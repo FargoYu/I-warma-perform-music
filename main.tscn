@@ -8,23 +8,12 @@
 [ext_resource type="Script" uid="uid://hvjm5gmedsem" path="res://scripts/door.gd" id="6_door"]
 [ext_resource type="TileSet" uid="uid://cechq05btlh3a" path="res://tileset.tres" id="7_tileset"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape_ground"]
-size = Vector2(320, 16)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape_platform_1"]
-size = Vector2(96, 16)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape_platform_2"]
-size = Vector2(64, 16)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape_player"]
-size = Vector2(6, 17.5)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape_door"]
 size = Vector2(20, 24)
 
 [sub_resource type="SystemFont" id="SystemFont_cjk"]
 font_names = PackedStringArray("Microsoft YaHei UI", "Microsoft YaHei", "SimSun")
+subpixel_positioning = 0
 
 [node name="Main" type="Node2D" unique_id=686817337]
 script = ExtResource("1_main")
@@ -32,42 +21,34 @@ script = ExtResource("1_main")
 [node name="Background" type="Sprite2D" parent="." unique_id=1078782825]
 z_index = -10
 texture_filter = 1
-position = Vector2(160, 90)
+position = Vector2(128, 72)
 texture = ExtResource("2_background")
+region_enabled = true
+region_rect = Rect2(32, 16, 256, 144)
 
 [node name="Blocks" type="TileMapLayer" parent="." unique_id=1467563932]
 texture_filter = 1
-tile_map_data = PackedByteArray("AAAAAAoAAAAAAAAAAAABAAoAAAAAAAAAAAACAAoAAAAAAAAAAAADAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAAFAAoAAAAAAAAAAAAGAAoAAAAAAAAAAAAHAAoAAAAAAAAAAAAIAAoAAAAAAAAAAAAJAAoAAAAAAAAAAAAKAAoAAAAAAAAAAAALAAoAAAAAAAAAAAAMAAoAAAAAAAAAAAANAAoAAAAAAAAAAAAOAAoAAAAAAAAAAAAPAAoAAAAAAAAAAAAQAAoAAAAAAAAAAAARAAoAAAAAAAAAAAASAAoAAAAAAAAAAAATAAoAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAAPAAYAAAAAAAAAAAAQAAYAAAAAAAAAAAARAAYAAAAAAAAAAAASAAYAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAAMAAQAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAA=")
 tile_set = ExtResource("7_tileset")
 
-[node name="Collision" type="StaticBody2D" parent="." unique_id=74770051]
-
-[node name="Ground" type="CollisionShape2D" parent="Collision" unique_id=808545433]
-position = Vector2(160, 168)
-shape = SubResource("RectangleShape_ground")
-
-[node name="Platform1" type="CollisionShape2D" parent="Collision" unique_id=1740806358]
-position = Vector2(160, 136)
-shape = SubResource("RectangleShape_platform_1")
-
-[node name="Platform2" type="CollisionShape2D" parent="Collision" unique_id=485415066]
-position = Vector2(272, 104)
-shape = SubResource("RectangleShape_platform_2")
-
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1291379621]
-position = Vector2(40, 120)
+position = Vector2(47, 120)
+safe_margin = 0.0
 script = ExtResource("4_player")
+jump_velocity = -150.0
 
 [node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=1332943649]
 texture_filter = 1
+position = Vector2(-3, -9)
 texture = ExtResource("3_warma")
+centered = false
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1989180157]
-position = Vector2(0, -0.25)
-shape = SubResource("RectangleShape_player")
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Player" unique_id=1989180157]
+polygon = PackedVector2Array(-3, -8, 3, -8, 3, 8, -3, 8)
 
 [node name="Door" type="Area2D" parent="." unique_id=262216686]
-position = Vector2(288, 152)
+z_index = -1
+position = Vector2(232, 120)
 collision_layer = 2
 script = ExtResource("6_door")
 
@@ -83,7 +64,7 @@ shape = SubResource("RectangleShape_door")
 [node name="Help" type="Label" parent="HUD" unique_id=1986427397]
 offset_left = 6.0
 offset_top = 4.0
-offset_right = 314.0
+offset_right = 250.0
 offset_bottom = 16.0
 theme_override_colors/font_color = Color(0, 0, 0, 0.85)
 theme_override_fonts/font = SubResource("SystemFont_cjk")
@@ -93,9 +74,9 @@ text = "A/D 移动   J 跳跃   W 进门"
 [node name="CompletionLabel" type="Label" parent="HUD" unique_id=344152511]
 unique_name_in_owner = true
 visible = false
-offset_top = 78.0
-offset_right = 320.0
-offset_bottom = 102.0
+offset_top = 60.0
+offset_right = 256.0
+offset_bottom = 84.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = SubResource("SystemFont_cjk")
 theme_override_font_sizes/font_size = 16

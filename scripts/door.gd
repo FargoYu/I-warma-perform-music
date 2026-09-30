@@ -1,5 +1,5 @@
 extends Area2D
-## 玩家走进门的区域后，按 W（interact）完成关卡。
+## Press W while the player is inside the door area.
 
 var player_inside := false
 
