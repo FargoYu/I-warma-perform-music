@@ -1,0 +1,104 @@
+[gd_scene format=4 uid="uid://cvcv3ausbix0y"]
+
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://scripts/main.gd" id="1_main"]
+[ext_resource type="Texture2D" uid="uid://cmu2wh2835v2y" path="res://Assets/Sprites/background.png" id="2_background"]
+[ext_resource type="Texture2D" uid="uid://j12iusb0okgh" path="res://Assets/Sprites/warma.png" id="3_warma"]
+[ext_resource type="Script" uid="uid://bqwjg5gypcdjt" path="res://scripts/player.gd" id="4_player"]
+[ext_resource type="Texture2D" uid="uid://dmmtkhavnm84d" path="res://Assets/Sprites/door.png" id="5_door"]
+[ext_resource type="Script" uid="uid://hvjm5gmedsem" path="res://scripts/door.gd" id="6_door"]
+[ext_resource type="TileSet" uid="uid://cechq05btlh3a" path="res://tileset.tres" id="7_tileset"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_ground"]
+size = Vector2(320, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_platform_1"]
+size = Vector2(96, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_platform_2"]
+size = Vector2(64, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_player"]
+size = Vector2(6, 17.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_door"]
+size = Vector2(20, 24)
+
+[sub_resource type="SystemFont" id="SystemFont_cjk"]
+font_names = PackedStringArray("Microsoft YaHei UI", "Microsoft YaHei", "SimSun")
+
+[node name="Main" type="Node2D" unique_id=686817337]
+script = ExtResource("1_main")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=1078782825]
+z_index = -10
+texture_filter = 1
+position = Vector2(160, 90)
+texture = ExtResource("2_background")
+
+[node name="Blocks" type="TileMapLayer" parent="." unique_id=1467563932]
+texture_filter = 1
+tile_map_data = PackedByteArray("AAAAAAoAAAAAAAAAAAABAAoAAAAAAAAAAAACAAoAAAAAAAAAAAADAAoAAAAAAAAAAAAEAAoAAAAAAAAAAAAFAAoAAAAAAAAAAAAGAAoAAAAAAAAAAAAHAAoAAAAAAAAAAAAIAAoAAAAAAAAAAAAJAAoAAAAAAAAAAAAKAAoAAAAAAAAAAAALAAoAAAAAAAAAAAAMAAoAAAAAAAAAAAANAAoAAAAAAAAAAAAOAAoAAAAAAAAAAAAPAAoAAAAAAAAAAAAQAAoAAAAAAAAAAAARAAoAAAAAAAAAAAASAAoAAAAAAAAAAAATAAoAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAAPAAYAAAAAAAAAAAAQAAYAAAAAAAAAAAARAAYAAAAAAAAAAAASAAYAAAAAAAAAAAA=")
+tile_set = ExtResource("7_tileset")
+
+[node name="Collision" type="StaticBody2D" parent="." unique_id=74770051]
+
+[node name="Ground" type="CollisionShape2D" parent="Collision" unique_id=808545433]
+position = Vector2(160, 168)
+shape = SubResource("RectangleShape_ground")
+
+[node name="Platform1" type="CollisionShape2D" parent="Collision" unique_id=1740806358]
+position = Vector2(160, 136)
+shape = SubResource("RectangleShape_platform_1")
+
+[node name="Platform2" type="CollisionShape2D" parent="Collision" unique_id=485415066]
+position = Vector2(272, 104)
+shape = SubResource("RectangleShape_platform_2")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1291379621]
+position = Vector2(40, 120)
+script = ExtResource("4_player")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player" unique_id=1332943649]
+texture_filter = 1
+texture = ExtResource("3_warma")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player" unique_id=1989180157]
+position = Vector2(0, -0.25)
+shape = SubResource("RectangleShape_player")
+
+[node name="Door" type="Area2D" parent="." unique_id=262216686]
+position = Vector2(288, 152)
+collision_layer = 2
+script = ExtResource("6_door")
+
+[node name="Sprite2D" type="Sprite2D" parent="Door" unique_id=1344364130]
+texture_filter = 1
+texture = ExtResource("5_door")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Door" unique_id=159866159]
+shape = SubResource("RectangleShape_door")
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1157094574]
+
+[node name="Help" type="Label" parent="HUD" unique_id=1986427397]
+offset_left = 6.0
+offset_top = 4.0
+offset_right = 314.0
+offset_bottom = 16.0
+theme_override_colors/font_color = Color(0, 0, 0, 0.85)
+theme_override_fonts/font = SubResource("SystemFont_cjk")
+theme_override_font_sizes/font_size = 8
+text = "A/D 移动   J 跳跃   W 进门"
+
+[node name="CompletionLabel" type="Label" parent="HUD" unique_id=344152511]
+unique_name_in_owner = true
+visible = false
+offset_top = 78.0
+offset_right = 320.0
+offset_bottom = 102.0
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("SystemFont_cjk")
+theme_override_font_sizes/font_size = 16
+text = "已进门"
+horizontal_alignment = 1
+vertical_alignment = 1
