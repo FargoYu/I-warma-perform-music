@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c8hemm53duuly"]
+
+[ext_resource type="Script" uid="uid://bhv6pm0bql20p" path="res://objects/extinguisher_pickup.gd" id="1_pickup"]
+[ext_resource type="Texture2D" uid="uid://dajhrwawvi65e" path="res://Assets/Sprites/extinguisher.png" id="2_extinguisher"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_pickup"]
+size = Vector2(8, 8)
+
+[node name="ExtinguisherPickup" type="Area2D" unique_id=354768487]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("1_pickup")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2008569501]
+texture_filter = 1
+position = Vector2(-1, -2)
+texture = ExtResource("2_extinguisher")
+centered = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1148037441]
+shape = SubResource("RectangleShape_pickup")

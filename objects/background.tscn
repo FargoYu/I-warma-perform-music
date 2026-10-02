@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://cmu2wh2835v2y" path="res://Assets/Sprites/background.png" id="1_background"]
+
+[node name="Background" type="Sprite2D"]
+z_index = -10
+texture_filter = 1
+position = Vector2(128, 72)
+texture = ExtResource("1_background")
+region_enabled = true
+region_rect = Rect2(32, 16, 256, 144)

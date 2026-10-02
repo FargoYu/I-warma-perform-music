@@ -1,0 +1,7 @@
+[gd_scene format=3]
+
+[ext_resource type="TileSet" uid="uid://cechq05btlh3a" path="res://objects/tileset.tres" id="1_tileset"]
+
+[node name="Blocks" type="TileMapLayer"]
+texture_filter = 1
+tile_set = ExtResource("1_tileset")

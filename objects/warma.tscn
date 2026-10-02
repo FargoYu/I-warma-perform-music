@@ -1,0 +1,40 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://bqwjg5gypcdjt" path="res://objects/warma.gd" id="1_warma"]
+[ext_resource type="Texture2D" uid="uid://j12iusb0okgh" path="res://Assets/Sprites/warma.png" id="2_warma"]
+[ext_resource type="PackedScene" path="res://objects/held_extinguisher.tscn" id="3_equipment"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_head_probe"]
+size = Vector2(8.2, 0.2)
+
+[node name="Warma" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 1
+safe_margin = 0.001
+script = ExtResource("1_warma")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(-3, -9)
+texture = ExtResource("2_warma")
+centered = false
+
+[node name="EquipmentPivot" type="Node2D" parent="."]
+visible = false
+z_index = 1
+
+[node name="HeldExtinguisher" parent="EquipmentPivot" instance=ExtResource("3_equipment")]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-3, -8, 3, -8, 3, 8, -3, 8)
+
+[node name="GroundProbe" type="RayCast2D" parent="."]
+position = Vector2(0, 7.8)
+target_position = Vector2(0, 1.2)
+collision_mask = 5
+
+[node name="HeadProbe" type="ShapeCast2D" parent="."]
+position = Vector2(0, -7.8)
+shape = SubResource("RectangleShape_head_probe")
+target_position = Vector2(0, -2)
+collision_mask = 4

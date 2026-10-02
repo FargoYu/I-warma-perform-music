@@ -66,7 +66,7 @@ func _side_jump_does_not_lift(player_at: Vector2, direction_action: String, side
 		"%s side jump stopped above the floor" % side_name)
 
 func _run() -> void:
-	var level: Node2D = load("res://main.tscn").instantiate()
+	var level: Node2D = load("res://rooms/main.tscn").instantiate()
 	root.add_child(level)
 	player = level.get_node("Player")
 	giraffe = level.get_node("Giraffe")

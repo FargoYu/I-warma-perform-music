@@ -227,11 +227,11 @@ godot --headless --path . --check-only --script res://tests/giraffe_physics_test
 
 ## 12. 建议的学习顺序
 
-1. 先修改 `main.tscn` 中的碰撞层和碰撞体，观察实体边界；
+1. 先修改 [rooms/main.tscn](../rooms/main.tscn) 中的碰撞层和碰撞体，观察实体边界；
 2. 阅读 `CharacterBody2D.move_and_collide()` 的参数和返回值；
 3. 用一个简单矩形实验 `test_only`、`get_travel` 和碰撞法线；
-4. 再阅读 `scripts/player.gd` 的水平/垂直两次查询；
-5. 最后阅读 `scripts/giraffe.gd` 的外力接口和测试文件；
+4. 再阅读 [warma.gd](../objects/warma.gd) 的水平/垂直两次查询；
+5. 最后阅读 [giraffe.gd](../objects/giraffe.gd) 的外力接口和测试文件；
 6. 每次改动都先添加一个能失败的测试，再运行两套物理测试。
 
 这样学习到的是 Godot 物理系统的可迁移方法，而不只是某一个长颈鹿 bug 的补丁。

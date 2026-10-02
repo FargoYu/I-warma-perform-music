@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" uid="uid://dajhrwawvi65e" path="res://Assets/Sprites/extinguisher.png" id="1_extinguisher"]
+
+[node name="HeldExtinguisher" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(3, -8)
+texture = ExtResource("1_extinguisher")
+centered = false
+
+[node name="Nozzle" type="Marker2D" parent="."]
+position = Vector2(5, -7)

@@ -3,7 +3,8 @@ extends CharacterBody2D
 
 const TERRAIN_LAYER := 1
 const GIRAFFE_LAYER := 4
-const MUSIC_BULLET_SCENE := preload("res://music_bullet.tscn")
+const BODY_HALF_HEIGHT := 8.0
+const MUSIC_BULLET_SCENE := preload("res://objects/music_bullet.tscn")
 
 @export var move_speed: float = 60.0
 @export var jump_velocity: float = -150.0
@@ -12,6 +13,8 @@ const MUSIC_BULLET_SCENE := preload("res://music_bullet.tscn")
 @export var music_bullet_speed: float = 24.0
 @export var music_bullet_growth_duration: float = 0.24
 @export var music_bullet_interval: float = 0.4
+@export var fall_limit: float = 144.0
+@export var death_flash_duration: float = 0.08
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var ground_probe: RayCast2D = $GroundProbe
@@ -22,6 +25,7 @@ const MUSIC_BULLET_SCENE := preload("res://music_bullet.tscn")
 var _lifting_giraffe := false
 var facing_direction := 1
 var _music_bullet_cooldown := 0.0
+var _dying := false
 
 func _ready() -> void:
 	add_to_group("player")
@@ -29,6 +33,12 @@ func _ready() -> void:
 	_apply_facing()
 
 func _physics_process(delta: float) -> void:
+	if _dying:
+		return
+	if Input.is_action_just_pressed("reset"):
+		die()
+		return
+
 	_music_bullet_cooldown = maxf(_music_bullet_cooldown - delta, 0.0)
 	if Input.is_action_just_pressed("fire_music"):
 		_fire_music_bullet()
@@ -77,9 +87,37 @@ func _physics_process(delta: float) -> void:
 			velocity.y = 0.0
 	collision_mask = TERRAIN_LAYER
 
-	if global_position.y > 180.0:
-		global_position = Vector2(85.0, 120.0)
-		velocity = Vector2.ZERO
+	# The bottom of the 16px body touching the screen edge counts as death.
+	if global_position.y + BODY_HALF_HEIGHT >= fall_limit:
+		die()
+
+## Starts the reusable death sequence, then restores the current room.
+func die() -> void:
+	if _dying:
+		return
+	_dying = true
+	velocity = Vector2.ZERO
+	set_physics_process(false)
+	var room := get_parent()
+	if room != null and room.has_method("freeze_for_death"):
+		room.freeze_for_death()
+	await play_death_animation()
+
+	if room != null and room.has_method("reset_scene"):
+		room.reset_scene()
+	else:
+		get_tree().reload_current_scene()
+
+## Visual death animation kept separate so its timing/effects can be changed later.
+func play_death_animation() -> void:
+	var was_visible := visible
+	var flash_time := maxf(death_flash_duration, 0.01)
+	for _flash in range(2):
+		visible = false
+		await get_tree().create_timer(flash_time).timeout
+		visible = was_visible
+		await get_tree().create_timer(flash_time).timeout
+	visible = was_visible
 
 func pick_up_extinguisher() -> void:
 	GameState.has_extinguisher = true

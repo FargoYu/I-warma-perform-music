@@ -48,7 +48,9 @@ func _jump_height(hold_frames: int, repress := false) -> float:
 	return start_y - top_y
 
 func _run() -> void:
-	level = load("res://main.tscn").instantiate()
+	level = load("res://rooms/main.tscn").instantiate()
+	# This suite isolates terrain and jumps; giraffe contacts have their own suite.
+	level.get_node("Giraffe").free()
 	root.add_child(level)
 	player = level.get_node("Player")
 	player.set_physics_process(false)

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://crn4xxx504yrw"]
 
-[ext_resource type="Script" uid="uid://bbanshyq3eq3q" path="res://scripts/giraffe.gd" id="1_giraffe"]
+[ext_resource type="Script" uid="uid://bbanshyq3eq3q" path="res://objects/giraffe.gd" id="1_giraffe"]
 [ext_resource type="Texture2D" uid="uid://dv6ixkyvjkv31" path="res://Assets/Sprites/giraffe.png" id="2_giraffe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape_giraffe"]
