@@ -19,9 +19,8 @@ config/icon="res://icon.svg"
 
 window/size/viewport_width=256
 window/size/viewport_height=144
-window/size/window_width_override=768
-window/size/window_height_override=432
-window/size/resizable=true
+window/size/window_width_override=1024
+window/size/window_height_override=576
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
 # Keep every logical pixel on an integer display-pixel boundary.
@@ -52,7 +51,12 @@ interact={
 
 [physics]
 
+common/physics_ticks_per_second=120
 3d/physics_engine="Jolt Physics"
+2d/solver/solver_iterations=32
+2d/solver/contact_recycle_radius=0.01
+2d/solver/contact_max_separation=0.05
+2d/solver/contact_max_allowed_penetration=0.01
 
 [rendering]
 

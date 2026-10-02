@@ -1,40 +1,49 @@
-# Warma 极简平台跳跃示例（Godot 4.7）
+# Warma 平台跳跃示例（Godot 4.7）
 
-这是一个可直接运行的最小平台跳跃关卡。游戏逻辑分辨率是 **256×144**，默认窗口是 **768×432**，也就是 3 倍整数放大。
+逻辑分辨率为 **256×144**，默认窗口为 **1024×576**，即 4 倍整数缩放。
 
-## 运行
+## 操作
 
-1. 用 Godot 4.7 打开这个文件夹。
-2. 打开 `main.tscn` 后按 F6，或按 F5 运行项目。
-3. `A/D` 左右移动，`J` 跳跃，走到门附近后按 `W`。
-4. 成功进门后，屏幕中央显示黑色的“已进门”。
+- `A/D`：左右移动
+- `J`：跳跃；轻按小跳，长按大跳
+- `W`：在门附近进入
 
-## 文件作用
+## 主要结构
 
-- `main.tscn`：背景、TileMapLayer、玩家、门和 HUD。
-- `scripts/main.gd`：按 16 像素网格生成地面和平台。
-- `scripts/player.gd`：玩家移动、重力和一段跳。
-- `scripts/door.gd`：门的 Area2D 和 W 键。
-- `tileset.tres`：把 `block.png` 做成带碰撞的 16×16 TileSet。
+- `main.tscn`：关卡、Warma、长颈鹿、门和 HUD。
+- `scripts/player.gd`：Warma 的移动、跳跃、地面探测和向上托起长颈鹿。
+- `giraffe.tscn`：可重复实例化的 `CharacterBody2D` 长颈鹿。
+- `scripts/giraffe.gd`：长颈鹿的重力、实体碰撞和可复用的外部冲量入口。
+- `tileset.tres`：16×16 TileSet；方块碰撞上下各缩进 0.01px。
+- `docs/GODOT_LEARNING.md`：面向学习的 Godot 4.7 物理、碰撞查询和调试说明。
 
-平台没有额外的 StaticBody2D，碰撞来自 TileMapLayer 使用的 TileSet。`warma.png` 是 6×17 像素，碰撞多边形的顶点是 `(-3,-9)`、`(3,-9)`、`(3,8)`、`(-3,8)`。
+## 长颈鹿物理规则
 
-## 分辨率和像素对齐
+长颈鹿使用单一完整碰撞体，由 `CharacterBody2D` 显式处理重力和移动；普通 Warma 接触只会产生移动约束，不会把 Warma 的水平速度转移给长颈鹿。长颈鹿压在 Warma 上方时，Warma 可以水平移动，长颈鹿不会被横向带走。
 
-256×144 的视口包含 16 列、 9 行 16 像素方块。地面是第 8 行，顶边是 `y=128`。玩家位于 `(85,120)`，碰撞多边形的底边是 `120+8=128`，两条边完全重合。
+- Warma 横向碰到长颈鹿侧面时会停止，不能穿过它；长颈鹿的 X 位置也保持不变。
+- Warma 从长颈鹿头顶走开时，不会靠摩擦把它带走。
+- Warma 站在长颈鹿上可以正常起跳，长颈鹿不会跟着起跳。
+- 长颈鹿在 Warma 头顶时不会把 Warma 压入地面。
+- Warma 从下方起跳时，会给头顶长颈鹿一个仅竖直方向的物理冲量。
 
-默认窗口 768×432 是 3 倍放大，项目启用了整数缩放。窗口尺寸不是整数倍时，Godot 会留出少量空白边缘，避免逻辑像素落在显示像素之间。
+Warma 与长颈鹿通过同一个完整实体碰撞体处理顶部、底部和左右接触。轴向查询使用 `test_only` 后必须提交 `get_travel()`；垂直查询只提交垂直 travel，避免接触恢复把角色横向挤走。长颈鹿在普通接触时不主动扫描 Warma 的静止水平位移，从而不会被横向带走；下落和外部主动运动时会恢复对应方向的实体碰撞。Warma 的 `HeadProbe` 只负责识别从下方跳入的长颈鹿，并调用统一的外部冲量入口。长颈鹿位于 Warma 顶部时，Warma 的水平查询会把它视为垂直支撑而不是水平墙；真正的侧面接触仍然阻挡穿透。
 
-提供的 `background.png` 原始大小是 320×176，运行时从中心裁剪出 256×144。编辑器 2D 视图中会隐藏这张游戏背景，因此显示 Godot 默认底色。
+## 小尺寸物理精度
 
-## 调整参数
+本项目使用轴向 test-only 碰撞查询、`get_travel()` 提交和 2D 物理求解器设置提高小尺寸实体的精度：
 
-打开 `scripts/player.gd` 顶部：
+- 120 次物理更新/秒
+- 最大允许穿透：0.01px
+- 最大接触分离：0.05px
+- 接触复用半径：0.01px
+- 求解迭代：32
 
-```gdscript
-@export var move_speed: float = 60.0
-@export var jump_velocity: float = -112.0
-@export var gravity: float = 300.0
+Warma 使用 `CharacterBody2D.safe_margin = 0.001`；长颈鹿的完整形状使用零恢复余量，避免上下接触产生横向修正。
+
+## 自动测试
+
+```powershell
+godot --headless --path . --script res://tests/player_physics_test.gd
+godot --headless --path . --script res://tests/giraffe_physics_test.gd
 ```
-
-`move_speed` 控制移动速度，`jump_velocity` 的绝对值控制跳跃高度，`gravity` 控制下落速度。

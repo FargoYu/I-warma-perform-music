@@ -12,9 +12,9 @@ func _process(_delta: float) -> void:
 		get_tree().call_group("game", "show_completion")
 
 func _on_body_entered(body: Node2D) -> void:
-	if body is CharacterBody2D:
+	if body.is_in_group("player"):
 		player_inside = true
 
 func _on_body_exited(body: Node2D) -> void:
-	if body is CharacterBody2D:
+	if body.is_in_group("player"):
 		player_inside = false

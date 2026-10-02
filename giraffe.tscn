@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://crn4xxx504yrw"]
+
+[ext_resource type="Script" uid="uid://bbanshyq3eq3q" path="res://scripts/giraffe.gd" id="1_giraffe"]
+[ext_resource type="Texture2D" uid="uid://dv6ixkyvjkv31" path="res://Assets/Sprites/giraffe.png" id="2_giraffe"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_giraffe"]
+custom_solver_bias = 1.0
+size = Vector2(8, 16)
+
+[node name="Giraffe" type="CharacterBody2D" unique_id=792921680]
+position = Vector2(0.5, 0)
+collision_layer = 4
+collision_mask = 1
+safe_margin = 0.0
+script = ExtResource("1_giraffe")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1336652431]
+texture_filter = 1
+texture = ExtResource("2_giraffe")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1277571673]
+shape = SubResource("RectangleShape_giraffe")
