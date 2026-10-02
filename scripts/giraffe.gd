@@ -6,11 +6,24 @@ const WARMA_LAYER := 2
 
 @export var gravity: float = 300.0
 @export var mass: float = 1.0
+@export var music_run_speed: float = 24.0
+@export var music_run_duration: float = 0.8
+
+var _music_run_time := 0.0
+var _music_run_direction := 0
 
 func _ready() -> void:
 	add_to_group("giraffe")
 
 func _physics_process(delta: float) -> void:
+	if _music_run_time > 0.0:
+		_music_run_time = maxf(_music_run_time - delta, 0.0)
+		velocity.x = float(_music_run_direction) * music_run_speed
+	else:
+		# Let an ordinary external impulse wind down instead of keeping a note
+		# reaction active forever.
+		velocity.x = move_toward(velocity.x, 0.0, music_run_speed * 4.0 * delta)
+
 	# Keep gravity explicit so this body remains controllable without a
 	# per-frame horizontal lock that would defeat projectile impulses.
 	velocity.y += gravity * delta
@@ -58,3 +71,8 @@ func apply_external_impulse(impulse: Vector2) -> void:
 	# Projectiles and other explicit game events use this entry point. Normal
 	# CharacterBody2D contact does not transfer Warma's movement to this body.
 	velocity += impulse / maxf(mass, 0.001)
+
+func run_in_direction(direction: int) -> void:
+	_music_run_direction = -1 if direction < 0 else 1
+	_music_run_time = maxf(music_run_duration, 0.0)
+	velocity.x = float(_music_run_direction) * music_run_speed

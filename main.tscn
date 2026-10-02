@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://hvjm5gmedsem" path="res://scripts/door.gd" id="6_door"]
 [ext_resource type="TileSet" uid="uid://cechq05btlh3a" path="res://tileset.tres" id="7_tileset"]
 [ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://giraffe.tscn" id="8_giraffe"]
+[ext_resource type="PackedScene" path="res://extinguisher_pickup.tscn" id="9_pickup"]
+[ext_resource type="Texture2D" uid="uid://dajhrwawvi65e" path="res://Assets/Sprites/extinguisher.png" id="10_extinguisher"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape_head_probe"]
 size = Vector2(8.2, 0.2)
@@ -33,13 +35,12 @@ region_rect = Rect2(32, 16, 256, 144)
 
 [node name="Blocks" type="TileMapLayer" parent="." unique_id=1467563932]
 texture_filter = 1
-tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAAMAAQAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAAFAAcAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAAMAAQAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAA=")
 tile_set = ExtResource("7_tileset")
 
 [node name="Player" type="CharacterBody2D" parent="." unique_id=1291379621]
 position = Vector2(29, 120)
 collision_layer = 2
-collision_mask = 1
 safe_margin = 0.001
 script = ExtResource("4_player")
 
@@ -48,6 +49,21 @@ texture_filter = 1
 position = Vector2(-3, -9)
 texture = ExtResource("3_warma")
 centered = false
+
+[node name="EquipmentPivot" type="Node2D" parent="Player" unique_id=174197893]
+visible = false
+z_index = 1
+
+[node name="HeldExtinguisher" type="Node2D" parent="Player/EquipmentPivot" unique_id=837620465]
+
+[node name="Sprite2D" type="Sprite2D" parent="Player/EquipmentPivot/HeldExtinguisher" unique_id=1709523147]
+texture_filter = 1
+position = Vector2(3, -8)
+texture = ExtResource("10_extinguisher")
+centered = false
+
+[node name="Nozzle" type="Marker2D" parent="Player/EquipmentPivot/HeldExtinguisher" unique_id=1877387570]
+position = Vector2(5, -7)
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Player" unique_id=1989180157]
 polygon = PackedVector2Array(-3, -8, 3, -8, 3, 8, -3, 8)
@@ -64,7 +80,10 @@ target_position = Vector2(0, -2)
 collision_mask = 4
 
 [node name="Giraffe" parent="." unique_id=199434316 instance=ExtResource("8_giraffe")]
-position = Vector2(29, 90)
+position = Vector2(118, 120)
+
+[node name="ExtinguisherPickup" parent="." unique_id=1267596474 instance=ExtResource("9_pickup")]
+position = Vector2(88, 108)
 
 [node name="Door" type="Area2D" parent="." unique_id=262216686]
 z_index = -1

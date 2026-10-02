@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=4]
+
+[ext_resource type="Script" path="res://scripts/music_bullet.gd" id="1_bullet"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_bullet"]
+size = Vector2(3, 4)
+
+[node name="MusicBullet" type="Area2D"]
+collision_layer = 8
+collision_mask = 4
+monitoring = false
+script = ExtResource("1_bullet")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, 0)
+centered = false
+texture_filter = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.5, 2)
+shape = SubResource("RectangleShape_bullet")

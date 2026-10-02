@@ -3,29 +3,44 @@ extends CharacterBody2D
 
 const TERRAIN_LAYER := 1
 const GIRAFFE_LAYER := 4
+const MUSIC_BULLET_SCENE := preload("res://music_bullet.tscn")
 
 @export var move_speed: float = 60.0
 @export var jump_velocity: float = -150.0
 @export var jump_cut_speed: float = 60.0
 @export var gravity: float = 300.0
+@export var music_bullet_speed: float = 24.0
+@export var music_bullet_growth_duration: float = 0.24
+@export var music_bullet_interval: float = 0.4
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var ground_probe: RayCast2D = $GroundProbe
 @onready var head_probe: ShapeCast2D = $HeadProbe
+@onready var equipment_pivot: Node2D = $EquipmentPivot
+@onready var nozzle: Marker2D = $EquipmentPivot/HeldExtinguisher/Nozzle
 
 var _lifting_giraffe := false
+var facing_direction := 1
+var _music_bullet_cooldown := 0.0
 
 func _ready() -> void:
 	add_to_group("player")
+	_sync_equipment_from_state()
+	_apply_facing()
 
 func _physics_process(delta: float) -> void:
+	_music_bullet_cooldown = maxf(_music_bullet_cooldown - delta, 0.0)
+	if Input.is_action_just_pressed("fire_music"):
+		_fire_music_bullet()
+
 	if not _has_ground_support():
 		velocity.y += gravity * delta
 
 	var direction := Input.get_axis("move_left", "move_right")
 	if direction != 0.0:
 		velocity.x = direction * move_speed
-		sprite.flip_h = direction < 0.0
+		facing_direction = -1 if direction < 0.0 else 1
+		_apply_facing()
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, move_speed * 8.0 * delta)
 
@@ -65,6 +80,35 @@ func _physics_process(delta: float) -> void:
 	if global_position.y > 180.0:
 		global_position = Vector2(85.0, 120.0)
 		velocity = Vector2.ZERO
+
+func pick_up_extinguisher() -> void:
+	GameState.has_extinguisher = true
+	equipment_pivot.visible = true
+
+func _sync_equipment_from_state() -> void:
+	equipment_pivot.visible = GameState.has_extinguisher
+
+func _apply_facing() -> void:
+	var is_facing_left := facing_direction < 0
+	sprite.flip_h = is_facing_left
+	# The held item and its nozzle marker are children of this pivot. Mirroring
+	# the pivot preserves their local relationship without per-frame world edits.
+	equipment_pivot.scale.x = float(facing_direction)
+
+func _fire_music_bullet() -> void:
+	if not GameState.has_extinguisher or not equipment_pivot.visible:
+		return
+	if _music_bullet_cooldown > 0.0:
+		return
+
+	var bullet := MUSIC_BULLET_SCENE.instantiate()
+	bullet.setup(facing_direction, music_bullet_speed, music_bullet_growth_duration)
+	var bullet_parent: Node = get_tree().current_scene
+	if bullet_parent == null:
+		bullet_parent = get_tree().root
+	bullet_parent.add_child(bullet)
+	bullet.global_position = nozzle.global_position
+	_music_bullet_cooldown = music_bullet_interval
 
 func _move_test_only(motion: Vector2, mask: int) -> KinematicCollision2D:
 	collision_mask = mask
