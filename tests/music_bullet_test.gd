@@ -299,6 +299,26 @@ func _test_automatic_growth() -> void:
 			_check(bullet.global_position.x > 100.0, "Automatically grown note must move horizontally")
 	await _clear_level(level)
 
+func _test_rapid_fire_input() -> void:
+	var level := _new_level()
+	current_scene = level
+	var player := _instance(PLAYER_SCENE) as CharacterBody2D
+	player.position = Vector2(128, 64)
+	player.set("gravity", 0.0)
+	level.add_child(player)
+	player.pick_up_extinguisher()
+	for _press in range(6):
+		Input.action_press("fire_music")
+		await _tick(2)
+		Input.action_release("fire_music")
+		await _tick(2)
+	var bullet_count := 0
+	for child in level.get_children():
+		if child.scene_file_path == BULLET_SCENE:
+			bullet_count += 1
+	_check(bullet_count == 6, "Six rapid fire presses must emit six notes without the former 0.4s delay")
+	await _clear_level(level)
+
 func _run() -> void:
 	game_state = root.get_node_or_null("GameState")
 	_check(game_state != null, "GameState autoload must exist")
@@ -323,6 +343,7 @@ func _run() -> void:
 	for use_tiles in [false, true]:
 		await _test_growth_inside_terrain(use_tiles)
 	await _test_giraffe(1, true)
+	await _test_rapid_fire_input()
 	game_state.set("has_extinguisher", saved_equipment)
 	print("Music bullet physics checks: ", "PASS" if failures.is_empty() else "FAIL (%d)" % failures.size())
 	quit(0 if failures.is_empty() else 1)

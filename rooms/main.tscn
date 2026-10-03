@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_giraffe"]
 [ext_resource type="PackedScene" uid="uid://c8hemm53duuly" path="res://objects/extinguisher_pickup.tscn" id="8_pickup"]
 [ext_resource type="PackedScene" path="res://objects/signboard.tscn" id="9_signboard"]
+[ext_resource type="PackedScene" path="res://objects/screen_text.tscn" id="10_text"]
 
 [node name="Main" type="Node2D" unique_id=686817337]
 script = ExtResource("1_room")
@@ -36,3 +37,7 @@ position = Vector2(232, 120)
 next_room = "res://rooms/roomX.tscn"
 
 [node name="HUD" parent="." unique_id=1157094574 instance=ExtResource("6_hud")]
+
+[node name="EntryText" parent="." instance=ExtResource("10_text")]
+message = "第一关"
+display_duration = 2.0

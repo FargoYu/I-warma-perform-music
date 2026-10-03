@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://objects/screen_text.gd" id="1_text"]
+
+[sub_resource type="SystemFont" id="SystemFont_text"]
+font_names = PackedStringArray("Microsoft YaHei UI", "Microsoft YaHei", "SimSun")
+subpixel_positioning = 0
+
+[node name="ScreenText" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_text")
+
+[node name="Message" type="Label" parent="."]
+visible = false
+offset_left = 8.0
+offset_top = 62.0
+offset_right = 248.0
+offset_bottom = 82.0
+mouse_filter = 2
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = SubResource("SystemFont_text")
+theme_override_font_sizes/font_size = 16
+text = "场景提示"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3

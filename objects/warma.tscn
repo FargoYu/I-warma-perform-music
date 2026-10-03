@@ -1,40 +1,45 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://monkdhxuo2p8"]
 
 [ext_resource type="Script" uid="uid://bqwjg5gypcdjt" path="res://objects/warma.gd" id="1_warma"]
 [ext_resource type="Texture2D" uid="uid://j12iusb0okgh" path="res://Assets/Sprites/warma.png" id="2_warma"]
-[ext_resource type="PackedScene" path="res://objects/held_extinguisher.tscn" id="3_equipment"]
+[ext_resource type="PackedScene" uid="uid://5ic46eouq0l8" path="res://objects/held_extinguisher.tscn" id="3_equipment"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_ground_probe"]
+size = Vector2(5, 0.1)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape_head_probe"]
-size = Vector2(8.2, 0.2)
+size = Vector2(5, 0.1)
 
-[node name="Warma" type="CharacterBody2D"]
+[node name="Warma" type="CharacterBody2D" unique_id=802351745]
 collision_layer = 2
 collision_mask = 1
 safe_margin = 0.001
 script = ExtResource("1_warma")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=541030360]
 texture_filter = 1
 position = Vector2(-3, -9)
 texture = ExtResource("2_warma")
 centered = false
 
-[node name="EquipmentPivot" type="Node2D" parent="."]
+[node name="EquipmentPivot" type="Node2D" parent="." unique_id=396124921]
 visible = false
 z_index = 1
 
-[node name="HeldExtinguisher" parent="EquipmentPivot" instance=ExtResource("3_equipment")]
+[node name="HeldExtinguisher" parent="EquipmentPivot" unique_id=1422764239 instance=ExtResource("3_equipment")]
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-3, -8, 3, -8, 3, 8, -3, 8)
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=204951887]
+polygon = PackedVector2Array(-2, -8, 3, -8, 3, 8, -2, 8)
 
-[node name="GroundProbe" type="RayCast2D" parent="."]
-position = Vector2(0, 7.8)
-target_position = Vector2(0, 1.2)
+[node name="GroundProbe" type="ShapeCast2D" parent="." unique_id=1747204448]
+position = Vector2(0.5, 7.9)
+shape = SubResource("RectangleShape_ground_probe")
+target_position = Vector2(0, 0.07)
 collision_mask = 5
 
-[node name="HeadProbe" type="ShapeCast2D" parent="."]
-position = Vector2(0, -7.8)
+[node name="HeadProbe" type="ShapeCast2D" parent="." unique_id=1316166143]
+position = Vector2(0.5, -7.9)
 shape = SubResource("RectangleShape_head_probe")
-target_position = Vector2(0, -2)
+target_position = Vector2(0, -1.32)
+margin = 0.001
 collision_mask = 4

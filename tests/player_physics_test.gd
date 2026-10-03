@@ -60,7 +60,9 @@ func _run() -> void:
 	var bounds := Rect2(points[0], Vector2.ZERO)
 	for point in points:
 		bounds = bounds.expand(point)
-	_check(bounds.size == Vector2(6, 16), "Player collision must be 6x16")
+	_check(points == PackedVector2Array([Vector2(-2, -8), Vector2(3, -8), Vector2(3, 8), Vector2(-2, 8)]),
+		"Player collision polygon must preserve the approved x=-2..3, y=-8..8 bounds")
+	_check(bounds.size == Vector2(5, 16), "Player collision must remain 5x16")
 	_check(level.get_node("Blocks").tile_set.tile_size == Vector2i(16, 16), "Grid must be 16x16")
 	_check(is_equal_approx(player.safe_margin, 0.001), "Player safe_margin must remain 0.001")
 

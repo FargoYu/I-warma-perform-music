@@ -1,14 +1,15 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://5ic46eouq0l8"]
 
 [ext_resource type="Texture2D" uid="uid://dajhrwawvi65e" path="res://Assets/Sprites/extinguisher.png" id="1_extinguisher"]
 
-[node name="HeldExtinguisher" type="Node2D"]
+[node name="HeldExtinguisher" type="Node2D" unique_id=1431487418]
+position = Vector2(-1, 2)
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=535735612]
 texture_filter = 1
 position = Vector2(3, -8)
 texture = ExtResource("1_extinguisher")
 centered = false
 
-[node name="Nozzle" type="Marker2D" parent="."]
+[node name="Nozzle" type="Marker2D" parent="." unique_id=1571865707]
 position = Vector2(5, -7)

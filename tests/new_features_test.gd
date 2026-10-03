@@ -24,7 +24,7 @@ func _run() -> void:
 	var player := load("res://objects/warma.tscn").instantiate() as CharacterBody2D
 	var sign := load("res://objects/signboard.tscn").instantiate() as Area2D
 	var button := load("res://objects/button.tscn").instantiate() as Area2D
-	var elevator := load("res://objects/elevator.tscn").instantiate() as Node2D
+	var elevator := load("res://objects/elevator_up.tscn").instantiate() as Node2D
 	_check(player != null and sign != null and button != null and elevator != null, "New reusable scenes must instantiate")
 	if player == null or sign == null or button == null or elevator == null:
 		quit(1)

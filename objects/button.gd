@@ -13,6 +13,10 @@ var activated := false
 func _ready() -> void:
 	add_to_group("buttons")
 	monitoring = true
+	# Each instance owns its pressure shape; otherwise multiple buttons sharing
+	# this scene would also share one RectangleShape2D resource.
+	if pressure_shape != null and pressure_shape.shape != null:
+		pressure_shape.shape = pressure_shape.shape.duplicate()
 	_apply_pressure_size()
 	_set_visual(false)
 	# An explicitly assigned elevator receives the signal without requiring
@@ -78,10 +82,22 @@ func _set_visual(active: bool) -> void:
 	plate_sprite.texture = load("res://Assets/Sprites/buttonActive.png" if active else "res://Assets/Sprites/buttonInactive.png")
 
 func _bounds_overlap(body: Node2D) -> bool:
-	var body_half := Vector2(3.0, 8.0)
+	var bounds := _body_bounds(body)
+	var center := global_position + pressure_shape.position
+	var half := pressure_size * 0.5
+	return bounds.end.x >= center.x - half.x and bounds.position.x <= center.x + half.x and bounds.end.y >= center.y - half.y and bounds.position.y <= center.y + half.y
+
+func _body_bounds(body: Node2D) -> Rect2:
 	var shape_node := body.get_node_or_null("CollisionShape2D") as CollisionShape2D
 	if shape_node != null and shape_node.shape is RectangleShape2D:
-		body_half = (shape_node.shape as RectangleShape2D).size * 0.5
-	var center := global_position + pressure_shape.position
-	return absf(body.global_position.x - center.x) <= pressure_size.x * 0.5 + body_half.x \
-		and absf(body.global_position.y - center.y) <= pressure_size.y * 0.5 + body_half.y
+		var shape := shape_node.shape as RectangleShape2D
+		var half_size := shape.size * 0.5
+		return Rect2(body.global_position + shape_node.position - half_size, shape.size)
+	var polygon := body.get_node_or_null("CollisionPolygon2D") as CollisionPolygon2D
+	if polygon != null and not polygon.polygon.is_empty():
+		var rect := Rect2(polygon.polygon[0], Vector2.ZERO)
+		for point in polygon.polygon:
+			rect = rect.expand(point)
+		return Rect2(body.global_position + rect.position, rect.size)
+	var half_size := Vector2(3.0, 8.0)
+	return Rect2(body.global_position - half_size, half_size * 2.0)

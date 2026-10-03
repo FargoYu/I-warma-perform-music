@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://objects/title.gd" id="1_title"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_background"]
+[ext_resource type="PackedScene" path="res://objects/screen_text.tscn" id="3_text"]
+
+[node name="Title" type="Node2D"]
+script = ExtResource("1_title")
+next_scene = "res://rooms/main.tscn"
+
+[node name="Background" parent="." instance=ExtResource("2_background")]
+
+[node name="StartPrompt" parent="." instance=ExtResource("3_text")]
+message = "按任意键开始"
+display_duration = 0.0

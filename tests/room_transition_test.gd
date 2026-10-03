@@ -179,6 +179,9 @@ func _check_room_contract(room: Node, path: String) -> void:
 				expected_cells.append(Vector2i(x, 6))
 			for x in range(12, 16):
 				expected_cells.append(Vector2i(x, 4))
+		else:
+			# The authored second room now includes a step above its floor.
+			expected_cells.append(Vector2i(4, 7))
 		_check(blocks.get_used_cells().size() == expected_cells.size(), "Room must retain its tile layout: %s" % path)
 		for cell in expected_cells:
 			_check(blocks.get_cell_source_id(cell) == 0 and blocks.get_cell_atlas_coords(cell) == Vector2i.ZERO, "Missing room floor/platform tile %s in %s" % [cell, path])

@@ -39,14 +39,17 @@ func _side_jump_does_not_lift(player_at: Vector2, direction_action: String, side
 	Input.action_press(direction_action)
 	Input.action_press("jump")
 	var minimum_giraffe_y := giraffe.position.y
+	var minimum_player_y := player.position.y
 	var furthest_player_x := player.position.x
 	for frame in range(150):
 		if frame == 12:
 			# Keep the simultaneous side+jump input long enough to exercise the
 			# bug, then stop pressing into the giraffe so the landing is local.
 			Input.action_release(direction_action)
+			Input.action_release("jump")
 		await _tick()
 		minimum_giraffe_y = minf(minimum_giraffe_y, giraffe.position.y)
+		minimum_player_y = minf(minimum_player_y, player.position.y)
 		if direction_action == "move_right":
 			furthest_player_x = maxf(furthest_player_x, player.position.x)
 		else:
@@ -56,6 +59,8 @@ func _side_jump_does_not_lift(player_at: Vector2, direction_action: String, side
 		await _tick()
 	_check(minimum_giraffe_y >= giraffe_start_y - 0.1,
 		"%s side jump incorrectly lifted the giraffe" % side_name)
+	_check(minimum_player_y < player_at.y - 4.0,
+		"%s side contact must not prevent Warma from jumping" % side_name)
 	_check(absf(furthest_player_x - player_at.x) < 0.1,
 		"%s side jump entered the giraffe while still side-contacting" % side_name)
 	_check(player._has_ground_support(),
@@ -102,7 +107,7 @@ func _run() -> void:
 		await _tick()
 	_release_input()
 	_check(player.position.x < 58.0, "Warma did not move toward the giraffe from the right")
-	_check(player.position.x > right_giraffe_x + 6.5, "Warma passed through the giraffe from the right")
+	_check(player.position.x >= right_giraffe_x + 6.0 - 0.01, "Warma passed through the giraffe from the right")
 	_check(is_zero_approx(player.velocity.x), "Warma kept horizontal velocity after right contact")
 	_check(absf(giraffe.position.x - right_giraffe_x) < 0.1,
 		"Right-side Warma contact pushed the giraffe horizontally")
@@ -185,11 +190,11 @@ func _run() -> void:
 
 	# A Warma landing beside the giraffe must reach the floor, even when its
 	# falling body is exactly flush with the giraffe's side.
-	await _reset_bodies(Vector2(54, 80), Vector2(47, 120), 2)
+	await _reset_bodies(Vector2(53, 80), Vector2(47, 120), 2)
 	for _i in range(100):
 		await _tick()
 	_release_input()
-	_check(absf(player.position.x - 54.0) < 0.1,
+	_check(absf(player.position.x - 53.0) < 0.1,
 		"Warma drifted horizontally while landing beside the giraffe")
 	_check(absf(player.position.y - 120.0) < 0.1,
 		"Warma landed above the floor beside the giraffe")
@@ -216,7 +221,7 @@ func _run() -> void:
 	# Pressing into either side while jumping must not be mistaken for a
 	# below-to-above impact or leave a support gap after the jump.
 	await _side_jump_does_not_lift(Vector2(40, 120), "move_right", "Left")
-	await _side_jump_does_not_lift(Vector2(54, 120), "move_left", "Right")
+	await _side_jump_does_not_lift(Vector2(53, 120), "move_left", "Right")
 
 	# The future projectile contract must move the giraffe in either direction.
 	await _reset_bodies(Vector2(200, 120), Vector2(120, 120))

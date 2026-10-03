@@ -7,8 +7,10 @@
 [ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_door"]
 [ext_resource type="PackedScene" path="res://objects/hud.tscn" id="6_hud"]
 [ext_resource type="PackedScene" path="res://objects/button.tscn" id="7_button"]
-[ext_resource type="PackedScene" path="res://objects/elevator.tscn" id="8_elevator"]
+[ext_resource type="PackedScene" path="res://objects/elevator_up.tscn" id="8_elevator"]
 [ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="9_p572l"]
+[ext_resource type="PackedScene" uid="uid://c8hemm53duuly" path="res://objects/extinguisher_pickup.tscn" id="10_3587n"]
+[ext_resource type="PackedScene" path="res://objects/screen_text.tscn" id="11_text"]
 
 [node name="RoomX" type="Node2D" unique_id=1527030395]
 script = ExtResource("1_room")
@@ -17,7 +19,7 @@ script = ExtResource("1_room")
 visible = false
 
 [node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_blocks")]
-tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAALAAgAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAEAAcAAAAAAAAAAAA=")
 
 [node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_player")]
 position = Vector2(29, 120)
@@ -38,3 +40,10 @@ target_elevator = NodePath("../Elevator")
 
 [node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("9_p572l")]
 position = Vector2(159, 112)
+
+[node name="ExtinguisherPickup" parent="." unique_id=354768487 instance=ExtResource("10_3587n")]
+position = Vector2(41, 122)
+
+[node name="EntryText" parent="." instance=ExtResource("11_text")]
+message = "第二关"
+display_duration = 2.0

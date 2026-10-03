@@ -51,7 +51,7 @@
 
 不要用“左边一根柱子、右边一根柱子、顶部一个平台”拼出同一个角色。多个辅助碰撞体会让边角、法线和恢复方向变得难以推理。传感器可以存在，但传感器不应该替代实体碰撞。
 
-Warma 的碰撞多边形大小为 `6x16`。精灵图片只是显示内容，不是物理边界；调试时应该以 `CollisionPolygon2D` 和 `CollisionShape2D` 为准。
+Warma 的碰撞多边形大小为 `5x16`，边界是 `x=-2..3, y=-8..8`，中心偏右 `0.5px`。两个探针按这个实际边界对齐，完整碰撞多边形不变。精灵图片只是显示内容，不是物理边界；调试时应该以 `CollisionPolygon2D` 和 `CollisionShape2D` 为准。
 
 ## 4. 轴向移动为什么存在
 
@@ -118,17 +118,19 @@ else:
 3. 提交当前轴的 travel；
 4. 对被法线阻挡的轴清零速度。
 
-## 7. 三个探针各自负责什么
+## 7. 两个探针各自负责什么
 
 ### GroundProbe
 
-`GroundProbe` 是 Warma 脚下的 `RayCast2D`。它检测地面或长颈鹿顶部，用来回答：
+`GroundProbe` 是 Warma 脚下的 `ShapeCast2D`，宽度与完整脚边一致。它检测地面或长颈鹿顶部，用来回答：
 
 - Warma 是否有支撑？
 - 是否允许开始跳跃？
 - 落地后是否已经回到稳定状态？
 
 它是传感器，不是阻挡器。真正防止穿透的是 Warma 的完整碰撞体和移动查询。
+
+只要脚的一部分仍压在平台上，就有支撑。判定要求接触法线向上，接触点距离脚底不超过 `0.02px`；侧墙或真正的悬空不能提供跳跃资格。脚探针使用零 `margin`，避免在紧贴墙壁时先检测到墙侧、遮住脚下地面的查询结果。
 
 ### HeadProbe
 
@@ -138,6 +140,8 @@ else:
 
 - 碰撞法线的 `y` 分量是否指向 Warma；
 - 长颈鹿中心是否真的位于 Warma 上方。
+
+头探针同样按 `5px` 的真实头宽对齐，向上扫过本次起跳帧的实际位移，避免在头部横向或竖直方向尚未接触时提前抬升长颈鹿。
 
 侧面接触或长颈鹿顶部接触不会触发抬升。
 
@@ -160,17 +164,25 @@ Warma 会通过 `_has_giraffe_above()` 判断：
 
 这是一个明确的游戏规则，不是依赖物理引擎自动产生摩擦或推动效果。
 
+### 一格高空隙的入口
+
+地形上下各缩进 `0.01px`，因此一格高空隙的实际高度约为 `16.02px`，可以容纳完整 `16px` 的角色。但跳跃的竖直离散步长会跳过这个极窄的入口高度，所以对齐后水平行走可通过，直接跳入却可能持续撞墙。
+
+水平受阻时，仅对上下两面都存在、容得下完整身体的一格高空隙尝试最多 `0.75px` 的入口高度对齐。先检查竖直调整路径，再用完整身体检查剩余水平运动；两条路径都安全才提交。小于角色身高的空隙仍然阻挡，普通墙壁不会触发对齐，也不会忽略长颈鹿碰撞。这项修正不改变贴图、缩放、碰撞多边形或方块形状。
+
 ## 9. 长颈鹿的运动流程
 
 长颈鹿每个物理帧执行：
 
 1. 累加重力到 `velocity.y`；
 2. 如果有水平速度，查询水平运动；
-3. 如果正在下落，查询垂直运动并检测 Warma；
+3. 查询垂直运动，检测地形和其他长颈鹿；下落时还检测 Warma；
 4. 将对应轴的 travel 提交到位置；
 5. 只有被对应法线阻挡时才清零该轴速度。
 
 长颈鹿向上移动时暂时不扫描 Warma，目的是允许 Warma 从下方顶起它。进入下落阶段后恢复垂直碰撞。
+
+长颈鹿之间也使用完整实体碰撞，垂直查询包含长颈鹿层，因此可以稳定叠放。水平查询仅暂时排除正在自己头顶上方接触的长颈鹿，查询结束后立即恢复该身体的碰撞；旁边其他长颈鹿仍然阻挡。上下两只之间没有速度传递或平台跟随，任意一只都能独立滑动，水平重叠消失后上方那只正常下落。
 
 未来的投射物不应该直接修改长颈鹿的坐标。应该调用：
 
@@ -189,6 +201,8 @@ Warma 会通过 `_has_giraffe_above()` 判断：
 - 短跳、中跳和大跳；
 - 空中重新按跳跃不会二段跳。
 
+`tests/precision_platforming_test.gd` 另外验证两端脚边落地与起跳、悬空和侧墙不误判、头部边缘抬升、一格高空隙从左右进入、不同跳跃步长与起跳高度，以及截图对应的 `rooms/Standard/room2.tscn`。
+
 长颈鹿测试位于 `tests/giraffe_physics_test.gd`，验证：
 
 - 左右侧面不能穿透；
@@ -202,6 +216,8 @@ Warma 会通过 `_has_giraffe_above()` 判断：
 - 贴边下落和跳跃干扰后仍然精确落地；
 - 正负水平外力都能移动长颈鹿。
 
+`tests/giraffe_stacking_test.gd` 验证两种节点顺序下的三只叠放、上下两只分别向左右滑动时不产生摩擦带动、滑出支撑后下落，以及头顶有长颈鹿时仍保留其他长颈鹿的侧面阻挡。`tests/foreground_messages_test.gd` 验证告示牌覆盖进场消息、重叠触发区与直接传送下的消息互斥、常驻 HUD 保留，以及告示牌文字的间距和相机定位。
+
 运行方式：
 
 ```powershell
@@ -210,6 +226,16 @@ godot --headless --path . --script res://tests/giraffe_physics_test.gd
 godot --headless --path . --check-only --script res://tests/player_physics_test.gd
 godot --headless --path . --check-only --script res://tests/giraffe_physics_test.gd
 ```
+
+## Elevator direction scenes and moving support
+
+Elevator no longer has a direction property. `objects/elevator.gd` contains the shared extension, blocking, and support logic and returns `Vector2.UP` from the virtual `_axis()`; `elevator_up.gd`, `elevator_down.gd`, `elevator_left.gd`, and `elevator_right.gd` each override `_axis()` for one direction, and `elevator_up.tscn`, `elevator_down.tscn`, `elevator_left.tscn`, and `elevator_right.tscn` are authored with the collision shape and visual already rotated, so a map placement looks correct before the game runs. `elevator.tscn` is retained as the upward compatibility scene.
+
+A moving platform can update in a different order from the CharacterBody2D during one physics tick. The Elevator moves Warma, Giraffe, and a vertical support chain before committing its new collision size. Warma still uses `GroundProbe` for ordinary terrain and giraffe contacts, and also accepts the Elevator's `supports_body()` result while a body is resting on or falling toward the moving surface.
+
+`supports_body()` must never mistake an active jump for support. A body whose `velocity.y` is negative is leaving the platform, so it is excluded from both support snapping and the carried stack; otherwise a jump whose per-frame rise is smaller than the contact tolerance (which happens at the slower `Engine.time_scale` values) would be re-snapped back onto the surface and its upward velocity cleared on the next physics frame. Each Elevator also duplicates its `CollisionShape2D` in `_ready`, so multiple instances of the same scene do not share a shape resource, and `_body_bounds` reads the body's real collision extents rather than assuming the collision polygon is centred on the node origin.
+
+A lift behaves as a telescoping rod rather than a wall: its extension ignores static scenery (Blocks and tiles), so a rod placed inside or beside a Block still grows out of it. What still stops growth is an actor: an uncarried character in the newly added strip blocks it, and a carried rider stops the rod before it would be pushed into solid terrain. The upward direction keeps that safety rule, and the other three scenes use the same rule with their own extension axis and anchored support surface. Buttons only emit `activation_changed`; they do not contain direction-specific branches.
 
 ## 11. 推荐的调试顺序
 

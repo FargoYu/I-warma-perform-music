@@ -1,0 +1,35 @@
+[gd_scene format=4 uid="uid://73d5sdxh6brh"]
+
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_e7tgp"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_by2gh"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_gsh30"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_0x0v5"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_khf5o"]
+[ext_resource type="PackedScene" path="res://objects/hud.tscn" id="6_2kr14"]
+[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="7_rsmgl"]
+
+[node name="RoomX" type="Node2D" unique_id=1527030395]
+script = ExtResource("1_e7tgp")
+
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_by2gh")]
+visible = false
+
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_gsh30")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAADAAUAAAAAAAAAAAAGAAYAAAAAAAAAAAAIAAUAAAAAAAAAAAAIAAcAAAAAAAAAAAAFAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAA=")
+
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_0x0v5")]
+position = Vector2(18, 120)
+
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_khf5o")]
+position = Vector2(232, 120)
+next_room = "res://rooms/main.tscn"
+
+[node name="HUD" parent="." unique_id=148657613 instance=ExtResource("6_2kr14")]
+
+[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("7_rsmgl")]
+position = Vector2(24, 120)
+message = "按J跳跃"
+
+[node name="Signboard2" parent="." unique_id=815610732 instance=ExtResource("7_rsmgl")]
+position = Vector2(56, 104)
+message = "长按J跳的更高"

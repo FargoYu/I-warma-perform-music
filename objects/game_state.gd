@@ -8,6 +8,7 @@ var has_extinguisher: bool = false
 const SPEED_MULTIPLIERS: Array[float] = [0.1, 0.2, 0.5, 1.0]
 var speed_index: int = SPEED_MULTIPLIERS.size() - 1
 var speed_multiplier: float = 1.0
+var _speed_input_resume_frame: int = -1
 signal speed_changed(multiplier: float)
 
 func _ready() -> void:
@@ -18,6 +19,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	# Input actions cover both physical arrow keys and deterministic presses in
 	# automated tests, while PROCESS_MODE_ALWAYS keeps this responsive at x0.1.
+	if Engine.get_process_frames() <= _speed_input_resume_frame:
+		return
 	if Input.is_action_just_pressed("speed_decrease"):
 		decrease_speed()
 	elif Input.is_action_just_pressed("speed_increase"):
@@ -36,7 +39,11 @@ func set_speed_index(index: int) -> void:
 	speed_index = next_index
 	_apply_speed()
 
-func reset_speed() -> void:
+func reset_speed(ignore_current_input := false) -> void:
+	if ignore_current_input:
+		# A released action can still be just_pressed in this frame. Ignore the
+		# title's starting arrow until the next input frame has been flushed.
+		_speed_input_resume_frame = Engine.get_process_frames() + 1
 	speed_index = SPEED_MULTIPLIERS.size() - 1
 	_apply_speed()
 
