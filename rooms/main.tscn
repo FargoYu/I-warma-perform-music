@@ -7,12 +7,14 @@
 [ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_door"]
 [ext_resource type="PackedScene" path="res://objects/hud.tscn" id="6_hud"]
 [ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_giraffe"]
-[ext_resource type="PackedScene" path="res://objects/extinguisher_pickup.tscn" id="8_pickup"]
+[ext_resource type="PackedScene" uid="uid://c8hemm53duuly" path="res://objects/extinguisher_pickup.tscn" id="8_pickup"]
+[ext_resource type="PackedScene" path="res://objects/signboard.tscn" id="9_signboard"]
 
 [node name="Main" type="Node2D" unique_id=686817337]
 script = ExtResource("1_room")
 
 [node name="Background" parent="." unique_id=1078782825 instance=ExtResource("2_background")]
+visible = false
 
 [node name="Blocks" parent="." unique_id=1467563932 instance=ExtResource("3_blocks")]
 tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAAHAAYAAAAAAAAAAAAIAAYAAAAAAAAAAAAJAAYAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAAMAAQAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAA=")
@@ -25,6 +27,9 @@ position = Vector2(118, 120)
 
 [node name="ExtinguisherPickup" parent="." unique_id=1267596474 instance=ExtResource("8_pickup")]
 position = Vector2(88, 108)
+
+[node name="Signboard" parent="." unique_id=660997735 instance=ExtResource("9_signboard")]
+position = Vector2(72, 120)
 
 [node name="Door" parent="." unique_id=262216686 instance=ExtResource("5_door")]
 position = Vector2(232, 120)

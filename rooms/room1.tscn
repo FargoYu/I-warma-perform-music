@@ -16,19 +16,19 @@ script = ExtResource("1_room")
 visible = false
 
 [node name="Blocks" parent="." unique_id=1514720589 instance=ExtResource("3_blocks")]
-tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAA=")
 
 [node name="Player" parent="." unique_id=1046444413 instance=ExtResource("4_player")]
 position = Vector2(29, 120)
 
 [node name="Door" parent="." unique_id=1940145715 instance=ExtResource("5_door")]
 position = Vector2(232, 120)
-next_room = "res://rooms/main.tscn"
+next_room = "uid://j37lvqtdl65f"
 
 [node name="HUD" parent="." unique_id=615354721 instance=ExtResource("6_hud")]
 
 [node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_17aq2")]
-position = Vector2(89, 120)
+position = Vector2(84, 120)
 
 [node name="ExtinguisherPickup" parent="." unique_id=354768487 instance=ExtResource("8_v6lk3")]
 position = Vector2(42, 121)

@@ -1,0 +1,21 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://objects/button.gd" id="1_button"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/buttonInactive.png" id="2_button"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_button"]
+size = Vector2(14, 4)
+
+[node name="Button" type="Area2D" groups=["buttons"]]
+collision_layer = 0
+collision_mask = 6
+monitoring = true
+script = ExtResource("1_button")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_button")
+
+[node name="PressureShape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -6)
+shape = SubResource("RectangleShape_button")

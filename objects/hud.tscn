@@ -1,10 +1,13 @@
 [gd_scene format=3]
 
+[ext_resource type="Script" path="res://objects/hud.gd" id="1_hud"]
+
 [sub_resource type="SystemFont" id="SystemFont_cjk"]
 font_names = PackedStringArray("Microsoft YaHei UI", "Microsoft YaHei", "SimSun")
 subpixel_positioning = 0
 
 [node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_hud")
 
 [node name="Help" type="Label" parent="."]
 offset_left = 6.0
@@ -15,3 +18,13 @@ theme_override_colors/font_color = Color(0, 0, 0, 0.85)
 theme_override_fonts/font = SubResource("SystemFont_cjk")
 theme_override_font_sizes/font_size = 8
 text = "A/D 移动   J 跳跃   W 进门   R 重置"
+
+[node name="Speed" type="Label" parent="."]
+offset_left = 6.0
+offset_top = 132.0
+offset_right = 35.0
+offset_bottom = 143.0
+theme_override_colors/font_color = Color(0.03, 0.03, 0.03, 0.9)
+theme_override_fonts/font = SubResource("SystemFont_cjk")
+theme_override_font_sizes/font_size = 8
+text = "x1"

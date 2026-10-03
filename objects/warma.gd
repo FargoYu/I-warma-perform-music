@@ -26,6 +26,7 @@ var _lifting_giraffe := false
 var facing_direction := 1
 var _music_bullet_cooldown := 0.0
 var _dying := false
+var _jump_was_held := false
 
 func _ready() -> void:
 	add_to_group("player")
@@ -43,7 +44,8 @@ func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("fire_music"):
 		_fire_music_bullet()
 
-	if not _has_ground_support():
+	var has_ground_support := _has_ground_support()
+	if not has_ground_support:
 		velocity.y += gravity * delta
 
 	var direction := Input.get_axis("move_left", "move_right")
@@ -54,9 +56,18 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, move_speed * 8.0 * delta)
 
-	if Input.is_action_just_pressed("jump") and _has_ground_support():
+	# A held jump is deliberately sampled at the support surface. This keeps the
+	# normal variable-height jump, while allowing the next landing on terrain or
+	# the giraffe to immediately launch again without a timing-perfect re-press.
+	var jump_held := Input.is_action_pressed("jump")
+	# A side wall contact is not a landing surface. Excluding that case keeps a
+	# held key from repeatedly launching Warma while he is wedged beside the
+	# giraffe, while floor and giraffe-top landings remain chainable.
+	var can_chain_jump := jump_held and has_ground_support and velocity.y >= 0.0 and not _has_giraffe_side_contact()
+	if can_chain_jump and (Input.is_action_just_pressed("jump") or _jump_was_held):
 		velocity.y = jump_velocity
 		_lifting_giraffe = _lift_giraffes_above(jump_velocity, delta)
+	_jump_was_held = jump_held
 
 	if not Input.is_action_pressed("jump") and velocity.y < 0.0:
 		velocity.y = maxf(velocity.y, -jump_cut_speed)
@@ -177,6 +188,18 @@ func _has_giraffe_above() -> bool:
 		if absf(global_position.x - giraffe.global_position.x) > 7.25:
 			continue
 		return true
+	return false
+
+func _has_giraffe_side_contact() -> bool:
+	for node in get_tree().get_nodes_in_group("giraffe"):
+		var giraffe := node as CharacterBody2D
+		if giraffe == null:
+			continue
+		var vertical_gap := absf(global_position.y - giraffe.global_position.y)
+		if vertical_gap > 7.5:
+			continue
+		if absf(global_position.x - giraffe.global_position.x) <= 7.25:
+			return true
 	return false
 
 func _has_ground_support() -> bool:

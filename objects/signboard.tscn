@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://objects/signboard.gd" id="1_sign"]
+[ext_resource type="Texture2D" path="res://Assets/Sprites/signboard.png" id="2_sign"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape_sign"]
+size = Vector2(28, 20)
+
+[sub_resource type="SystemFont" id="SystemFont_sign"]
+font_names = PackedStringArray("Microsoft YaHei UI", "Microsoft YaHei", "SimSun")
+subpixel_positioning = 0
+
+[node name="Signboard" type="Area2D" groups=["signboards"]]
+collision_layer = 0
+collision_mask = 6
+monitoring = true
+script = ExtResource("1_sign")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("2_sign")
+
+[node name="TriggerShape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape_sign")
+
+[node name="MessageLayer" type="CanvasLayer" parent="."]
+layer = 20
+
+[node name="Message" type="Label" parent="MessageLayer"]
+offset_left = 8.0
+offset_top = 62.0
+offset_right = 248.0
+offset_bottom = 82.0
+theme_override_colors/font_color = Color(0.03, 0.03, 0.03, 1)
+theme_override_fonts/font = SubResource("SystemFont_sign")
+theme_override_font_sizes/font_size = 16
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "A/D 移动   J 跳跃   W 进门   R 重置"

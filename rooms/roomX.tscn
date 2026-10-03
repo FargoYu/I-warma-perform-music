@@ -1,4 +1,4 @@
-[gd_scene format=3]
+[gd_scene format=4 uid="uid://j37lvqtdl65f"]
 
 [ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_room"]
 [ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_background"]
@@ -6,20 +6,35 @@
 [ext_resource type="PackedScene" path="res://objects/warma.tscn" id="4_player"]
 [ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_door"]
 [ext_resource type="PackedScene" path="res://objects/hud.tscn" id="6_hud"]
+[ext_resource type="PackedScene" path="res://objects/button.tscn" id="7_button"]
+[ext_resource type="PackedScene" path="res://objects/elevator.tscn" id="8_elevator"]
+[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="9_p572l"]
 
-[node name="RoomX" type="Node2D"]
+[node name="RoomX" type="Node2D" unique_id=1527030395]
 script = ExtResource("1_room")
 
-[node name="Background" parent="." instance=ExtResource("2_background")]
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_background")]
+visible = false
 
-[node name="Blocks" parent="." instance=ExtResource("3_blocks")]
-tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAA=")
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_blocks")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAALAAgAAAAAAAAAAAA=")
 
-[node name="Player" parent="." instance=ExtResource("4_player")]
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_player")]
 position = Vector2(29, 120)
 
-[node name="Door" parent="." instance=ExtResource("5_door")]
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_door")]
 position = Vector2(232, 120)
 next_room = "res://rooms/main.tscn"
 
-[node name="HUD" parent="." instance=ExtResource("6_hud")]
+[node name="HUD" parent="." unique_id=148657613 instance=ExtResource("6_hud")]
+
+[node name="Elevator" parent="." unique_id=2061463132 instance=ExtResource("8_elevator")]
+position = Vector2(160, 128)
+button_path = NodePath("../Button")
+
+[node name="Button" parent="." unique_id=1995743717 instance=ExtResource("7_button")]
+position = Vector2(136, 136)
+target_elevator = NodePath("../Elevator")
+
+[node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("9_p572l")]
+position = Vector2(159, 112)
