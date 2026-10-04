@@ -1,0 +1,60 @@
+[gd_scene format=4 uid="uid://cldsxb6wdurwm"]
+
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_px4b1"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_opr51"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_bfwax"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_gfijn"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_6pwds"]
+[ext_resource type="PackedScene" path="res://objects/hud.tscn" id="6_hvty2"]
+[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_px4b1"]
+[ext_resource type="PackedScene" uid="uid://c8hemm53duuly" path="res://objects/extinguisher_pickup.tscn" id="8_opr51"]
+[ext_resource type="PackedScene" path="res://objects/elevator_up.tscn" id="9_gfijn"]
+[ext_resource type="PackedScene" uid="uid://diycu6ihjqm32" path="res://objects/button.tscn" id="10_6pwds"]
+[ext_resource type="PackedScene" uid="uid://rwppqim67nwr" path="res://objects/elevator_right.tscn" id="11_6pwds"]
+[ext_resource type="PackedScene" uid="uid://br352grq2lppd" path="res://objects/elevator_down.tscn" id="12_hvty2"]
+
+[node name="RoomX" type="Node2D" unique_id=1527030395]
+script = ExtResource("1_px4b1")
+
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_opr51")]
+visible = false
+
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_bfwax")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAFAAAAAAAAAAAAAAAFAAEAAAAAAAAAAAAFAAIAAAAAAAAAAAAFAAMAAAAAAAAAAAA=")
+
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_gfijn")]
+position = Vector2(48, 88)
+
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_6pwds")]
+position = Vector2(232, 120)
+next_room = "res://rooms/main.tscn"
+
+[node name="HUD" parent="." unique_id=148657613 instance=ExtResource("6_hvty2")]
+
+[node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_px4b1")]
+position = Vector2(91, 88)
+
+[node name="Giraffe2" parent="." unique_id=1470130671 instance=ExtResource("7_px4b1")]
+position = Vector2(-48, 56)
+
+[node name="Giraffe3" parent="." unique_id=1906632835 instance=ExtResource("7_px4b1")]
+position = Vector2(-43, 80)
+
+[node name="ExtinguisherPickup" parent="." unique_id=354768487 instance=ExtResource("8_opr51")]
+position = Vector2(48, 104)
+
+[node name="Elevator" parent="." unique_id=404397236 instance=ExtResource("9_gfijn")]
+position = Vector2(91, 131)
+max_height = 64.17
+button_path = NodePath("../Button")
+
+[node name="Button" parent="." unique_id=1809513932 instance=ExtResource("10_6pwds")]
+position = Vector2(64, 136)
+
+[node name="Elevator2" parent="." unique_id=462899195 instance=ExtResource("11_6pwds")]
+position = Vector2(72, 80)
+button_path = NodePath("../Button")
+
+[node name="Elevator3" parent="." unique_id=1794086143 instance=ExtResource("12_hvty2")]
+position = Vector2(84, 64)
+button_path = NodePath("../Button")

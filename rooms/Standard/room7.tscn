@@ -1,0 +1,27 @@
+[gd_scene format=4 uid="uid://uyo2eq5d8f7t"]
+
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_0tu8p"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_kpt4i"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_31xg3"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_51q64"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_pqtg4"]
+[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_sc1jg"]
+
+[node name="RoomX" type="Node2D" unique_id=1527030395]
+script = ExtResource("1_0tu8p")
+
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_kpt4i")]
+visible = false
+
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_31xg3")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAA=")
+
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_51q64")]
+position = Vector2(13, 120)
+
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_pqtg4")]
+position = Vector2(248, 120)
+next_room = "res://rooms/main.tscn"
+
+[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_sc1jg")]
+position = Vector2(8, 120)

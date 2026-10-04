@@ -48,15 +48,18 @@ func _physics_process(delta: float) -> void:
 	if not is_zero_approx(velocity.x):
 		horizontal_mask |= WARMA_LAYER
 	if not is_zero_approx(horizontal_motion):
-		# A rider supplies vertical contact only. Ignore that individual body
-		# during the horizontal sweep so the support can slide out freely while
-		# other giraffes still block real side contact.
-		var riders := _giraffes_above()
-		for rider in riders:
-			add_collision_exception_with(rider)
+		# Vertical stack contacts supply only support. Ignore every giraffe that is
+		# resting on this body, or that this body is resting on, while performing a
+		# horizontal sweep. Without this, a stacked giraffe can be read back as a
+		# side wall and cancel the music impulse even though the contact is vertical.
+		# Same-level neighbours are still included and continue to block real side
+		# contact.
+		var stack_contacts := _vertical_stack_contacts()
+		for body in stack_contacts:
+			add_collision_exception_with(body)
 		var horizontal_collision := _move_test_only(horizontal_motion * Vector2.RIGHT, horizontal_mask)
-		for rider in riders:
-			remove_collision_exception_with(rider)
+		for body in stack_contacts:
+			remove_collision_exception_with(body)
 		if horizontal_collision != null and not is_zero_approx(horizontal_collision.get_normal().x):
 			velocity.x = 0.0
 
@@ -71,16 +74,31 @@ func _physics_process(delta: float) -> void:
 
 	collision_mask = TERRAIN_LAYER
 
-func _giraffes_above() -> Array[PhysicsBody2D]:
-	var riders: Array[PhysicsBody2D] = []
+func _vertical_stack_contacts() -> Array[PhysicsBody2D]:
+	# Bodies in the same vertical stack must be ignored as horizontal obstacles.
+	# This covers both directions: the support can slide out from under a rider,
+	# and a rider can slide across its support. The discriminator is the vertical
+	# relationship alone — a body whose top or bottom edge meets this body's
+	# opposite edge (within the settle tolerance) is stack, never wall. Width is
+	# deliberately unbounded: two touching columns also sit 8px apart centre to
+	# centre, so a horizontal window cannot tell the touching neighbour that
+	# forms the walkable seam from a same-level wall — the vertical gap can
+	# (a wall sits a full body height away and stays blocking).
+	var contacts: Array[PhysicsBody2D] = []
+	var top_y := global_position.y - 8.0
+	var bottom_y := global_position.y + 8.0
 	for node in get_tree().get_nodes_in_group("giraffe"):
 		var other := node as CharacterBody2D
 		if other == null or other == self:
 			continue
-		var gap := (global_position.y - 8.0) - (other.global_position.y + 8.0)
-		if absf(gap) <= 0.75 and absf(other.global_position.x - global_position.x) < 8.0:
-			riders.append(other)
-	return riders
+
+		var other_top_y := other.global_position.y - 8.0
+		var other_bottom_y := other.global_position.y + 8.0
+		var rider_gap := top_y - other_bottom_y
+		var support_gap := other_top_y - bottom_y
+		if absf(rider_gap) <= 0.75 or absf(support_gap) <= 0.75:
+			contacts.append(other)
+	return contacts
 
 func _move_test_only(motion: Vector2, mask: int) -> KinematicCollision2D:
 	collision_mask = mask

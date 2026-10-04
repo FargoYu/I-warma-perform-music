@@ -22,41 +22,17 @@
 - [objects/block.tscn](objects/block.tscn)：可单独摆放的 16×16 静态方块，节点原点位于方块中心。
 - [objects/blocks.tscn](objects/blocks.tscn) 和 [tileset.tres](objects/tileset.tres)：可复用 TileMapLayer 和 TileSet，继续支持绘制地形；碰撞上下各缩进 0.01px。
 - [objects/giraffe.tscn](objects/giraffe.tscn) 和 [giraffe.gd](objects/giraffe.gd)：完整实体碰撞与外部冲量接口。
-- [objects/music_bullet.tscn](objects/music_bullet.tscn) 和 [music_bullet.gd](objects/music_bullet.gd)：成长动画、地形阻挡及长颈鹿反应；ShapeCast2D 检查整段位移防止高速穿墙，`Lifetime` 控制清理时间，不依赖主房间坐标。
+- [objects/music\_bullet.tscn](objects/music_bullet.tscn) 和 [music\_bullet.gd](objects/music_bullet.gd)：成长动画、地形阻挡及长颈鹿反应；ShapeCast2D 检查整段位移防止高速穿墙，`Lifetime` 控制清理时间，不依赖主房间坐标。
 - [objects/door.tscn](objects/door.tscn) 和 [door.gd](objects/door.gd)：按 W 打开 Inspector 指定的下一房间。
-- [objects/extinguisher_pickup.tscn](objects/extinguisher_pickup.tscn) 和 [held_extinguisher.tscn](objects/held_extinguisher.tscn)：拾取物与手持装备。
+- [objects/extinguisher\_pickup.tscn](objects/extinguisher_pickup.tscn) 和 [held\_extinguisher.tscn](objects/held_extinguisher.tscn)：拾取物与手持装备。
 - [objects/background.tscn](objects/background.tscn) 和 [hud.tscn](objects/hud.tscn)：可复用背景与 HUD。
-- [objects/game_state.tscn](objects/game_state.tscn) 和 [game_state.gd](objects/game_state.gd)：Autoload，保留跨房间的灭火器持有状态。
-- [rooms/showcase/](rooms/showcase/)：Showcase 房间体系（见下节），由声明式定义生成。
-- [docs/GODOT_LEARNING.md](docs/GODOT_LEARNING.md)：物理、碰撞查询和调试说明。
-- [docs/SHOWCASE_ROOMS.md](docs/SHOWCASE_ROOMS.md)：机制清单与每个 Showcase 房间的目录。
-- [docs/EXTENSIBILITY_FINDINGS.md](docs/EXTENSIBILITY_FINDINGS.md)：Showcase 开发过程中记录的架构事实与扩展点。
-
-## Showcase Rooms
-
-`rooms/showcase/` 是一套长期的工程资产：单机制示例、机制组合、物理压力测试房间和小型挑战关卡。它们不改变默认启动流程，也不包含任何 room-specific 代码——每个房间都只是 `rooms/room.gd` 基类 + `objects/` 可复用场景的组合。
-
-启动 Showcase Hub（站上门按 `W` 进入分类，每个房间出口门回到分类 index）：
-
-```powershell
-godot --path . res://rooms/showcase/showcase_hub.tscn
-```
-
-分类与命名前缀：`fnd_` 基础单机制、`grf_` 长颈鹿、`elv_` 电梯、`cmb_` 双机制组合、`mlt_` 多机制、`trt_` 物理压力测试、`chl_` 综合挑战。
-
-房间由 [tools/showcase_room_defs.gd](tools/showcase_room_defs.gd) 中的声明式定义（ASCII 地图 + 实体清单）经 [tools/generate_showcase_rooms.gd](tools/generate_showcase_rooms.gd) 生成为普通 `.tscn`；修改定义后重新生成并提交两者：
-
-```powershell
-godot --headless --path . --script res://tools/generate_showcase_rooms.gd
-```
-
-地形使用 `objects/block.tscn` 实例拼成，与 `blocks.tscn` 的 TileMap 物理等价（同为 16×15.98 碰撞）。
+- [objects/game\_state.tscn](objects/game_state.tscn) 和 [game\_state.gd](objects/game_state.gd)：Autoload，保留跨房间的灭火器持有状态。
 
 ## 创建房间与配置门
 
 ### 标题、进场文字与告示牌
 
-标题页的 `StartPrompt` 与关卡的 `EntryText` 都实例化 [objects/screen_text.tscn](objects/screen_text.tscn)。在 Inspector 中设置 `Message`（文字内容）、`Font Size`（字号）、`Text Color`（颜色）和 `Display Duration`（显示秒数）。`Centered` 与 `Center On Screen` 默认开启，文字会随字号、换行和视口大小保持在屏幕中央。关闭 `Center On Screen` 后，`Text Position` 指定文本中心；再关闭 `Centered` 后，指定左上角并使用左对齐。时长为 0 时持续显示；第一关和第二关的进场示例显示 2 秒。把这个对象实例化到其他房间即可使用，不需要改房间脚本。
+标题页的 `StartPrompt` 与关卡的 `EntryText` 都实例化 [objects/screen\_text.tscn](objects/screen_text.tscn)。在 Inspector 中设置 `Message`（文字内容）、`Font Size`（字号）、`Text Color`（颜色）和 `Display Duration`（显示秒数）。`Centered` 与 `Center On Screen` 默认开启，文字会随字号、换行和视口大小保持在屏幕中央。关闭 `Center On Screen` 后，`Text Position` 指定文本中心；再关闭 `Centered` 后，指定左上角并使用左对齐。时长为 0 时持续显示；第一关和第二关的进场示例显示 2 秒。把这个对象实例化到其他房间即可使用，不需要改房间脚本。
 
 告示牌图片使用 `Z Index = -9`，位于背景（-10）之上、人物和砖块（0）之下。告示牌文字、进场文字和标题提示使用独立的 `CanvasLayer`（层级 100），显示在游戏对象前方。同一视口仅显示一条这类消息：接触告示牌会立即隐藏进场文字，接触新告示牌会先隐藏旧消息；离开后不恢复已经隐藏的消息。速度倍率等常驻 HUD 不参与消息替换。
 
@@ -80,9 +56,12 @@ godot --headless --path . --script res://tools/generate_showcase_rooms.gd
 - Warma 站在长颈鹿上可以正常起跳，长颈鹿不会跟着起跳。
 - 长颈鹿在 Warma 头顶时不会把 Warma 压入地面。
 - 长颈鹿能落在其他长颈鹿上，也能多只叠放；上下任意一只水平移动都不会把另一只带走，失去支撑后正常下落，真正的侧面接触仍会阻挡。
+- 一只长颈鹿踩在另一只（或多只）长颈鹿上时，被踩的那只仍能被音乐子弹推动着水平移动，叠放的骑乘者不会把它锁死。
 - Warma 从下方起跳时，会给头顶长颈鹿一个仅竖直方向的物理冲量。
 
 Warma 与长颈鹿通过同一个完整实体碰撞体处理顶部、底部和左右接触。轴向查询使用 `test_only` 后必须提交 `get_travel()`；垂直查询只提交垂直 travel，避免接触恢复把角色横向挤走。长颈鹿在普通接触时不主动扫描 Warma 的静止水平位移，从而不会被横向带走；下落和外部主动运动时会恢复对应方向的实体碰撞。Warma 的 `HeadProbe` 只负责识别从下方跳入的长颈鹿，并调用统一的外部冲量入口。长颈鹿位于 Warma 顶部时，Warma 的水平查询会把它视为垂直支撑而不是水平墙；真正的侧面接触仍然阻挡穿透。
+
+长颈鹿水平移动时，会把同一垂直堆叠里的长颈鹿（踩在自己头上的骑乘者、以及自己脚下的支撑者）临时加入碰撞例外再扫描，这样上下接触只提供垂直支撑、不会读作侧墙。堆叠关系按脚底/头顶平面贴合、且两只 8px 宽身体存在真实横向重叠来计算；单纯按中心点是否对齐判定会在长颈鹿停靠时被推歪几像素后漏判，导致音乐子弹给出的水平移动被错误清零。
 
 ## 小尺寸物理精度
 
@@ -107,38 +86,8 @@ The shared logic lives in `objects/elevator.gd`. Direction is not a property: ea
 - `objects/elevator_left.tscn`: right anchor, stretches left.
 - `objects/elevator_right.tscn`: left anchor, stretches right.
 
-All four scenes keep the same `min_height`, `max_height`, `height_speed`, `starts_extended`, and `button_path` properties; there is no `stretch_direction` to configure. Buttons still control an Elevator through the `activation_changed` signal. `objects/elevator.tscn` remains an upward compatibility entry point; new rooms should choose one of the four direction-specific scenes.
+All four scenes keep the same `min_height`, `max_height`, `height_speed`, `starts_extended`, and `button_path` properties; there is no `stretch_direction` to configure. Buttons still control an Elevator through the `activation_changed` signal; new rooms should choose one of the four direction-specific scenes.
 
 The collision shape uses the same 0.02px total edge inset as `Block`, so a visually continuous Elevator/Block surface has no extra seam step. A lift is a telescoping rod, not a wall: its extension passes straight through Blocks and tiles instead of being stopped by them, so a rod anchored inside or beside a Block still grows out of it. An upward Elevator carries the complete Warma/Giraffe stack and still stops before pushing a carried body into an overhead Block, and an uncarried actor in the newly added strip blocks growth. Retraction and downward motion move supported bodies before committing the new shape.
 
 Each Elevator duplicates its `CollisionShape2D` in `_ready`, so several lifts of the same scene in one room never share — and therefore never corrupt — a single shape resource. Support is only granted while a body is resting on or falling toward the surface: an actively rising body (negative `velocity.y`, such as a fresh jump) is never re-snapped or carried, so holding `J` launches reliably even at slow time scales where the per-frame jump displacement is below the contact tolerance. Elevator support and pressure-plate overlap both use `_body_bounds`, which reads the real collision extents and keeps Warma's `x=-2..3` polygon (centre `+0.5`) from shifting edge detection.
-
-Regression coverage for direction geometry, support, stacking, downward jumping, seams, blocking, shape-resource isolation, rising-body rejection, and room reset is in `tests/elevator_regression_test.gd`.
-
-## 自动测试
-
-```powershell
-godot --headless --path . --script res://tests/player_physics_test.gd
-godot --headless --path . --script res://tests/giraffe_physics_test.gd
-godot --headless --path . --script res://tests/music_bullet_test.gd
-godot --headless --path . --script res://tests/room_transition_test.gd
-godot --headless --path . --script res://tests/death_reset_test.gd
-godot --headless --path . --script res://tests/new_features_test.gd
-godot --headless --path . --script res://tests/wall_jump_test.gd
-godot --headless --path . --script res://tests/precision_platforming_test.gd
-godot --headless --path . --script res://tests/title_screen_test.gd
-godot --headless --path . --script res://tests/foreground_messages_test.gd
-godot --headless --path . --script res://tests/giraffe_stacking_test.gd
-godot --headless --path . --script res://tests/elevator_regression_test.gd
-```
-
-Showcase 房间体系的自动测试（加载/契约/门图可达性/重置/多实例隔离，以及每个房间的物理冒烟）：
-
-```powershell
-godot --headless --path . --script res://tests/showcase_contract_test.gd
-godot --headless --path . --script res://tests/showcase_test_foundation.gd
-godot --headless --path . --script res://tests/showcase_test_giraffe_elevator.gd
-godot --headless --path . --script res://tests/showcase_test_combinations.gd
-godot --headless --path . --script res://tests/showcase_test_multi_challenge.gd
-godot --headless --path . --script res://tests/showcase_test_torture.gd
-```

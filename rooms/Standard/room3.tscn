@@ -1,0 +1,111 @@
+[gd_scene format=3 uid="uid://egrruacbqtmd"]
+
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_vgj0r"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_jd1yx"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_sau6x"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_xhju7"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_51ij0"]
+[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_771an"]
+[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_jd1yx"]
+
+[node name="RoomX" type="Node2D" unique_id=1527030395]
+script = ExtResource("1_vgj0r")
+
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_jd1yx")]
+visible = false
+
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_sau6x")]
+tile_map_data = PackedByteArray(0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_xhju7")]
+position = Vector2(13, 120)
+
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_51ij0")]
+position = Vector2(248, 120)
+next_room = "res://rooms/main.tscn"
+
+[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_771an")]
+position = Vector2(8, 120)
+
+[node name="Signboard2" parent="." unique_id=1261727725 instance=ExtResource("6_771an")]
+position = Vector2(120, 24)
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1216360195]
+
+[node name="Giraffe" parent="Node2D" unique_id=792921680 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 120)
+
+[node name="Giraffe2" parent="Node2D" unique_id=1609888471 instance=ExtResource("7_jd1yx")]
+position = Vector2(37, 104)
+
+[node name="Giraffe3" parent="Node2D" unique_id=706514625 instance=ExtResource("7_jd1yx")]
+position = Vector2(42, 88)
+
+[node name="Giraffe4" parent="Node2D" unique_id=862818371 instance=ExtResource("7_jd1yx")]
+position = Vector2(47, 72)
+
+[node name="Giraffe5" parent="Node2D" unique_id=691556929 instance=ExtResource("7_jd1yx")]
+position = Vector2(52, 56)
+
+[node name="Giraffe6" parent="Node2D" unique_id=30604344 instance=ExtResource("7_jd1yx")]
+position = Vector2(57, 40)
+
+[node name="Node2D2" type="Node2D" parent="." unique_id=436732070]
+position = Vector2(200, 0)
+
+[node name="Giraffe" parent="Node2D2" unique_id=662308235 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 120)
+
+[node name="Giraffe2" parent="Node2D2" unique_id=1775546191 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 104)
+
+[node name="Giraffe3" parent="Node2D2" unique_id=140061014 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 88)
+
+[node name="Giraffe4" parent="Node2D2" unique_id=845284956 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 72)
+
+[node name="Giraffe5" parent="Node2D2" unique_id=623907744 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 56)
+
+[node name="Giraffe6" parent="Node2D2" unique_id=78327727 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 40)
+metadata/_edit_group_ = true
+
+[node name="Giraffe7" parent="Node2D2" unique_id=258266823 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 24)
+metadata/_edit_group_ = true
+
+[node name="Giraffe8" parent="Node2D2" unique_id=1157153801 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 8)
+metadata/_edit_group_ = true
+
+[node name="Node2D3" type="Node2D" parent="." unique_id=2065381137]
+position = Vector2(192, 0)
+
+[node name="Giraffe" parent="Node2D3" unique_id=1452774851 instance=ExtResource("7_jd1yx")]
+position = Vector2(32, 120)
+
+[node name="Giraffe2" parent="Node2D3" unique_id=960096559 instance=ExtResource("7_jd1yx")]
+position = Vector2(25, 104)
+
+[node name="Giraffe3" parent="Node2D3" unique_id=677861299 instance=ExtResource("7_jd1yx")]
+position = Vector2(18, 88)
+
+[node name="Giraffe4" parent="Node2D3" unique_id=876627455 instance=ExtResource("7_jd1yx")]
+position = Vector2(11, 72)
+
+[node name="Giraffe5" parent="Node2D3" unique_id=1371204241 instance=ExtResource("7_jd1yx")]
+position = Vector2(4, 56)
+
+[node name="Giraffe6" parent="Node2D3" unique_id=1629716589 instance=ExtResource("7_jd1yx")]
+position = Vector2(-3, 40)
+metadata/_edit_group_ = true
+
+[node name="Giraffe7" parent="Node2D3" unique_id=817970475 instance=ExtResource("7_jd1yx")]
+position = Vector2(-10, 24)
+metadata/_edit_group_ = true
+
+[node name="Giraffe8" parent="Node2D3" unique_id=422270862 instance=ExtResource("7_jd1yx")]
+position = Vector2(-16, 8)
+metadata/_edit_group_ = true
