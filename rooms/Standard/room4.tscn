@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" path="res://objects/elevator_up.tscn" id="9_gfijn"]
 [ext_resource type="PackedScene" uid="uid://diycu6ihjqm32" path="res://objects/button.tscn" id="10_6pwds"]
 [ext_resource type="PackedScene" uid="uid://rwppqim67nwr" path="res://objects/elevator_right.tscn" id="11_6pwds"]
+[ext_resource type="PackedScene" uid="uid://br352grq2lppd" path="res://objects/elevator_down.tscn" id="12_hvty2"]
 
 [node name="RoomX" type="Node2D" unique_id=1527030395]
 script = ExtResource("1_px4b1")
@@ -51,5 +52,9 @@ button_path = NodePath("../Button")
 position = Vector2(64, 136)
 
 [node name="Elevator2" parent="." unique_id=462899195 instance=ExtResource("11_6pwds")]
-position = Vector2(93, 60)
+position = Vector2(72, 80)
+button_path = NodePath("../Button")
+
+[node name="Elevator3" parent="." unique_id=1794086143 instance=ExtResource("12_hvty2")]
+position = Vector2(84, 64)
 button_path = NodePath("../Button")

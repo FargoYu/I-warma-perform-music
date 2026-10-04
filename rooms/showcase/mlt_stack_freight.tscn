@@ -1,0 +1,82 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://rooms/room.gd" id="1_room"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_bg"]
+[ext_resource type="PackedScene" path="res://objects/hud.tscn" id="3_hud"]
+[ext_resource type="PackedScene" path="res://objects/warma.tscn" id="4_player"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_door"]
+[ext_resource type="PackedScene" path="res://objects/block.tscn" id="6_block"]
+[ext_resource type="PackedScene" path="res://objects/screen_text.tscn" id="7_text"]
+[ext_resource type="PackedScene" path="res://objects/signboard.tscn" id="8_sign"]
+[ext_resource type="PackedScene" path="res://objects/giraffe.tscn" id="9_grf"]
+[ext_resource type="PackedScene" path="res://objects/elevator_up.tscn" id="10_elvu"]
+
+[node name="MltStackFreight" type="Node2D"]
+script = ExtResource("1_room")
+
+[node name="Background" parent="." instance=ExtResource("2_bg")]
+visible = false
+
+[node name="HUD" parent="." instance=ExtResource("3_hud")]
+
+[node name="Terrain" parent="." type="Node2D"]
+[node name="Block1" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(200, 72)
+[node name="Block2" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(216, 72)
+[node name="Block3" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(232, 72)
+[node name="Block4" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(248, 72)
+[node name="Block5" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(8, 136)
+[node name="Block6" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(24, 136)
+[node name="Block7" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(40, 136)
+[node name="Block8" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(56, 136)
+[node name="Block9" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(72, 136)
+[node name="Block10" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(88, 136)
+[node name="Block11" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(104, 136)
+[node name="Block12" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(120, 136)
+[node name="Block13" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(136, 136)
+[node name="Block14" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(152, 136)
+[node name="Block15" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(168, 136)
+[node name="Block16" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(184, 136)
+[node name="Block17" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(200, 136)
+[node name="Block18" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(216, 136)
+[node name="Block19" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(232, 136)
+[node name="Block20" parent="Terrain" instance=ExtResource("6_block")]
+position = Vector2(248, 136)
+
+[node name="Player" parent="." instance=ExtResource("4_player")]
+position = Vector2(40.0, 120.0)
+[node name="Sign1" parent="." instance=ExtResource("8_sign")]
+position = Vector2(72.0, 120.0)
+message = "电梯平台+长颈鹿=两级塔 跳上去"
+[node name="Lift1" parent="." instance=ExtResource("10_elvu")]
+position = Vector2(152.0, 128.0)
+min_height = 32.0
+max_height = 32.0
+starts_extended = true
+[node name="Giraffe1" parent="." instance=ExtResource("9_grf")]
+position = Vector2(152.0, 88.0)
+[node name="Door1" parent="." instance=ExtResource("5_door")]
+position = Vector2(232.0, 56.0)
+next_room = "res://rooms/showcase/multi_index.tscn"
+
+[node name="EntryText" parent="." instance=ExtResource("7_text")]
+message = "MULTI · 电梯与叠塔"
+display_duration = 2.5

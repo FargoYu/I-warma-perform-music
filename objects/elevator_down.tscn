@@ -1,20 +1,18 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://br352grq2lppd"]
 
-[ext_resource type="Script" path="res://objects/elevator_down.gd" id="1_elevator"]
+[ext_resource type="Script" uid="uid://bqvjud6eykyn2" path="res://objects/elevator_down.gd" id="1_elevator"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape_elevator"]
 size = Vector2(8, 3)
 
-[node name="Elevator" type="AnimatableBody2D" groups=["elevators"]]
-collision_layer = 1
+[node name="Elevator" type="AnimatableBody2D" unique_id=1794086143 groups=["elevators"]]
 collision_mask = 0
-sync_to_physics = true
 script = ExtResource("1_elevator")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1731113105]
 position = Vector2(0, 1.5)
 shape = SubResource("RectangleShape_elevator")
 
-[node name="Visual" type="Polygon2D" parent="."]
+[node name="Visual" type="Polygon2D" parent="." unique_id=1311413128]
 color = Color(0.78, 0.31, 0.16, 1)
 polygon = PackedVector2Array(4, 0, 4, 3, -4, 3, -4, 0)

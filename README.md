@@ -27,8 +27,30 @@
 - [objects/extinguisher_pickup.tscn](objects/extinguisher_pickup.tscn) 和 [held_extinguisher.tscn](objects/held_extinguisher.tscn)：拾取物与手持装备。
 - [objects/background.tscn](objects/background.tscn) 和 [hud.tscn](objects/hud.tscn)：可复用背景与 HUD。
 - [objects/game_state.tscn](objects/game_state.tscn) 和 [game_state.gd](objects/game_state.gd)：Autoload，保留跨房间的灭火器持有状态。
-- [rooms/node_2d.tscn](rooms/node_2d.tscn)：保留的旧精灵试验场景，不参与房间切换。
+- [rooms/showcase/](rooms/showcase/)：Showcase 房间体系（见下节），由声明式定义生成。
 - [docs/GODOT_LEARNING.md](docs/GODOT_LEARNING.md)：物理、碰撞查询和调试说明。
+- [docs/SHOWCASE_ROOMS.md](docs/SHOWCASE_ROOMS.md)：机制清单与每个 Showcase 房间的目录。
+- [docs/EXTENSIBILITY_FINDINGS.md](docs/EXTENSIBILITY_FINDINGS.md)：Showcase 开发过程中记录的架构事实与扩展点。
+
+## Showcase Rooms
+
+`rooms/showcase/` 是一套长期的工程资产：单机制示例、机制组合、物理压力测试房间和小型挑战关卡。它们不改变默认启动流程，也不包含任何 room-specific 代码——每个房间都只是 `rooms/room.gd` 基类 + `objects/` 可复用场景的组合。
+
+启动 Showcase Hub（站上门按 `W` 进入分类，每个房间出口门回到分类 index）：
+
+```powershell
+godot --path . res://rooms/showcase/showcase_hub.tscn
+```
+
+分类与命名前缀：`fnd_` 基础单机制、`grf_` 长颈鹿、`elv_` 电梯、`cmb_` 双机制组合、`mlt_` 多机制、`trt_` 物理压力测试、`chl_` 综合挑战。
+
+房间由 [tools/showcase_room_defs.gd](tools/showcase_room_defs.gd) 中的声明式定义（ASCII 地图 + 实体清单）经 [tools/generate_showcase_rooms.gd](tools/generate_showcase_rooms.gd) 生成为普通 `.tscn`；修改定义后重新生成并提交两者：
+
+```powershell
+godot --headless --path . --script res://tools/generate_showcase_rooms.gd
+```
+
+地形使用 `objects/block.tscn` 实例拼成，与 `blocks.tscn` 的 TileMap 物理等价（同为 16×15.98 碰撞）。
 
 ## 创建房间与配置门
 
@@ -107,4 +129,16 @@ godot --headless --path . --script res://tests/precision_platforming_test.gd
 godot --headless --path . --script res://tests/title_screen_test.gd
 godot --headless --path . --script res://tests/foreground_messages_test.gd
 godot --headless --path . --script res://tests/giraffe_stacking_test.gd
+godot --headless --path . --script res://tests/elevator_regression_test.gd
+```
+
+Showcase 房间体系的自动测试（加载/契约/门图可达性/重置/多实例隔离，以及每个房间的物理冒烟）：
+
+```powershell
+godot --headless --path . --script res://tests/showcase_contract_test.gd
+godot --headless --path . --script res://tests/showcase_test_foundation.gd
+godot --headless --path . --script res://tests/showcase_test_giraffe_elevator.gd
+godot --headless --path . --script res://tests/showcase_test_combinations.gd
+godot --headless --path . --script res://tests/showcase_test_multi_challenge.gd
+godot --headless --path . --script res://tests/showcase_test_torture.gd
 ```

@@ -8,6 +8,7 @@ extends AnimatableBody2D
 
 const TERRAIN_LAYER := 1
 const SUPPORT_TOLERANCE := 0.75
+const GROWTH_CLEARANCE := 0.05
 const EDGE_INSET := 0.02
 const MIN_COLLISION_LENGTH := 0.1
 const RISE_EPSILON := 0.01
@@ -28,7 +29,8 @@ var _button_source: Node
 
 func _ready() -> void:
 	add_to_group("elevators")
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Keep the default PROCESS_MODE_INHERIT: a frozen room (death animation)
+	# must freeze its lifts too, and PROCESS_MODE_ALWAYS bypassed that freeze.
 	collision_layer = TERRAIN_LAYER
 	collision_mask = 0
 	sync_to_physics = true
@@ -143,8 +145,8 @@ func _growth_blocked(next_height: float) -> bool:
 	if is_zero_approx(delta_length):
 		return false
 	# A telescoping rod extends through Blocks and tiles instead of colliding
-	# with them, so only an actor obstructs the newly added strip here. A
-	# carried rider is still protected by _can_push_supported_bodies().
+	# with them, so only actors and other lifts obstruct the newly added strip
+	# here. A carried rider is still protected by _can_push_supported_bodies().
 	var old_end := global_position + axis * current_height
 	var new_end := global_position + axis * next_height
 	for candidate in _occupants():
@@ -157,6 +159,16 @@ func _growth_blocked(next_height: float) -> bool:
 		if _carries_stack() and _body_is_supported_by_endpoint(bounds, old_end) and _vertical_speed(candidate) >= -RISE_EPSILON:
 			continue
 		return true
+	# Lifts are solid to one another in every direction: another rod entering
+	# the added strip jams this one exactly like an actor. The jam is not a
+	# cancel — each rod keeps its button target, so once the other retracts
+	# and the strip reopens, motion resumes on a later frame.
+	for other in get_tree().get_nodes_in_group("elevators"):
+		var lift := other as Node2D
+		if lift == null or lift == self:
+			continue
+		if _body_intersects_added_strip(_body_bounds(lift), old_end, new_end):
+			return true
 	return false
 
 func _body_intersects_added_strip(bounds: Rect2, old_end: Vector2, new_end: Vector2) -> bool:
@@ -167,7 +179,14 @@ func _body_intersects_added_strip(bounds: Rect2, old_end: Vector2, new_end: Vect
 	var projected_axis := _project_rect(bounds, axis)
 	var projected_cross := _project_rect(bounds, perpendicular)
 	var cross_half := 4.0
-	return projected_axis.y > old_axis + SUPPORT_TOLERANCE and projected_axis.x < new_axis - SUPPORT_TOLERANCE \
+	# The far-edge test only asks whether the body occupies the corridor beyond
+	# the previous tip. The near-edge test must freeze the tip at a clearance
+	# BEFORE the body: a lift that cannot carry its obstruction (downward and
+	# horizontal lifts, or a body the upward lift has no support claim on) keeps
+	# that overlap forever, and physics depenetration then grinds the grounded
+	# body into whatever it stands on. SUPPORT_TOLERANCE is a support contract,
+	# not permission to penetrate.
+	return projected_axis.y > old_axis + SUPPORT_TOLERANCE and projected_axis.x < new_axis + GROWTH_CLEARANCE \
 		and projected_cross.y > -cross_half and projected_cross.x < cross_half
 
 func _body_is_supported_by_endpoint(bounds: Rect2, endpoint: Vector2) -> bool:

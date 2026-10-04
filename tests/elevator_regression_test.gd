@@ -412,6 +412,158 @@ func _rising_body_is_not_supported() -> void:
 		"A rising body must not be re-snapped onto the elevator support plane")
 	await _cleanup()
 
+func _growth_freezes_clear_of_grounded_bodies() -> void:
+	# The reported crush: a downward rod extending onto grounded Warma froze
+	# only after penetrating the head by the support tolerance, and that lasting
+	# overlap let physics depenetration grind Warma into the floor. Only the
+	# upward lift carries its obstruction; every other direction must freeze at
+	# a clearance BEFORE touching a body in its growth corridor.
+	for direction in [1, 2, 3]:
+		_new_level()
+		var lift := load(ELEVATOR_DIRECTION_SCENES[direction]).instantiate() as AnimatableBody2D
+		lift.position = Vector2(100, 100)
+		lift.set("min_height", 3.0)
+		lift.set("max_height", 60.0)
+		lift.set("height_speed", 16.0)
+		level.add_child(lift)
+		var body_at := Vector2(100, 132)
+		var stand_on := Vector2(100, 148)
+		match direction:
+			1:
+				stand_on = Vector2(100, 148)
+				body_at = Vector2(100, 132)
+			2:
+				stand_on = Vector2(48, 112)
+				body_at = Vector2(48, 96)
+			3:
+				stand_on = Vector2(152, 112)
+				body_at = Vector2(152, 96)
+		_block(stand_on)
+		var player := _warma(body_at)
+		await _tick(15)
+		lift.call("set_button_active", true)
+		await _tick(600)
+		var height := float(lift.get("current_height"))
+		_check(height < 59.0,
+			"Direction %d must freeze before reaching the grounded body (h=%.3f)" % [direction, height])
+		var shape_node := lift.get_node("CollisionShape2D") as CollisionShape2D
+		var rectangle := shape_node.shape as RectangleShape2D
+		var rod_rect := Rect2(lift.global_position + shape_node.position - rectangle.size * 0.5, rectangle.size)
+		var body_rect: Rect2 = lift.call("_body_bounds", player)
+		_check(not rod_rect.intersects(body_rect),
+			"Direction %d rod (rect %s) must never overlap the grounded body (rect %s)" % [direction, rod_rect, body_rect])
+		_check(absf(player.position.x - body_at.x) < 0.05 and absf(player.position.y - body_at.y) < 0.05,
+			"Direction %d must not shove the grounded body (at %s, want %s)" % [direction, player.position, body_at])
+		await _cleanup()
+
+func _lifts_jam_and_resume_vertically() -> void:
+	# The requested contract: rods extending toward each other must jam (both
+	# stop, neither abandons its button target), and when one retracts the
+	# other resumes toward its own target. Blocks stay pass-through; only
+	# another lift is solid.
+	_new_level()
+	var rising := load(ELEVATOR_SCENE).instantiate() as AnimatableBody2D
+	rising.position = Vector2(100, 140)
+	rising.set("min_height", 3.0)
+	rising.set("max_height", 60.0)
+	rising.set("height_speed", 24.0)
+	level.add_child(rising)
+	var descending := load("res://objects/elevator_down.tscn").instantiate() as AnimatableBody2D
+	descending.position = Vector2(100, 60)
+	descending.set("min_height", 3.0)
+	descending.set("max_height", 60.0)
+	descending.set("height_speed", 24.0)
+	level.add_child(descending)
+	await _tick(2)
+	rising.call("set_button_active", true)
+	descending.call("set_button_active", true)
+	await _tick(400)
+	var rising_end := 140.0 - float(rising.get("current_height"))
+	var descending_end := 60.0 + float(descending.get("current_height"))
+	# The rising tip comes from below, so at the jam it must still sit below
+	# the descending tip (larger world y) by at least the clearance.
+	_check(rising_end - descending_end >= 0.05,
+		"Jammed rods must keep a clearance gap (gap=%.3f)" % (rising_end - descending_end))
+	_check(float(rising.get("current_height")) < 59.0 and float(descending.get("current_height")) < 59.0,
+		"Both rods must stop before crossing (up h=%.3f, down h=%.3f)" % [float(rising.get("current_height")), float(descending.get("current_height"))])
+	descending.call("set_button_active", false)
+	await _tick(400)
+	_check(is_equal_approx(float(rising.get("current_height")), 60.0),
+		"The rising rod must extend fully once the other retracts (h=%.3f)" % float(rising.get("current_height")))
+	_check(is_equal_approx(float(descending.get("current_height")), 3.0),
+		"The released rod must retract to its minimum (h=%.3f)" % float(descending.get("current_height")))
+	descending.call("set_button_active", true)
+	await _tick(400)
+	var down_end := 60.0 + float(descending.get("current_height"))
+	_check(down_end <= rising_end - 0.04,
+		"The descending rod must stop clear above the extended rod (end y=%.3f, tip y=%.3f)" % [down_end, rising_end])
+	rising.call("set_button_active", false)
+	await _tick(400)
+	_check(is_equal_approx(float(descending.get("current_height")), 60.0),
+		"The descending rod must extend fully once the rising rod retracts (h=%.3f)" % float(descending.get("current_height")))
+	await _cleanup()
+
+func _lifts_jam_and_resume_horizontally() -> void:
+	# The same jam-and-resume contract along the horizontal axes: a left-growing
+	# rod and a right-growing rod stop clear of one another, and the survivor
+	# continues toward its target when the other side retracts.
+	_new_level()
+	var leftward := load("res://objects/elevator_left.tscn").instantiate() as AnimatableBody2D
+	leftward.position = Vector2(140, 100)
+	leftward.set("min_height", 3.0)
+	leftward.set("max_height", 60.0)
+	leftward.set("height_speed", 24.0)
+	level.add_child(leftward)
+	var rightward := load("res://objects/elevator_right.tscn").instantiate() as AnimatableBody2D
+	rightward.position = Vector2(60, 100)
+	rightward.set("min_height", 3.0)
+	rightward.set("max_height", 60.0)
+	rightward.set("height_speed", 24.0)
+	level.add_child(rightward)
+	await _tick(2)
+	leftward.call("set_button_active", true)
+	rightward.call("set_button_active", true)
+	await _tick(400)
+	var left_end := 140.0 - float(leftward.get("current_height"))
+	var right_end := 60.0 + float(rightward.get("current_height"))
+	_check(left_end - right_end >= 0.05,
+		"Jammed horizontal rods must keep a clearance gap (gap=%.3f)" % (left_end - right_end))
+	_check(float(leftward.get("current_height")) < 59.0 and float(rightward.get("current_height")) < 59.0,
+		"Both horizontal rods must stop before crossing (left h=%.3f, right h=%.3f)" % [float(leftward.get("current_height")), float(rightward.get("current_height"))])
+	rightward.call("set_button_active", false)
+	await _tick(400)
+	_check(is_equal_approx(float(leftward.get("current_height")), 60.0),
+		"The leftward rod must extend fully once the rightward rod retracts (h=%.3f)" % float(leftward.get("current_height")))
+	leftward.call("set_button_active", false)
+	await _cleanup()
+
+func _static_lift_is_solid_to_growing_lifts() -> void:
+	# A fully extended (static) rod is terrain for other rods: growth must stop
+	# at a clearance before its underside, in contrast to blocks and tiles,
+	# which rods telescope straight through.
+	_new_level()
+	var bridge := load("res://objects/elevator_left.tscn").instantiate() as AnimatableBody2D
+	bridge.position = Vector2(120, 70)
+	bridge.set("min_height", 40.0)
+	bridge.set("max_height", 40.0)
+	level.add_child(bridge)
+	var rising := load(ELEVATOR_SCENE).instantiate() as AnimatableBody2D
+	rising.position = Vector2(100, 140)
+	rising.set("min_height", 3.0)
+	rising.set("max_height", 80.0)
+	rising.set("height_speed", 24.0)
+	level.add_child(rising)
+	await _tick(2)
+	rising.call("set_button_active", true)
+	await _tick(500)
+	var height := float(rising.get("current_height"))
+	var tip_y := 140.0 - height
+	_check(tip_y >= 74.0 + 0.04,
+		"The rising rod must stop clear below the static rod's underside (tip y=%.3f)" % tip_y)
+	_check(height < 79.0,
+		"The rising rod must not pass through a static rod (h=%.3f)" % height)
+	await _cleanup()
+
 func _scenes_are_authored_per_direction() -> void:
 	# Each direction scene must be saved already rotated, so dropping it into a
 	# map shows the final orientation before the game ever runs.
@@ -446,6 +598,29 @@ func _scenes_are_authored_per_direction() -> void:
 			"%s must be authored already rotated for its direction" % entry[0])
 		root.free()
 
+func _death_freeze_stops_lift() -> void:
+	# room.freeze_for_death() must stop lift motion: PROCESS_MODE_ALWAYS would
+	# bypass the room's DISABLED mode and keep the rod moving while Warma's
+	# death animation plays.
+	_release_input()
+	level = load("res://rooms/roomX.tscn").instantiate() as Node2D
+	root.add_child(level)
+	await _tick(2)
+	var lift := level.get_node_or_null("Elevator") as AnimatableBody2D
+	_check(lift != null, "RoomX must expose Elevator for the death-freeze check")
+	if lift == null:
+		await _cleanup()
+		return
+	level.call("freeze_for_death")
+	await _tick(2)
+	var frozen_height := float(lift.get("current_height"))
+	lift.call("set_button_active", true)
+	await _tick(30)
+	_check(is_equal_approx(float(lift.get("current_height")), frozen_height),
+		"A frozen room's elevator must not keep moving during death")
+	level.process_mode = Node.PROCESS_MODE_INHERIT
+	await _cleanup()
+
 func _run() -> void:
 	await _stack_on_static_lift()
 	await _moving_stack_stays_supported()
@@ -459,7 +634,12 @@ func _run() -> void:
 	await _rise_blocked()
 	await _shape_resource_isolation()
 	await _rising_body_is_not_supported()
+	await _growth_freezes_clear_of_grounded_bodies()
+	await _lifts_jam_and_resume_vertically()
+	await _lifts_jam_and_resume_horizontally()
+	await _static_lift_is_solid_to_growing_lifts()
 	await _reset_restores_lift()
+	await _death_freeze_stops_lift()
 	print("Elevator regression checks: ", "PASS" if failures.is_empty() else "FAIL (%d)" % failures.size())
 	quit(0 if failures.is_empty() else 1)
 
