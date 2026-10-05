@@ -1,5 +1,10 @@
 extends CharacterBody2D
 ## Warma: A/D movement and a variable-height J jump.
+##
+## Giraffes resting on her head are riders. She never tunnels through them and
+## her jump is never shortened by them: the whole chain above her is lifted by
+## the vertical travel she actually commits, so the jump height is the same with
+## no, one or twenty giraffes on her head.
 
 const TERRAIN_LAYER := 1
 const GIRAFFE_LAYER := 4
@@ -10,6 +15,10 @@ const CONTACT_TOLERANCE := 0.02
 const TIGHT_GAP_ALIGNMENT := 0.75
 const JUMP_BUFFER_DURATION := 0.15
 const SUPPORT_GRACE_DURATION := 0.10
+## Support contract shared with the lifts: an edge within this gap is a contact.
+const RIDER_TOLERANCE := 0.75
+## A rider already moving up is leaving the surface, not resting on it.
+const RISE_EPSILON := 0.01
 const MUSIC_BULLET_SCENE := preload("res://objects/music_bullet.tscn")
 
 @export var move_speed: float = 60.0
@@ -25,11 +34,9 @@ const MUSIC_BULLET_SCENE := preload("res://objects/music_bullet.tscn")
 
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var ground_probe: ShapeCast2D = $GroundProbe
-@onready var head_probe: ShapeCast2D = $HeadProbe
 @onready var equipment_pivot: Node2D = $EquipmentPivot
 @onready var nozzle: Marker2D = $EquipmentPivot/HeldExtinguisher/Nozzle
 
-var _lifting_giraffe := false
 var facing_direction := 1
 var _music_bullet_cooldown := 0.0
 var _dying := false
@@ -88,35 +95,39 @@ func _physics_process(delta: float) -> void:
 		velocity.y = jump_velocity
 		_jump_buffer_time = 0.0
 		_support_grace_time = 0.0
-		_lifting_giraffe = _lift_giraffes_above(jump_velocity, delta)
 	_jump_was_held = jump_held
 
 	if not Input.is_action_pressed("jump") and velocity.y < 0.0:
 		velocity.y = maxf(velocity.y, -jump_cut_speed)
 
+	# Everything Warma is carrying on her head this frame.
+	var riders := _rider_chain(true)
+	# Giraffes whose whole body clears her head. She may slide in under those, so
+	# they are never horizontal walls; a giraffe sharing her height still blocks
+	# her, which is what stops her walking straight through one.
+	var overhead := _overhead_giraffes()
+
 	# A resting Warma uses GroundProbe for support. Axis-separated test-only
 	# queries prevent contact recovery from moving either CharacterBody sideways.
-	if _lifting_giraffe and velocity.y >= 0.0:
-		_lifting_giraffe = false
-
 	var horizontal_motion := velocity.x * delta
-	var horizontal_mask := TERRAIN_LAYER
-	if not is_zero_approx(horizontal_motion) and not _has_giraffe_above():
-		# A giraffe resting on Warma is a vertical support, not a horizontal
-		# wall. Keep side contact blocking everywhere else.
-		horizontal_mask |= GIRAFFE_LAYER
 	if not is_zero_approx(horizontal_motion):
-		var horizontal_collision := _move_test_only(horizontal_motion * Vector2.RIGHT, horizontal_mask)
+		_set_body_exceptions(overhead, true)
+		var horizontal_collision := _move_test_only(horizontal_motion * Vector2.RIGHT, TERRAIN_LAYER | GIRAFFE_LAYER)
 		if horizontal_collision != null and not is_zero_approx(horizontal_collision.get_normal().x):
-			if not _try_enter_tight_gap(horizontal_collision.get_remainder().x, horizontal_mask):
+			if not _try_enter_tight_gap(horizontal_collision.get_remainder().x, TERRAIN_LAYER | GIRAFFE_LAYER, riders):
 				velocity.x = 0.0
+		_set_body_exceptions(overhead, false)
 
+	# Only the riders leave the sweep; every other giraffe is still a real
+	# ceiling. The chain then follows the vertical travel Warma actually
+	# committed, which is what keeps her own trajectory independent of it.
 	var vertical_motion := velocity.y * delta
-	var vertical_mask := TERRAIN_LAYER
-	if not (_lifting_giraffe and vertical_motion < 0.0):
-		vertical_mask |= GIRAFFE_LAYER
 	if not is_zero_approx(vertical_motion):
-		var vertical_collision := _move_test_only(vertical_motion * Vector2.DOWN, vertical_mask)
+		var before_y := global_position.y
+		_set_body_exceptions(riders, true)
+		var vertical_collision := _move_test_only(vertical_motion * Vector2.DOWN, TERRAIN_LAYER | GIRAFFE_LAYER)
+		_carry_riders(riders, global_position.y - before_y)
+		_set_body_exceptions(riders, false)
 		if vertical_collision != null and not is_zero_approx(vertical_collision.get_normal().y):
 			velocity.y = 0.0
 	collision_mask = TERRAIN_LAYER
@@ -188,21 +199,30 @@ func _move_test_only(motion: Vector2, mask: int) -> KinematicCollision2D:
 	if collision == null:
 		global_position += motion
 	else:
-		# Commit only the requested axis. A recovery from an overlapping body can
-		# carry a perpendicular travel component, which must not move this axis.
+		# Commit only the requested axis, and never more of it than was asked for.
+		# A recovery can carry a perpendicular travel component, which must not
+		# move this axis; a floor or ceiling contact in particular is returned
+		# with its vertical recovery as the whole travel while the body rests a
+		# fraction of a pixel inside its support, and reading travel.x from it
+		# would cancel a horizontal move that nothing is blocking. A real wall is
+		# reported with a horizontal normal and still blocks. The requested motion
+		# is the ceiling for the axis, so a slow tick cannot press the body deeper
+		# into its support than its own gravity asked for.
 		var travel := collision.get_travel()
 		if not is_zero_approx(motion.x):
-			global_position.x += travel.x
+			var requested := motion.x if is_zero_approx(collision.get_normal().x) else travel.x
+			global_position.x += clampf(requested, minf(motion.x, 0.0), maxf(motion.x, 0.0))
 		else:
-			global_position.y += travel.y
+			global_position.y += clampf(travel.y, minf(motion.y, 0.0), maxf(motion.y, 0.0))
 	return collision
 
-func _try_enter_tight_gap(horizontal_motion: float, mask: int) -> bool:
+func _try_enter_tight_gap(horizontal_motion: float, mask: int, riders: Array[CharacterBody2D]) -> bool:
 	# A 16px body fits a one-tile gap, but the discrete vertical steps can
 	# skip its 0.02px clearance. Align by at most a fraction of one logical
 	# pixel, only when both surfaces bound a real gap and the complete body
-	# can safely move to and through it. Ordinary walls and giraffes still block.
-	if is_zero_approx(horizontal_motion) or is_zero_approx(velocity.y) or _lifting_giraffe:
+	# can safely move to and through it. Ordinary walls and giraffes still block,
+	# and a carried stack does not fit such a gap in the first place.
+	if is_zero_approx(horizontal_motion) or is_zero_approx(velocity.y) or not riders.is_empty():
 		return false
 	var leading_edge := BODY_RIGHT if horizontal_motion > 0.0 else BODY_LEFT
 	var sample := global_position + Vector2(leading_edge + horizontal_motion, 0.0)
@@ -241,21 +261,106 @@ func _try_enter_tight_gap(horizontal_motion: float, mask: int) -> bool:
 	velocity.y = 0.0
 	return true
 
-func _has_giraffe_above() -> bool:
-	# Warma's complete body spans x=-2..3 and the giraffe is 8x16. A
-	# contact within this small tolerance means the giraffe is supported by
-	# Warma's top; it must not act as a horizontal wall in that state.
+## The chain Warma's head is carrying, bottom-up: every giraffe whose bottom
+## edge rests on her top, then every giraffe resting on those. Contact is the
+## same support contract the lifts use, measured between real collision edges,
+## so a rider is never decided by its sprite or its centre point.
+##
+## `skip_rising` leaves out a giraffe that is already moving up under its own
+## power (a music-bullet launch). It is leaving the surface rather than resting
+## on it, and carrying it would cancel that motion.
+func _rider_chain(skip_rising: bool) -> Array[CharacterBody2D]:
+	var riders: Array[CharacterBody2D] = []
+	var carriers: Array[Node2D] = [self]
+	var index := 0
+	while index < carriers.size():
+		var carrier_bounds := _body_bounds(carriers[index])
+		index += 1
+		for node in get_tree().get_nodes_in_group("giraffe"):
+			var giraffe := node as CharacterBody2D
+			if giraffe == null or riders.has(giraffe):
+				continue
+			if skip_rising and giraffe.velocity.y < -RISE_EPSILON:
+				continue
+			var bounds := _body_bounds(giraffe)
+			if absf(bounds.end.y - carrier_bounds.position.y) > RIDER_TOLERANCE:
+				continue
+			if bounds.end.x <= carrier_bounds.position.x or bounds.position.x >= carrier_bounds.end.x:
+				continue
+			riders.append(giraffe)
+			carriers.append(giraffe)
+	return riders
+
+
+## Every giraffe whose bottom edge is level with or above her head, whether or
+## not it overlaps her horizontally yet. Those are the bodies she can move in
+## under, so her own sweep must not treat them as walls; everything sharing her
+## height keeps blocking her.
+func _overhead_giraffes() -> Array[CharacterBody2D]:
+	var overhead: Array[CharacterBody2D] = []
+	var warma_top := global_position.y - BODY_HALF_HEIGHT
 	for node in get_tree().get_nodes_in_group("giraffe"):
 		var giraffe := node as CharacterBody2D
 		if giraffe == null:
 			continue
-		var top_gap := (global_position.y - 8.0) - (giraffe.global_position.y + 8.0)
-		if absf(top_gap) > 0.75:
-			continue
-		if global_position.x + BODY_RIGHT <= giraffe.global_position.x - 4.0 or global_position.x + BODY_LEFT >= giraffe.global_position.x + 4.0:
-			continue
-		return true
-	return false
+		if _body_bounds(giraffe).end.y <= warma_top + RIDER_TOLERANCE:
+			overhead.append(giraffe)
+	return overhead
+
+
+## World-space bounds from a body's real collision geometry. Warma's polygon is
+## x=-2..3, so her box is deliberately not centred on her origin.
+func _body_bounds(node: Node2D) -> Rect2:
+	var polygon := node.get_node_or_null("CollisionPolygon2D") as CollisionPolygon2D
+	if polygon != null and not polygon.polygon.is_empty():
+		var rect := Rect2(polygon.polygon[0], Vector2.ZERO)
+		for point in polygon.polygon:
+			rect = rect.expand(point)
+		return Rect2(node.global_position + rect.position, rect.size)
+	var shape_node := node.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if shape_node != null and shape_node.shape is RectangleShape2D:
+		var size := (shape_node.shape as RectangleShape2D).size
+		return Rect2(node.global_position + shape_node.position - size * 0.5, size)
+	var half_size := Vector2(3.0, BODY_HALF_HEIGHT)
+	return Rect2(node.global_position - half_size, half_size * 2.0)
+
+
+## A packed stack moves as one body, so the contacts inside it (and with Warma)
+## must not be read back as walls while each member tests its travel. The same
+## switch hides the giraffes she is sliding under from her own sweep.
+func _set_body_exceptions(bodies: Array[CharacterBody2D], enabled: bool) -> void:
+	for body in bodies:
+		if enabled:
+			add_collision_exception_with(body)
+			body.add_collision_exception_with(self)
+		else:
+			remove_collision_exception_with(body)
+			body.remove_collision_exception_with(self)
+		for other in bodies:
+			if other == body:
+				continue
+			if enabled:
+				body.add_collision_exception_with(other)
+			else:
+				body.remove_collision_exception_with(other)
+
+
+## Moves the complete rider chain by the vertical travel Warma committed this
+## frame. The chain is rigid for this step: every member stops at the first
+## common blocking plane, so a rider pinned under a ceiling can never be
+## compressed into the riders below it. Warma's own travel is already committed
+## and is never shortened by her riders.
+func _carry_riders(riders: Array[CharacterBody2D], travel_y: float) -> void:
+	if riders.is_empty() or is_zero_approx(travel_y):
+		return
+	var allowed := absf(travel_y)
+	for rider in riders:
+		allowed = minf(allowed, absf(rider.carried_travel_limit(travel_y)))
+	var carry := signf(travel_y) * allowed
+	if is_zero_approx(carry):
+		return
+	for rider in riders:
+		rider.apply_carried_travel(carry)
 
 func _has_ground_support() -> bool:
 	# The probe spans the complete bottom edge of the collision polygon.  A
@@ -274,38 +379,3 @@ func _has_ground_support() -> bool:
 		if elevator != null and elevator.has_method("snap_body_to_support") and elevator.call("snap_body_to_support", self, 0.75):
 			return true
 	return false
-
-func _lift_giraffes_above(target_velocity_y: float, physics_delta: float) -> bool:
-	# The full-body collision handles contact. This probe adds the explicit
-	# upward game rule when Warma jumps into a giraffe from below.
-	var found_giraffe := false
-	# Sweep only as far as this jump frame actually travels, plus the inset
-	# of the thin head strip. This prevents lifting a body before reaching it.
-	head_probe.target_position.y = minf(target_velocity_y * physics_delta, 0.0) - 0.05 - CONTACT_TOLERANCE
-	head_probe.force_shapecast_update()
-	for index in head_probe.get_collision_count():
-		var giraffe := head_probe.get_collider(index) as CharacterBody2D
-		if giraffe == null or not giraffe.is_in_group("giraffe"):
-			continue
-
-		# A wide head probe can also touch the giraffe's top while Warma is
-		# flush against its side. Only an upward-facing contact with the
-		# giraffe clearly above Warma is a genuine below-to-above impact.
-		var collision_normal := head_probe.get_collision_normal(index)
-		if collision_normal.y <= 0.5:
-			continue
-		if giraffe.global_position.y >= global_position.y - 0.5:
-			continue
-
-		found_giraffe = true
-		if not giraffe.has_method("apply_external_impulse"):
-			continue
-		# Giraffe integrates gravity before its own motion, while Warma has
-		# already selected the jump velocity this frame. Preload the opposite
-		# gravity step so both bodies receive the same first-frame displacement.
-		var target_velocity_before_gravity := target_velocity_y - float(giraffe.get("gravity")) * physics_delta
-		var delta_velocity := target_velocity_before_gravity - giraffe.velocity.y
-		if not is_zero_approx(delta_velocity):
-			var mass := maxf(float(giraffe.get("mass")), 0.001)
-			giraffe.call("apply_external_impulse", Vector2(0.0, delta_velocity * mass))
-	return found_giraffe

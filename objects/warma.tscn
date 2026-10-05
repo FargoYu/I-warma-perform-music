@@ -7,9 +7,6 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape_ground_probe"]
 size = Vector2(5, 0.1)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape_head_probe"]
-size = Vector2(5, 0.1)
-
 [node name="Warma" type="CharacterBody2D" unique_id=802351745]
 collision_layer = 2
 collision_mask = 1
@@ -37,9 +34,3 @@ shape = SubResource("RectangleShape_ground_probe")
 target_position = Vector2(0, 0.07)
 collision_mask = 5
 
-[node name="HeadProbe" type="ShapeCast2D" parent="." unique_id=1316166143]
-position = Vector2(0.5, -7.9)
-shape = SubResource("RectangleShape_head_probe")
-target_position = Vector2(0, -1.32)
-margin = 0.001
-collision_mask = 4

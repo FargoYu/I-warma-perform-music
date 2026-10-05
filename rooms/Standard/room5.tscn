@@ -5,9 +5,7 @@
 [ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_p8inl"]
 [ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_ydhmo"]
 [ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_177oy"]
-[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_jbxap"]
 [ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_ibafc"]
-[ext_resource type="PackedScene" uid="uid://c8hemm53duuly" path="res://objects/extinguisher_pickup.tscn" id="8_p8inl"]
 
 [node name="RoomX" type="Node2D" unique_id=1527030395]
 script = ExtResource("1_x0rvu")
@@ -25,24 +23,11 @@ position = Vector2(13, 120)
 position = Vector2(248, 120)
 next_room = "res://rooms/main.tscn"
 
-[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_jbxap")]
-position = Vector2(8, 120)
-
-[node name="Signboard2" parent="." unique_id=1550866418 instance=ExtResource("6_jbxap")]
-position = Vector2(88, 120)
-
 [node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_ibafc")]
-position = Vector2(132, 104)
+position = Vector2(104, 72)
 
 [node name="Giraffe2" parent="." unique_id=1758585015 instance=ExtResource("7_ibafc")]
-position = Vector2(140, 120)
+position = Vector2(104, 120)
 
 [node name="Giraffe3" parent="." unique_id=175766754 instance=ExtResource("7_ibafc")]
-position = Vector2(132, 120)
-
-[node name="ExtinguisherPickup" parent="." unique_id=354768487 instance=ExtResource("8_p8inl")]
-position = Vector2(24, 114)
-glow_color = Color(0.88235295, 0.18039216, 0.34509805, 1)
-spark_amount = 24
-spark_radius = 5.5
-spark_lifetime = 4.0
+position = Vector2(40, 120)

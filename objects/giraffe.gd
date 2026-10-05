@@ -11,6 +11,8 @@ const GIRAFFE_LAYER := 4
 @export var music_run_duration: float = 0.8
 
 var _music_run_time := 0.0
+## Set by the carrier that just moved this body, consumed by its own next step.
+var _carried_this_frame := false
 var _music_run_direction := 0
 
 func _ready() -> void:
@@ -34,7 +36,15 @@ func _physics_process(delta: float) -> void:
 		if elevator != null and elevator.has_method("snap_body_to_support") and elevator.call("snap_body_to_support", self, 0.75):
 			elevator_support = true
 			break
-	if not elevator_support:
+	# A carrier (Warma's head) already committed this body's whole vertical
+	# travel for the frame, so its own gravity step must not run on top of it.
+	# Besides doubling the motion, the carrier moves after the physics server's
+	# last snapshot of this body: an extra query would read that stale pair and
+	# "recover" the rider straight back down into the carrier. A carried body is
+	# supported, exactly like one resting on a lift.
+	var carried := _carried_this_frame
+	_carried_this_frame = false
+	if not elevator_support and not carried:
 		velocity.y += gravity * delta
 	else:
 		velocity.y = 0.0
@@ -48,9 +58,9 @@ func _physics_process(delta: float) -> void:
 	if not is_zero_approx(velocity.x):
 		horizontal_mask |= WARMA_LAYER
 	if not is_zero_approx(horizontal_motion):
-		# Vertical stack contacts supply only support. Ignore every giraffe that is
+		# Vertical stack contacts supply only support. Ignore every body that is
 		# resting on this body, or that this body is resting on, while performing a
-		# horizontal sweep. Without this, a stacked giraffe can be read back as a
+		# horizontal sweep. Without this, a stacked body can be read back as a
 		# side wall and cancel the music impulse even though the contact is vertical.
 		# Same-level neighbours are still included and continue to block real side
 		# contact.
@@ -84,10 +94,20 @@ func _vertical_stack_contacts() -> Array[PhysicsBody2D]:
 	# centre, so a horizontal window cannot tell the touching neighbour that
 	# forms the walkable seam from a same-level wall — the vertical gap can
 	# (a wall sits a full body height away and stays blocking).
+	#
+	# Warma belongs to the same rule. She is a 16px body centred on her origin
+	# exactly like a giraffe, so when her top edge is level with this body's feet
+	# her whole box lies below it and she can only support it — for example
+	# standing in a one-tile hole flush against the wall this body is about to
+	# walk off. Reading her back as a side wall there cancels the music impulse
+	# until she happens to move away, which is the reported bug.
 	var contacts: Array[PhysicsBody2D] = []
 	var top_y := global_position.y - 8.0
 	var bottom_y := global_position.y + 8.0
-	for node in get_tree().get_nodes_in_group("giraffe"):
+	var candidates: Array[Node] = []
+	candidates.append_array(get_tree().get_nodes_in_group("giraffe"))
+	candidates.append_array(get_tree().get_nodes_in_group("player"))
+	for node in candidates:
 		var other := node as CharacterBody2D
 		if other == null or other == self:
 			continue
@@ -106,14 +126,46 @@ func _move_test_only(motion: Vector2, mask: int) -> KinematicCollision2D:
 	if collision == null:
 		global_position += motion
 	else:
-		# Commit only the requested axis. Vertical contact recovery must not move
-		# the giraffe sideways during a landing.
+		# Commit only the requested axis, and never more of it than was asked for.
+		# Two contact shapes have to be rejected here:
+		# - a floor or ceiling contact carries no constraint for the horizontal
+		#   axis, but while this body rests a fraction of a pixel inside its
+		#   support the solver returns that contact with its vertical recovery as
+		#   the whole travel. Taking travel.x from it would freeze the body
+		#   against the ground it is standing on, so the requested motion wins.
+		#   A real wall is reported with a horizontal normal and still blocks.
+		# - the same recovery can point against the motion (a stack pressing this
+		#   body downwards), and the requested motion is the ceiling for the axis,
+		#   so a slow tick cannot push the body deeper than it asked to move.
 		var travel := collision.get_travel()
 		if not is_zero_approx(motion.x):
-			global_position.x += travel.x
+			var requested := motion.x if is_zero_approx(collision.get_normal().x) else travel.x
+			global_position.x += clampf(requested, minf(motion.x, 0.0), maxf(motion.x, 0.0))
 		else:
-			global_position.y += travel.y
+			global_position.y += clampf(travel.y, minf(motion.y, 0.0), maxf(motion.y, 0.0))
 	return collision
+
+## Vertical travel this giraffe can still make while the body it rests on
+## carries it. The carrier stack is already excluded by the carrier, so only
+## terrain and unrelated bodies limit the move; nothing is committed here.
+func carried_travel_limit(delta_y: float) -> float:
+	if is_zero_approx(delta_y):
+		return 0.0
+	collision_mask = TERRAIN_LAYER | GIRAFFE_LAYER
+	var probe := KinematicCollision2D.new()
+	var blocked := test_move(global_transform, Vector2(0.0, delta_y), probe, safe_margin, true)
+	collision_mask = TERRAIN_LAYER
+	return probe.get_travel().y if blocked else delta_y
+
+
+## Commits a vertical travel chosen by the carrier. The rider keeps the
+## carrier's surface instead of the speed its own gravity step would add.
+func apply_carried_travel(delta_y: float) -> void:
+	global_position.y += delta_y
+	_carried_this_frame = true
+	if not is_zero_approx(velocity.y) and signf(velocity.y) == signf(delta_y):
+		velocity.y = 0.0
+
 
 func apply_external_impulse(impulse: Vector2) -> void:
 	# Projectiles and other explicit game events use this entry point. Normal

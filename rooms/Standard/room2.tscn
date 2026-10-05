@@ -26,9 +26,11 @@ next_room = "res://rooms/main.tscn"
 
 [node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_e7tgp")]
 position = Vector2(8, 120)
+message = "沃玛可与长颈鹿碰撞"
 
 [node name="Signboard2" parent="." unique_id=486022882 instance=ExtResource("6_e7tgp")]
 position = Vector2(120, 120)
+message = "按R重置"
 
 [node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_rsmgl")]
 position = Vector2(40, 104)

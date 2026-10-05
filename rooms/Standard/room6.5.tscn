@@ -1,0 +1,32 @@
+[gd_scene format=4 uid="uid://dyp0tecp6q32j"]
+
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_vf3qd"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_4ayqh"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_lrrsj"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_rfabn"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_i7gt6"]
+[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_ac0a4"]
+[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_lv174"]
+
+[node name="RoomX" type="Node2D" unique_id=1527030395]
+script = ExtResource("1_vf3qd")
+
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_4ayqh")]
+visible = false
+
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_lrrsj")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAgAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAAAAAAAAAANAAYAAAAAAAAAAAANAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAPAAUAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAAPAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAA=")
+
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_rfabn")]
+position = Vector2(13, 104)
+
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_i7gt6")]
+position = Vector2(232, 56)
+next_room = "res://rooms/main.tscn"
+
+[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_ac0a4")]
+position = Vector2(8, 104)
+message = "奏乐本无限制"
+
+[node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_lv174")]
+position = Vector2(56, 104)

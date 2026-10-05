@@ -21,19 +21,24 @@ position = Vector2(13, 120)
 
 [node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_opoou")]
 position = Vector2(248, 40)
-next_room = "res://rooms/main.tscn"
+next_room = "uid://73d5sdxh6brh"
 
 [node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_jw05f")]
 position = Vector2(8, 120)
+message = "按A/D移动"
 
 [node name="Signboard2" parent="." unique_id=1326849414 instance=ExtResource("6_jw05f")]
 position = Vector2(40, 120)
+message = "按J跳跃"
 
 [node name="Signboard3" parent="." unique_id=965198501 instance=ExtResource("6_jw05f")]
 position = Vector2(72, 104)
+message = "长按J跳得更高"
 
 [node name="Signboard4" parent="." unique_id=1271894127 instance=ExtResource("6_jw05f")]
 position = Vector2(120, 120)
+message = "按R重置"
 
 [node name="Signboard5" parent="." unique_id=1589260700 instance=ExtResource("6_jw05f")]
 position = Vector2(232, 40)
+message = "按W进门"
