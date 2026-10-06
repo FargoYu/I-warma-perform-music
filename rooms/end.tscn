@@ -1,0 +1,45 @@
+[gd_scene format=3 uid="uid://te5fflk08g8u"]
+
+[ext_resource type="Script" uid="uid://ctfm71ivslhlp" path="res://objects/title.gd" id="1_d3v54"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_cnhfb"]
+[ext_resource type="Texture2D" uid="uid://j12iusb0okgh" path="res://Assets/Sprites/warma.png" id="3_vqwoa"]
+[ext_resource type="Texture2D" uid="uid://dajhrwawvi65e" path="res://Assets/Sprites/extinguisher.png" id="4_5jep7"]
+[ext_resource type="Texture2D" uid="uid://donv1khc1honm" path="res://Assets/Sprites/signboard.png" id="5_g4q5q"]
+[ext_resource type="Texture2D" uid="uid://dv6ixkyvjkv31" path="res://Assets/Sprites/giraffe.png" id="6_yv0bf"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_elpsm"]
+font_color = Color(0.34483066, 0.21474218, 0.0702158, 1)
+
+[node name="Title" type="Node2D" unique_id=634241846]
+script = ExtResource("1_d3v54")
+next_scene = "uid://te5fflk08g8u"
+
+[node name="Background" parent="." unique_id=1248653081 instance=ExtResource("2_cnhfb")]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=144383187]
+position = Vector2(39, 74.5)
+scale = Vector2(5, 5)
+texture = ExtResource("3_vqwoa")
+
+[node name="Sprite2D4" type="Sprite2D" parent="." unique_id=1330733981]
+position = Vector2(63, 74.5)
+scale = Vector2(5, 5)
+texture = ExtResource("4_5jep7")
+
+[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=215171492]
+position = Vector2(128, 72.00001)
+scale = Vector2(7, 7)
+texture = ExtResource("5_g4q5q")
+
+[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=42127202]
+position = Vector2(216, 72)
+scale = Vector2(5, 5)
+texture = ExtResource("6_yv0bf")
+
+[node name="Label3" type="Label" parent="." unique_id=2045732730]
+offset_left = 96.0
+offset_top = 51.0
+offset_right = 192.0
+offset_bottom = 74.0
+text = "感谢游玩!"
+label_settings = SubResource("LabelSettings_elpsm")

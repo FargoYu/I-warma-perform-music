@@ -5,6 +5,15 @@ const TERRAIN_LAYER := 1
 const WARMA_LAYER := 2
 const GIRAFFE_LAYER := 4
 
+const BODY_HALF_WIDTH := 4.0
+const BODY_HALF_HEIGHT := 8.0
+## A note-driven run forgives only a sub-pixel ledge mismatch: two surfaces at
+## the same logical height (a giraffe's head and a one-cell block top) must be
+## crossable, but any ledge that genuinely rises above the feet — even by a
+## fraction of a pixel more — stays a wall and stops the run.
+const STEP_UP_REACH := 0.1
+const STEP_UP_TOLERANCE := 0.1
+
 @export var gravity: float = 300.0
 @export var mass: float = 1.0
 @export var music_run_speed: float = 24.0
@@ -71,7 +80,11 @@ func _physics_process(delta: float) -> void:
 		for body in stack_contacts:
 			remove_collision_exception_with(body)
 		if horizontal_collision != null and not is_zero_approx(horizontal_collision.get_normal().x):
-			velocity.x = 0.0
+			if _music_run_time > 0.0 and _try_step_up(horizontal_mask, stack_contacts):
+				# The ledge became floor: finish this frame's run on top of it.
+				_move_test_only(horizontal_motion * Vector2.RIGHT, horizontal_mask)
+			else:
+				velocity.x = 0.0
 
 	var vertical_motion := velocity.y * delta
 	var vertical_mask := TERRAIN_LAYER | GIRAFFE_LAYER
@@ -119,6 +132,38 @@ func _vertical_stack_contacts() -> Array[PhysicsBody2D]:
 		if absf(rider_gap) <= 0.75 or absf(support_gap) <= 0.75:
 			contacts.append(other)
 	return contacts
+
+## Climbs onto the ledge whose face just stopped a music run. The ledge top is
+## sampled by a ray half a pixel past the leading edge, so a corner graze is
+## read the same as a full face contact. The climb needs a clear lift and a
+## clear first step onto the surface; a ceiling, a rider overhead or a taller
+## face keeps it a wall and the run stops as before.
+func _try_step_up(mask: int, stack_contacts: Array[PhysicsBody2D]) -> bool:
+	var feet_y := global_position.y + BODY_HALF_HEIGHT
+	var sample_x := global_position.x + signf(velocity.x) * (BODY_HALF_WIDTH + 0.5)
+	var exclude: Array[RID] = [get_rid()]
+	for body in stack_contacts:
+		exclude.append(body.get_rid())
+	var query := PhysicsRayQueryParameters2D.create(Vector2(sample_x, feet_y - STEP_UP_REACH - 2.0), Vector2(sample_x, feet_y), mask, exclude)
+	var hit := get_world_2d().direct_space_state.intersect_ray(query)
+	if hit.is_empty():
+		return false
+	var rise := feet_y - (hit["position"] as Vector2).y
+	if rise < -STEP_UP_TOLERANCE or rise > STEP_UP_REACH + STEP_UP_TOLERANCE:
+		return false
+	# Land a hair above the surface so the follow-up horizontal sweep cannot
+	# graze the ledge corner; gravity settles the body onto it right after.
+	var lift := rise + 0.02
+	var raised := global_transform
+	raised.origin.y -= lift
+	collision_mask = TERRAIN_LAYER | GIRAFFE_LAYER | WARMA_LAYER
+	var blocked := test_move(global_transform, Vector2(0.0, -lift), null, safe_margin, true) \
+			or test_move(raised, Vector2(signf(velocity.x) * 1.5, 0.0), null, safe_margin, true)
+	collision_mask = TERRAIN_LAYER
+	if blocked:
+		return false
+	global_position.y -= lift
+	return true
 
 func _move_test_only(motion: Vector2, mask: int) -> KinematicCollision2D:
 	collision_mask = mask

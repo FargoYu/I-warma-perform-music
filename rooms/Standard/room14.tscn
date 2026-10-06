@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://c63ujsnnji8rv"]
+[gd_scene format=4 uid="uid://bghgleleoc0ht"]
 
 [ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_2uiay"]
 [ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_r03xu"]
@@ -22,10 +22,11 @@ position = Vector2(14, 104)
 
 [node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_5p5jf")]
 position = Vector2(8, 8)
-next_room = "uid://crlcoih1bhemd"
+next_room = "res://rooms/Standard/room16.tscn"
 
 [node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_mt0tk")]
 position = Vector2(8, 104)
+message = "沃玛可以阻碍长颈鹿的水平移动"
 
 [node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_ukoxa")]
 position = Vector2(32, 104)

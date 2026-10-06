@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameState="*res://objects/game_state.tscn"
 DebugTools="*res://objects/debug_tools.tscn"
+BackgroundMusic="*res://objects/background_music.tscn"
 
 [display]
 

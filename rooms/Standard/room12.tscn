@@ -1,40 +1,30 @@
-[gd_scene format=4 uid="uid://vfcjy3w7sjo0"]
+[gd_scene format=4 uid="uid://b8mt57co26k3b"]
 
-[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_5vwf4"]
-[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_a8s1y"]
-[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_efnh7"]
-[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_36xud"]
-[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_0muol"]
-[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_5bpgq"]
-[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_dyt0c"]
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_0tu8p"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_kpt4i"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_31xg3"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_51q64"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_pqtg4"]
+[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_kpt4i"]
 
 [node name="RoomX" type="Node2D" unique_id=1527030395]
-script = ExtResource("1_5vwf4")
+script = ExtResource("1_0tu8p")
 
-[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_a8s1y")]
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_kpt4i")]
 visible = false
 
-[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_efnh7")]
-tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAA=")
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_31xg3")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAAJAAgAAAAAAAAAAAAPAAcAAAAAAAAAAAAPAAQAAAAAAAAAAAAPAAUAAAAAAAAAAAAPAAYAAAAAAAAAAAAOAAYAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAQAAAAAAAAAAAAOAAMAAAAAAAAAAAAPAAMAAAAAAAAAAAA=")
 
-[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_36xud")]
-position = Vector2(48, 104)
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_51q64")]
+position = Vector2(13, 104)
 
-[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_0muol")]
-position = Vector2(8, 8)
-next_room = "uid://crlcoih1bhemd"
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_pqtg4")]
+position = Vector2(248, 40)
+next_room = "res://rooms/Standard/room13.tscn"
 
-[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_5bpgq")]
-position = Vector2(8, 104)
+[node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_kpt4i")]
+position = Vector2(133, 104)
 
-[node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_dyt0c")]
-position = Vector2(188, 104)
-
-[node name="Giraffe2" parent="." unique_id=905492844 instance=ExtResource("7_dyt0c")]
-position = Vector2(172, 104)
-
-[node name="Giraffe3" parent="." unique_id=1173274303 instance=ExtResource("7_dyt0c")]
-position = Vector2(88, 104)
-
-[node name="Giraffe4" parent="." unique_id=1008441919 instance=ExtResource("7_dyt0c")]
-position = Vector2(72, 104)
+[node name="Giraffe2" parent="." unique_id=1365705771 instance=ExtResource("7_kpt4i")]
+position = Vector2(133, 88)

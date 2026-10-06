@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://ucc2sipq8soj"]
+
+[ext_resource type="Script" uid="uid://jupp306c135y" path="res://objects/background_music.gd" id="1_script"]
+[ext_resource type="AudioStream" uid="uid://cyt1q8uksb3wx" path="res://music/title_2_warma_flute_loop.ogg" id="2_music"]
+
+[node name="BackgroundMusic" type="AudioStreamPlayer" unique_id=530156174]
+process_mode = 3
+stream = ExtResource("2_music")
+volume_db = -20.0
+script = ExtResource("1_script")
+music_volume = 0.1

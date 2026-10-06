@@ -1,27 +1,36 @@
-[gd_scene format=4 uid="uid://dsk7qcgu67pdw"]
+[gd_scene format=4 uid="uid://6otw6ue65wm8"]
 
-[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_10f8p"]
-[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_p8nsv"]
-[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_ma2k0"]
-[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_ac5b1"]
-[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_fdtgu"]
-[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_38wlc"]
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_c75g0"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_btgxj"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_nxvx8"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_hnc17"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_5eemw"]
+[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_sdcop"]
+[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_btgxj"]
 
 [node name="RoomX" type="Node2D" unique_id=1527030395]
-script = ExtResource("1_10f8p")
+script = ExtResource("1_c75g0")
 
-[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_p8nsv")]
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_btgxj")]
 visible = false
 
-[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_ma2k0")]
-tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAA=")
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_nxvx8")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAgAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAAAAAAAAAANAAYAAAAAAAAAAAANAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAPAAUAAAAAAAAAAAANAAQAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAAPAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAA=")
 
-[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_ac5b1")]
-position = Vector2(13, 120)
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_hnc17")]
+position = Vector2(13, 104)
 
-[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_fdtgu")]
-position = Vector2(248, 120)
-next_room = "uid://crlcoih1bhemd"
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_5eemw")]
+position = Vector2(232, 56)
+next_room = "res://rooms/Standard/room9.tscn"
 
-[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_38wlc")]
-position = Vector2(8, 120)
+[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_sdcop")]
+position = Vector2(8, 104)
+message = "奏乐本无限制"
+
+[node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_btgxj")]
+position = Vector2(56, 104)
+gravity = null
+mass = null
+music_run_speed = null
+music_run_duration = null
