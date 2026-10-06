@@ -1,0 +1,32 @@
+[gd_scene format=4 uid="uid://crgli58gkwtrq"]
+
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_7c8wy"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_s8816"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_od6is"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_t6tl8"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_xud0c"]
+[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_dojk1"]
+[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_s8816"]
+
+[node name="RoomX" type="Node2D" unique_id=1527030395]
+script = ExtResource("1_7c8wy")
+
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_s8816")]
+visible = false
+
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_od6is")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAgAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAAAAAAAAAANAAYAAAAAAAAAAAANAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAPAAUAAAAAAAAAAAAOAAQAAAAAAAAAAAAPAAQAAAAAAAAAAAAPAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAKAAUAAAAAAAAAAAALAAUAAAAAAAAAAAAMAAUAAAAAAAAAAAAOAAIAAAAAAAAAAAAOAAMAAAAAAAAAAAAPAAIAAAAAAAAAAAAPAAMAAAAAAAAAAAAKAAYAAAAAAAAAAAALAAYAAAAAAAAAAAAMAAYAAAAAAAAAAAA=")
+
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_t6tl8")]
+position = Vector2(13, 104)
+
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_xud0c")]
+position = Vector2(232, 24)
+next_room = "res://rooms/main.tscn"
+
+[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_dojk1")]
+position = Vector2(8, 104)
+message = "奏乐本无限制"
+
+[node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_s8816")]
+position = Vector2(56, 104)

@@ -1,0 +1,34 @@
+[gd_scene format=4 uid="uid://dvej2b4y0ko4b"]
+
+[ext_resource type="Script" uid="uid://cdjpmodkjoodq" path="res://rooms/room.gd" id="1_h701i"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_6w5wv"]
+[ext_resource type="PackedScene" path="res://objects/blocks.tscn" id="3_62soo"]
+[ext_resource type="PackedScene" uid="uid://monkdhxuo2p8" path="res://objects/warma.tscn" id="4_vub2b"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_esjm3"]
+[ext_resource type="PackedScene" uid="uid://556nydvmda5s" path="res://objects/signboard.tscn" id="6_oyaw1"]
+[ext_resource type="PackedScene" uid="uid://crn4xxx504yrw" path="res://objects/giraffe.tscn" id="7_0k5ac"]
+
+[node name="RoomX" type="Node2D" unique_id=1527030395]
+script = ExtResource("1_h701i")
+
+[node name="Background" parent="." unique_id=1464875748 instance=ExtResource("2_6w5wv")]
+visible = false
+
+[node name="Blocks" parent="." unique_id=2130203606 instance=ExtResource("3_62soo")]
+tile_map_data = PackedByteArray("AAAAAAgAAAAAAAAAAAABAAgAAAAAAAAAAAAOAAgAAAAAAAAAAAAPAAgAAAAAAAAAAAACAAgAAAAAAAAAAAADAAgAAAAAAAAAAAAEAAgAAAAAAAAAAAAFAAgAAAAAAAAAAAAGAAgAAAAAAAAAAAAHAAgAAAAAAAAAAAAIAAgAAAAAAAAAAAAJAAgAAAAAAAAAAAAKAAgAAAAAAAAAAAALAAgAAAAAAAAAAAAMAAgAAAAAAAAAAAANAAgAAAAAAAAAAAAAAAcAAAAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAPAAQAAAAAAAAAAAAPAAUAAAAAAAAAAAAOAAUAAAAAAAAAAAAOAAYAAAAAAAAAAAAPAAYAAAAAAAAAAAAPAAMAAAAAAAAAAAAPAAIAAAAAAAAAAAAFAAUAAAAAAAAAAAA=")
+
+[node name="Player" parent="." unique_id=155555953 instance=ExtResource("4_vub2b")]
+position = Vector2(14, 104)
+
+[node name="Door" parent="." unique_id=351288452 instance=ExtResource("5_esjm3")]
+position = Vector2(248, 24)
+next_room = "uid://crlcoih1bhemd"
+
+[node name="Signboard" parent="." unique_id=636522275 instance=ExtResource("6_oyaw1")]
+position = Vector2(8, 104)
+
+[node name="Giraffe" parent="." unique_id=792921680 instance=ExtResource("7_0k5ac")]
+position = Vector2(88, 104)
+
+[node name="Giraffe2" parent="." unique_id=2115348318 instance=ExtResource("7_0k5ac")]
+position = Vector2(88, 72)
