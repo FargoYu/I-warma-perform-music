@@ -59,6 +59,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				world.request_restart()
 			KEY_P:
 				world.frozen = not world.frozen
+				get_node("/root/AudioManager").set_puzzle_paused(world.frozen)
 			KEY_F1:
 				world.show_contacts = not world.show_contacts
 				world.queue_redraw()

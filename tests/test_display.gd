@@ -198,6 +198,13 @@ func _test_character_and_equipment_faces() -> void:
 
 func _test_fractional_render_motion() -> void:
 	var player = game.world.player
+	# Isolate the moving sprite: comparing the whole scene also shifts static
+	# signboards and terrain, which are meant to stay in place.
+	var hidden: Array[CanvasItem] = []
+	for child in game.world.get_children():
+		if child is CanvasItem and child != player and child.visible:
+			hidden.append(child)
+			child.hide()
 	player.direction = 1
 	player.state.x = 24.0
 	game.world.sync_visuals()
@@ -216,6 +223,8 @@ func _test_fractional_render_motion() -> void:
 	_check(moved_pixels > 0, "a quarter logical pixel produces visible movement")
 	_check(wrong_pixels == 0, "a quarter logical pixel moves every drawn character pixel by exactly one screen pixel")
 	after.get_region(Rect2i(64, 424, 80, 112)).save_png("res://artifacts/warma_subpixel.png")
+	for child in hidden:
+		child.show()
 
 
 func _test_rebuild_teleport() -> void:

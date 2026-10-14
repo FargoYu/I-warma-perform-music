@@ -14,7 +14,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Warma"
+config/name="I warma perform music"
 config/version="0.2.0"
 run/main_scene="res://start.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
@@ -23,6 +23,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 GameState="*res://scripts/game_state.gd"
+AudioManager="*res://scripts/audio_manager.gd"
 
 [display]
 

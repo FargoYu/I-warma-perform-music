@@ -59,6 +59,15 @@ func _ready() -> void:
 	rebuild()
 	if get_tree().current_scene == self and player != null and get_node("/root/GameState").has_extinguisher:
 		player.pick_up_extinguisher()
+	if player != null:
+		player.extinguisher_changed.connect(_equipment_audio)
+
+func _equipment_audio(equipped: bool) -> void:
+	if equipped and not get_node("/root/GameState").has_extinguisher:
+		_audio(&"pickup")
+
+func _audio(cue: StringName, gain_db: float = 0.0) -> void:
+	get_node("/root/AudioManager").play_sfx(cue, gain_db)
 
 func _create_time_speed_hud() -> void:
 	_time_speed_hud = CanvasLayer.new()
@@ -168,6 +177,9 @@ func _add_state(body: Node, px: float, py: float, width: float, height: float, i
 func _physics_process(delta: float) -> void:
 	if frozen or restarting or transitioning or not setup_errors.is_empty():
 		return
+	var was_grounded: bool = player != null and player.state != null and player.state.grounded
+	var impact_speed: float = player.state.vy if player != null and player.state != null else 0.0
+	var jumped := false
 	jump_buffer = maxf(0.0, jump_buffer - delta)
 	if Input.is_action_just_pressed("jump"):
 		jump_buffer = 0.1
@@ -195,6 +207,7 @@ func _physics_process(delta: float) -> void:
 				state.vy = -body.jump_speed
 				jump_buffer = 0.0
 				coyote_time = 0.0
+				jumped = true
 			if Input.is_action_just_released("jump") and state.vy < -68.0:
 				state.vy = -68.0
 		else:
@@ -203,6 +216,9 @@ func _physics_process(delta: float) -> void:
 	var start: int = Time.get_ticks_usec()
 	solver.step(delta)
 	last_step_usec = Time.get_ticks_usec() - start
+	if player != null and player.state != null:
+		if player.state.grounded and not was_grounded and not jumped and impact_speed > 40.0:
+			_audio(&"land", -5.0)
 	_step_bullets(delta, before)
 	_step_pickups()
 	_step_signboards()
@@ -289,8 +305,10 @@ func request_room(path: String) -> void:
 	if player != null:
 		get_node("/root/GameState").has_extinguisher = player.has_extinguisher
 	if room_requested.has_connections():
+		_audio(&"door", -2.0)
 		room_requested.emit(path)
 	elif get_tree().current_scene == self:
+		_audio(&"door", -2.0)
 		get_tree().change_scene_to_file.call_deferred(path)
 	else:
 		transitioning = false
@@ -322,7 +340,11 @@ func request_restart(restart_current_room: bool = true) -> void:
 		return
 	restarting = true
 	frozen = true
+	_audio(&"restart", -2.0)
 	if is_instance_valid(player):
+		# Keep acquired equipment across both hosted and standalone room reloads.
+		var run_state := get_node("/root/GameState")
+		run_state.has_extinguisher = run_state.has_extinguisher or player.has_extinguisher
 		var was_visible: bool = player.visible
 		for flash in range(2):
 			player.visible = false
@@ -331,7 +353,6 @@ func request_restart(restart_current_room: bool = true) -> void:
 				break
 			player.visible = was_visible
 			await get_tree().create_timer(maxf(death_flash_duration, 0.01)).timeout
-	get_node("/root/GameState").reset_run()
 	# Hosts restore their own scene/layout; F6 levels can reload themselves.
 	if restart_requested.has_connections():
 		restart_requested.emit(restart_current_room)
@@ -353,6 +374,7 @@ func fire() -> void:
 	add_child(bullet)
 	bullet.reset_physics_interpolation()
 	bullets.append(bullet)
+	get_node("/root/AudioManager").play_shot()
 
 func _step_pickups() -> void:
 	if player == null or player.state == null:
@@ -383,8 +405,11 @@ func _step_bullets(delta: float, before: Dictionary) -> void:
 		if nearest <= 1.0:
 			if target.kind == "giraffe" and is_instance_valid(target.node):
 				target.node.hit_by_bullet(bullet.direction)
+				_audio(&"giraffe_hit", -3.0)
 				hits += 1
 				shot_hit.emit(target.node)
+			else:
+				_audio(&"wall_hit", -8.0)
 			bullets.erase(bullet)
 			bullet.queue_free()
 		else:

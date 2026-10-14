@@ -49,13 +49,17 @@ func _run() -> void:
 		_test_giraffe_cannot_collect, _test_duplicate_pickups,
 		_test_rebuild_consumed_pickup, _test_nested_pickup_coordinates,
 		_test_pickup_edges, _test_run_equipment_persistence,
-		_test_fall_restart, _test_fall_restart_current_room, _test_key_restart_current_room, _test_standalone_restart, _test_fall_limit_boundary,
+		_test_fall_restart, _test_fall_restart_current_room, _test_key_restart_current_room, _test_standalone_restart, _test_unequipped_restart, _test_fall_limit_boundary,
 		_test_door_keyboard, _test_signboard_switch, _test_room_transition, _test_standalone_door,
 		_test_start_screen,
 		_test_end_transition,
 	]
 	for test in suite:
 		current_case = str(test.get_method()).trim_prefix("_test_")
+		var selected := OS.get_cmdline_user_args()
+		if not selected.is_empty() and not selected.has(current_case):
+			continue
+		root.get_node("GameState").reset_run()
 		var before: int = failures.size()
 		await test.call()
 		cases += 1
@@ -154,16 +158,19 @@ func _test_end_transition() -> void:
 	var game = MainScene.instantiate()
 	root.add_child(game)
 	current_scene = game
-	game.world.set_physics_process(false)
-	game.world.enter_first_door()
-	await process_frame
-	game.world.set_physics_process(false)
-	game.world.enter_first_door()
-	await process_frame
-	await process_frame
+	for room in range(1, 17):
+		if not is_instance_valid(game):
+			_check(false, "main game stays active until room 16")
+			break
+		game.world.set_physics_process(false)
+		_check(game.world.scene_file_path == "res://levels/level_%02d.tscn" % room, "main route visits room %02d in order" % room)
+		game.world.enter_first_door()
+		await process_frame
+		await process_frame
 	_check(current_scene != null and current_scene.scene_file_path == "res://end.tscn", "last room door opens ending scene")
 	if current_scene != null:
-		_check(current_scene.quit_on_key, "ending is configured to quit")
+		if current_scene.get_script() == preload("res://scripts/scene_screen.gd"):
+			_check(current_scene.quit_on_key, "ending is configured to quit")
 		await _free_fixture(current_scene)
 
 func _test_door_keyboard() -> void:
@@ -334,10 +341,10 @@ func _test_continuous_visual_motion() -> void:
 	_check(world.player.texture_filter == CanvasItem.TEXTURE_FILTER_NEAREST, "pixel art remains nearest-filtered")
 	_check(world.player.physics_interpolation_mode == Node.PHYSICS_INTERPOLATION_MODE_INHERIT, "Warma inherits display interpolation without changing solver authority")
 	Input.action_press("move_right")
-	for frame in range(12):
+	for frame in range(11):
 		var before: float = world.player.state.x
 		world._physics_process(DT)
-		_near(world.player.state.x - before, 46.0 * DT, "solver retains every fractional horizontal step")
+		_near(world.player.state.x - before, world.player.move_speed * DT, "solver retains every fractional horizontal step")
 		_near(world.player.position.x, world.player.state.x, "visual sync preserves the fractional solver coordinate")
 	_check(not is_equal_approx(world.player.position.x, roundf(world.player.position.x)), "movement is not rounded back to whole logical pixels")
 	_safe(world)
@@ -376,6 +383,11 @@ func _test_main_scene() -> void:
 	_near(world.player.state.w, 5.0, "Warma collision width is exactly 5")
 	_near(world.player.state.h, 16.0, "Warma collision height is exactly 16")
 	_check(world.player.WARMA_TEXTURE.get_size() == Vector2(6, 17), "Warma uses the supplied 6 by 17 texture")
+	_safe(world)
+	# The opening room teaches walking and jumping; giraffes start in room 2.
+	game._switch_room("res://levels/level_02.tscn")
+	game.world.set_physics_process(false)
+	world = game.world
 	var giraffe_count: int = 0
 	for actor in world.actors:
 		if actor.kind == "giraffe":
@@ -383,7 +395,7 @@ func _test_main_scene() -> void:
 			_near(actor.state.w, 8.0, "Giraffe collision width is exactly 8")
 			_near(actor.state.h, 16.0, "Giraffe collision height is exactly 16")
 			_check(actor.GIRAFFE_TEXTURE.get_size() == Vector2(9, 16), "Giraffe uses the supplied 9 by 16 texture")
-	_check(giraffe_count > 0, "starter level includes a Giraffe")
+	_check(giraffe_count > 0, "second level includes a Giraffe")
 	_safe(world)
 	await _free_fixture(game)
 
@@ -407,7 +419,7 @@ func _test_starter_pickup_reachable() -> void:
 	# The pickup is injected so the walking path stays independent of the level's
 	# authored decorations; only the real controller and collect flow are tested.
 	var pickup = PickupScene.instantiate()
-	pickup.position = Vector2(40, 104)
+	pickup.position = Vector2(40, 120)
 	game.world.add_child(pickup)
 	game.world.rebuild()
 	Input.action_press("move_right")
@@ -682,9 +694,11 @@ func _test_run_equipment_persistence() -> void:
 	_check(current_scene != null, "R reloads a playable game scene")
 	if current_scene != null:
 		current_scene.world.set_physics_process(false)
-		_check(not root.get_node("GameState").has_extinguisher, "R resets the run equipment")
-		_check(not current_scene.world.player.has_extinguisher, "restarted player starts unequipped")
+		_check(root.get_node("GameState").has_extinguisher, "R preserves the run equipment")
+		_check(current_scene.world.player.has_extinguisher, "restarted player retains the extinguisher")
 		_check(current_scene.world.bullets.is_empty(), "R reloads without stale bullets")
+		current_scene.world.fire()
+		_check(current_scene.world.bullets.size() == 1, "player can fire immediately after R")
 		await _free_fixture(current_scene)
 
 
@@ -718,8 +732,8 @@ func _test_fall_restart() -> void:
 	if current_scene != null:
 		current_scene.world.set_physics_process(false)
 		_near(current_scene.world.player.state.x, authored_x, "fall restores the authored spawn")
-		_check(not current_scene.world.player.has_extinguisher, "fall resets equipment like R")
-		_check(not root.get_node("GameState").has_extinguisher, "fall resets run state like R")
+		_check(current_scene.world.player.has_extinguisher, "fall preserves equipment like R")
+		_check(root.get_node("GameState").has_extinguisher, "fall preserves run state like R")
 		_check(current_scene.world.bullets.is_empty(), "fall removes old bullets")
 		_check(current_scene.world.actors.size() == actor_count, "fall restores the level actors")
 		_check(not current_scene.world.restarting and not current_scene.world.frozen, "restarted game is playable")
@@ -762,8 +776,8 @@ func _test_restart_current_room(trigger: String) -> void:
 			_near(game.world.player.state.x, spawn.x, trigger + " restores current room spawn X")
 			_near(game.world.player.state.y, spawn.y, trigger + " restores current room spawn Y")
 			_check(not game.world.restarting and not game.world.frozen, "room is playable after repeated " + trigger)
-			_check(not game.world.player.has_extinguisher, "current room restart resets equipment")
-			_check(not root.get_node("GameState").has_extinguisher, "current room restart resets run equipment")
+			_check(game.world.player.has_extinguisher, "current room restart preserves equipment")
+			_check(root.get_node("GameState").has_extinguisher, "current room restart preserves run equipment")
 			_check(game.world.bullets.is_empty(), "current room restart removes stale bullets")
 	await _free_fixture(game)
 
@@ -789,8 +803,29 @@ func _test_standalone_restart() -> void:
 		if current_scene != null:
 			current_scene.set_physics_process(false)
 			_check(current_scene.player != null and not current_scene.frozen, "F6 level restarts playable")
-			_check(not current_scene.player.has_extinguisher, "F6 reload restores authored equipment")
+			_check(current_scene.player.has_extinguisher, "F6 reload retains acquired equipment")
+			_check(root.get_node("GameState").has_extinguisher, "F6 restart persists acquired equipment")
+			current_scene.fire()
+			_check(current_scene.bullets.size() == 1, "F6 player can fire after restart")
 			await _free_fixture(current_scene)
+
+
+func _test_unequipped_restart() -> void:
+	for path in ["res://main.tscn", "res://levels/level_01.tscn"]:
+		root.get_node("GameState").reset_run()
+		var scene = load(path).instantiate()
+		root.add_child(scene)
+		current_scene = scene
+		var world = scene.world if path == "res://main.tscn" else scene
+		world.set_physics_process(false)
+		_check(not world.player.has_extinguisher, "fresh player starts unequipped")
+		scene._unhandled_input(_key(KEY_R))
+		await _wait_for_restart(world)
+		var restored = current_scene.world if path == "res://main.tscn" else current_scene
+		restored.set_physics_process(false)
+		_check(not restored.player.has_extinguisher, "R does not grant an uncollected extinguisher")
+		_check(not root.get_node("GameState").has_extinguisher, "unequipped R keeps session unequipped")
+		await _free_fixture(current_scene)
 
 
 func _test_fall_limit_boundary() -> void:

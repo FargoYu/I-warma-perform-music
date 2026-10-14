@@ -6,6 +6,10 @@ extends Node2D
 
 var transitioning := false
 
+func _ready() -> void:
+	if quit_on_key:
+		get_node("/root/AudioManager").play_sfx(&"complete")
+
 func _unhandled_input(event: InputEvent) -> void:
 	if transitioning or not event is InputEventKey or not event.pressed or event.echo:
 		return
@@ -19,4 +23,5 @@ func _unhandled_input(event: InputEvent) -> void:
 		push_warning("开场场景的 Target Scene 无效：%s" % target_scene)
 		return
 	transitioning = true
+	get_node("/root/AudioManager").play_sfx(&"confirm", -2.0)
 	get_tree().change_scene_to_packed.call_deferred(scene)

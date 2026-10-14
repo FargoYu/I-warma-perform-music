@@ -21,6 +21,7 @@ func change_time_speed(direction: int) -> void:
 	time_speed_index = next_index
 	Engine.time_scale = get_time_speed()
 	time_speed_changed.emit(get_time_speed())
+	get_node("/root/AudioManager").play_sfx(&"time_down" if direction < 0 else &"time_up", -5.0)
 
 func reset_run() -> void:
 	has_extinguisher = false

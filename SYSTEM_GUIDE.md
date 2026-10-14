@@ -21,7 +21,8 @@
 | `objects/extinguisher_pickup.gd` | 拾取范围与视觉效果 |
 | `objects/door.gd` | 门图片、范围与目标房间路径 |
 | `objects/signboard.gd` | 告示牌图片、文字配置与上方提示框 |
-| `scripts/game_state.gd` | 本轮装备状态和本次运行的时间档位；重开清除装备，流速保留 |
+| `scripts/game_state.gd` | 本轮装备状态和本次运行的时间档位；重开保留已获得的灭火器和流速，退出游戏不存档 |
+| `scripts/audio_manager.gd` / `Assets/Audio/SFX/` | 15 个实际使用的音效、独立 SFX 总线与并发播放池；行走、起跳、告示牌保持安静，无背景音乐 |
 | `scripts/bullet.gd` | 音符显示数据，运动与命中由世界处理 |
 | `addons/block_painter/` | 方块画笔、擦除与撤销 |
 | `tests/` | 物理、玩法、按键、显示与画笔验证 |
