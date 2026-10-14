@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://dw24y4d5mvf2v"]
+
+[ext_resource type="Script" uid="uid://ca4ukhcx6ivcd" path="res://scripts/bullet.gd" id="1"]
+
+[node name="Bullet" type="Node2D" unique_id=30264940]
+texture_filter = 1
+script = ExtResource("1")
+speed = 20.0

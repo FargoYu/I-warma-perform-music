@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="PackedScene" path="res://fixtures/grid_base.tscn" id="1_grid"]
+
+[node name="Fixture" type="Node2D"]
+
+[node name="Display" type="Node2D" parent="."]
+scale = Vector2(4, 4)
+
+[node name="Translated" type="Node2D" parent="Display"]
+position = Vector2(3.25, -2.5)
+
+[node name="Grid" parent="Display/Translated" instance=ExtResource("1_grid")]
+position = Vector2(2.5, 1.25)
+
+[node name="Other" type="Node2D" parent="."]
+position = Vector2(200, 80)

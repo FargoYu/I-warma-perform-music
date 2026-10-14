@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://objects/block_grid.gd" id="1_grid"]
+
+[node name="Grid" type="Node2D"]
+script = ExtResource("1_grid")
+cells = Array[Vector2i]([Vector2i(0, 0)])

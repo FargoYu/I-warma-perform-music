@@ -1,0 +1,120 @@
+[gd_scene format=3 uid="uid://ccxaul8aqgp4d"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_ngl01"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_wq170"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_6hrdw"]
+[ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_2wlag"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_3ew82"]
+[ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="6_wq170"]
+[ext_resource type="PackedScene" uid="uid://dgte1a082nky7" path="res://objects/signboard.tscn" id="7_6hrdw"]
+
+[node name="Level03" type="Node2D" unique_id=621054034]
+script = ExtResource("1_ngl01")
+
+[node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_wq170")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_6hrdw")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(0, 8), Vector2i(1, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(7, 2), Vector2i(8, 2), Vector2i(9, 2)])
+
+[node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_2wlag")]
+position = Vector2(8, 112)
+direction = null
+
+[node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_3ew82")]
+position = Vector2(240, 112)
+target_room = "res://levels/level_04.tscn"
+
+[node name="Node2D" type="Node2D" parent="." unique_id=750095027]
+
+[node name="Giraffe" parent="Node2D" unique_id=1759761654 instance=ExtResource("6_wq170")]
+position = Vector2(24, 112)
+direction = -1
+
+[node name="Giraffe2" parent="Node2D" unique_id=1384187174 instance=ExtResource("6_wq170")]
+position = Vector2(31, 96)
+direction = -1
+
+[node name="Giraffe3" parent="Node2D" unique_id=781062865 instance=ExtResource("6_wq170")]
+position = Vector2(38, 80)
+direction = -1
+
+[node name="Giraffe4" parent="Node2D" unique_id=2060085916 instance=ExtResource("6_wq170")]
+position = Vector2(45, 64)
+direction = -1
+
+[node name="Giraffe5" parent="Node2D" unique_id=1156323201 instance=ExtResource("6_wq170")]
+position = Vector2(52, 48)
+direction = -1
+
+[node name="Giraffe6" parent="Node2D" unique_id=1248341982 instance=ExtResource("6_wq170")]
+position = Vector2(59, 32)
+direction = -1
+
+[node name="Node2D2" type="Node2D" parent="." unique_id=153478888]
+
+[node name="Giraffe7" parent="Node2D2" unique_id=426419398 instance=ExtResource("6_wq170")]
+position = Vector2(224, 112)
+direction = -1
+
+[node name="Giraffe8" parent="Node2D2" unique_id=1181827919 instance=ExtResource("6_wq170")]
+position = Vector2(218, 96)
+direction = -1
+
+[node name="Giraffe9" parent="Node2D2" unique_id=76578059 instance=ExtResource("6_wq170")]
+position = Vector2(212, 80)
+direction = -1
+
+[node name="Giraffe10" parent="Node2D2" unique_id=2089280538 instance=ExtResource("6_wq170")]
+position = Vector2(206, 64)
+direction = -1
+
+[node name="Giraffe11" parent="Node2D2" unique_id=1280259523 instance=ExtResource("6_wq170")]
+position = Vector2(200, 48)
+direction = -1
+
+[node name="Giraffe12" parent="Node2D2" unique_id=710911694 instance=ExtResource("6_wq170")]
+position = Vector2(194, 32)
+direction = -1
+
+[node name="Giraffe13" parent="Node2D2" unique_id=1734481937 instance=ExtResource("6_wq170")]
+position = Vector2(188, 16)
+direction = -1
+
+[node name="Giraffe14" parent="Node2D2" unique_id=578539350 instance=ExtResource("6_wq170")]
+position = Vector2(182, 0)
+direction = -1
+
+[node name="Node2D3" type="Node2D" parent="." unique_id=997558661]
+
+[node name="Giraffe" parent="Node2D3" unique_id=1491888351 instance=ExtResource("6_wq170")]
+position = Vector2(232, 112)
+
+[node name="Giraffe2" parent="Node2D3" unique_id=2048927473 instance=ExtResource("6_wq170")]
+position = Vector2(232, 96)
+
+[node name="Giraffe3" parent="Node2D3" unique_id=654419905 instance=ExtResource("6_wq170")]
+position = Vector2(232, 80)
+
+[node name="Giraffe4" parent="Node2D3" unique_id=982132825 instance=ExtResource("6_wq170")]
+position = Vector2(232, 64)
+
+[node name="Giraffe5" parent="Node2D3" unique_id=350828012 instance=ExtResource("6_wq170")]
+position = Vector2(232, 48)
+
+[node name="Giraffe6" parent="Node2D3" unique_id=1377239129 instance=ExtResource("6_wq170")]
+position = Vector2(232, 32)
+
+[node name="Giraffe7" parent="Node2D3" unique_id=1565874167 instance=ExtResource("6_wq170")]
+position = Vector2(232, 16)
+
+[node name="Giraffe8" parent="Node2D3" unique_id=1544121345 instance=ExtResource("6_wq170")]
+position = Vector2(232, 0)
+
+[node name="Signboard" parent="." unique_id=856111074 instance=ExtResource("7_6hrdw")]
+position = Vector2(0, 112)
+text = "长颈鹿可与长颈鹿碰撞"
+
+[node name="Signboard2" parent="." unique_id=1593970123 instance=ExtResource("7_6hrdw")]
+position = Vector2(128, 16)
+text = "这里没有上限"

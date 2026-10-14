@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://dpdqpad8vj83n"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_g8tau"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_j8rst"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_ifoay"]
+[ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_nox4o"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_qadnc"]
+[ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="6_j8rst"]
+
+[node name="Level04" type="Node2D" unique_id=621054034]
+script = ExtResource("1_g8tau")
+
+[node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_j8rst")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_ifoay")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(13, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(10, 8), Vector2i(11, 8), Vector2i(12, 8), Vector2i(14, 5), Vector2i(14, 6), Vector2i(14, 7), Vector2i(15, 7), Vector2i(15, 6), Vector2i(15, 5), Vector2i(9, 7), Vector2i(6, 5), Vector2i(6, 6)])
+
+[node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_nox4o")]
+position = Vector2(8, 112)
+
+[node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_qadnc")]
+position = Vector2(232, 64)
+target_room = "uid://0ghk82nbq5wx"
+
+[node name="Giraffe" parent="." unique_id=1759761654 instance=ExtResource("6_j8rst")]
+position = Vector2(100, 64)
+
+[node name="Giraffe2" parent="." unique_id=876276410 instance=ExtResource("6_j8rst")]
+position = Vector2(101, 112)
+
+[node name="Giraffe3" parent="." unique_id=1832128523 instance=ExtResource("6_j8rst")]
+position = Vector2(32, 112)

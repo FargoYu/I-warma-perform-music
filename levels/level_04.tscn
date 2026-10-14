@@ -1,0 +1,48 @@
+[gd_scene format=3 uid="uid://bnljqsxguire0"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_r8aof"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_b2w0k"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_rpmp5"]
+[ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_roa4n"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_g141h"]
+[ext_resource type="PackedScene" uid="uid://d2ab4o73pgtvs" path="res://objects/extinguisher_pickup.tscn" id="6_roa4n"]
+[ext_resource type="PackedScene" uid="uid://dgte1a082nky7" path="res://objects/signboard.tscn" id="7_g141h"]
+[ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="8_hapfj"]
+
+[node name="Level04" type="Node2D" unique_id=621054034]
+script = ExtResource("1_r8aof")
+
+[node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_b2w0k")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_rpmp5")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(13, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(2, 7), Vector2i(2, 6), Vector2i(5, 7), Vector2i(5, 6), Vector2i(5, 5), Vector2i(5, 4), Vector2i(8, 7), Vector2i(8, 6), Vector2i(8, 5), Vector2i(8, 4), Vector2i(8, 3), Vector2i(8, 2), Vector2i(9, 7), Vector2i(10, 7), Vector2i(11, 7), Vector2i(12, 7), Vector2i(13, 7), Vector2i(14, 7), Vector2i(15, 7), Vector2i(10, 8), Vector2i(11, 8), Vector2i(12, 8), Vector2i(14, 4), Vector2i(14, 5), Vector2i(14, 6), Vector2i(15, 6), Vector2i(15, 5), Vector2i(15, 4)])
+
+[node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_roa4n")]
+position = Vector2(8, 112)
+
+[node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_g141h")]
+position = Vector2(240, 48)
+target_room = "uid://m6y58utmn2dc"
+
+[node name="ExtinguisherPickup" parent="." unique_id=471347448 instance=ExtResource("6_roa4n")]
+position = Vector2(136, 8)
+
+[node name="Signboard" parent="." unique_id=856111074 instance=ExtResource("7_g141h")]
+position = Vector2(128, 16)
+text = "驱散一切"
+
+[node name="Signboard2" parent="." unique_id=256520923 instance=ExtResource("7_g141h")]
+position = Vector2(0, 112)
+text = "按住J连续跳跃"
+
+[node name="Signboard3" parent="." unique_id=442540172 instance=ExtResource("7_g141h")]
+position = Vector2(192, 96)
+text = "按K演奏灭火器"
+
+[node name="Signboard4" parent="." unique_id=1150057374 instance=ExtResource("7_g141h")]
+position = Vector2(112, 112)
+text = "按R重置"
+
+[node name="Giraffe" parent="." unique_id=1759761654 instance=ExtResource("8_hapfj")]
+position = Vector2(168, 96)

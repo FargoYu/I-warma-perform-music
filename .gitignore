@@ -1,4 +1,15 @@
-# Godot 4+ specific ignores
 .godot/
-.godot-user/
-/android/
+*.log
+
+# Generated captures and local exports
+/artifacts/
+/build/
+/dist/
+/show/_source/
+
+# Local editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini

@@ -1,30 +1,7 @@
-[gd_scene format=3 uid="uid://556nydvmda5s"]
+[gd_scene format=3 uid="uid://dgte1a082nky7"]
 
-[ext_resource type="Script" uid="uid://dol7c2lowe1y7" path="res://objects/signboard.gd" id="1_sign"]
-[ext_resource type="Texture2D" uid="uid://donv1khc1honm" path="res://Assets/Sprites/signboard.png" id="2_sign"]
-[ext_resource type="PackedScene" path="res://objects/screen_text.tscn" id="3_text"]
+[ext_resource type="Script" uid="uid://dq41q5qrqdvbw" path="res://objects/signboard.gd" id="1"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape_sign"]
-size = Vector2(16, 16)
-
-[node name="Signboard" type="Area2D" unique_id=636522275 groups=["signboards"]]
-z_index = -9
-z_as_relative = false
-collision_layer = 0
-collision_mask = 6
-script = ExtResource("1_sign")
-message = ""
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1173678382]
-texture_filter = 1
-texture = ExtResource("2_sign")
-
-[node name="TriggerShape" type="CollisionShape2D" parent="." unique_id=921552454]
-shape = SubResource("RectangleShape_sign")
-
-[node name="MessageLayer" parent="." unique_id=1087960482 instance=ExtResource("3_text")]
-message = ""
-text_position = Vector2(8, 62)
-center_on_screen = false
-show_on_enter = false
-display_duration = 0.0
+[node name="Signboard" type="Node2D" unique_id=856111074]
+z_index = -1
+script = ExtResource("1")

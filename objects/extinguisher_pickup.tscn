@@ -1,51 +1,7 @@
-[gd_scene format=3 uid="uid://c8hemm53duuly"]
+[gd_scene format=3 uid="uid://d2ab4o73pgtvs"]
 
-[ext_resource type="Script" uid="uid://bhv6pm0bql20p" path="res://objects/extinguisher_pickup.gd" id="1_pickup"]
-[ext_resource type="Texture2D" uid="uid://dajhrwawvi65e" path="res://Assets/Sprites/extinguisher.png" id="2_extinguisher"]
+[ext_resource type="Script" uid="uid://c4urpkumwpskv" path="res://objects/extinguisher_pickup.gd" id="1_pickup"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape_pickup"]
-size = Vector2(8, 8)
-
-[node name="ExtinguisherPickup" type="Area2D" unique_id=354768487]
-collision_layer = 16
-collision_mask = 2
+[node name="ExtinguisherPickup" type="Node2D" unique_id=471347448]
+texture_filter = 1
 script = ExtResource("1_pickup")
-glow_color = Color(0.47, 0.94, 1, 1)
-sparks_enabled = true
-spark_amount = 28
-spark_radius = 5.0
-spark_size = 1.0
-spark_lifetime = 1.0
-spark_drift_speed = 0.0
-spark_randomness = 0.0
-spark_blink_speed = 1.6
-spark_blink_min_alpha = 0.15
-pulse_enabled = true
-pulse_speed = 1.6
-pulse_min_brightness = 0.35
-pulse_max_brightness = 1.6
-
-[node name="Sparks" type="CPUParticles2D" parent="." unique_id=2008569502]
-z_index = 1
-texture_filter = 1
-emitting = true
-amount = 28
-lifetime = 1.0
-randomness = 0.0
-local_coords = true
-emission_shape = 6
-emission_ring_radius = 5.0
-emission_ring_inner_radius = 5.0
-gravity = Vector2(0, 0)
-scale_amount_min = 1.0
-scale_amount_max = 1.0
-color = Color(0.47, 0.94, 1, 1)
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2008569501]
-texture_filter = 1
-position = Vector2(-1, -2)
-texture = ExtResource("2_extinguisher")
-centered = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1148037441]
-shape = SubResource("RectangleShape_pickup")

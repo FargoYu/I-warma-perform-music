@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://drfdm5dpnddnx"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_world"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_background"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_grid"]
+[ext_resource type="PackedScene" path="res://objects/warma.tscn" id="4_warma"]
+[ext_resource type="PackedScene" path="res://objects/giraffe.tscn" id="5_giraffe"]
+[ext_resource type="PackedScene" path="res://objects/extinguisher_pickup.tscn" id="6_pickup"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="7_door"]
+[ext_resource type="PackedScene" path="res://objects/signboard.tscn" id="8_sign"]
+
+[node name="Level02" type="Node2D" unique_id=474188171]
+script = ExtResource("1_world")
+
+[node name="Background" parent="." unique_id=852335842 instance=ExtResource("2_background")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1253972990 instance=ExtResource("3_grid")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(10, 8), Vector2i(11, 8), Vector2i(12, 8), Vector2i(13, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(1, 5), Vector2i(11, 5), Vector2i(12, 5), Vector2i(13, 5), Vector2i(11, 7), Vector2i(12, 7), Vector2i(13, 7), Vector2i(2, 5), Vector2i(4, 6), Vector2i(5, 4)])
+
+[node name="Warma" parent="." unique_id=81343480 instance=ExtResource("4_warma")]
+texture_filter = 1
+position = Vector2(24, 112)
+
+[node name="ExtinguisherPickup" parent="." unique_id=324187749 instance=ExtResource("6_pickup")]
+position = Vector2(52, 120)
+
+[node name="Giraffe" parent="." unique_id=1338401749 instance=ExtResource("5_giraffe")]
+texture_filter = 1
+position = Vector2(96, 112)
+
+[node name="StackLower" parent="." unique_id=1309448271 instance=ExtResource("5_giraffe")]
+texture_filter = 1
+position = Vector2(144, 112)
+
+[node name="StackUpper" parent="." unique_id=680392717 instance=ExtResource("5_giraffe")]
+texture_filter = 1
+position = Vector2(144, 96)
+
+[node name="Door" parent="." instance=ExtResource("7_door")]
+position = Vector2(224, 112)
+target_room = "res://end.tscn"
+
+[node name="Signboard" parent="." instance=ExtResource("8_sign")]
+position = Vector2(32, 112)
+text = "装备会随房间切换保留。\nN 获得灭火器，M 使用第一扇门。"
