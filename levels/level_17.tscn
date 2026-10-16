@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://b58tllxon4j63"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_v6cwa"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_e1vc6"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_cuy2k"]
+[ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_wvxxa"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_6ogal"]
+[ext_resource type="PackedScene" uid="uid://dgte1a082nky7" path="res://objects/signboard.tscn" id="6_3ccr1"]
+[ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="7_g6sa6"]
+
+[node name="Level04" type="Node2D" unique_id=621054034]
+script = ExtResource("1_v6cwa")
+
+[node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_e1vc6")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_cuy2k")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(3, 4), Vector2i(4, 4), Vector2i(9, 3), Vector2i(10, 3), Vector2i(11, 3)])
+
+[node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_wvxxa")]
+position = Vector2(48, 48)
+
+[node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_6ogal")]
+position = Vector2(176, 32)
+target_room = "res://levels/level_18.tscn"
+
+[node name="Signboard" parent="." unique_id=856111074 instance=ExtResource("6_3ccr1")]
+position = Vector2(48, 48)
+text = "斑羚飞渡"
+
+[node name="Giraffe2" parent="." unique_id=1867246780 instance=ExtResource("7_g6sa6")]
+position = Vector2(72, 48)

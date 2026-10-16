@@ -20,6 +20,10 @@ run/main_scene="res://start.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://dsrocvtprdpsh"
+
 [autoload]
 
 GameState="*res://scripts/game_state.gd"

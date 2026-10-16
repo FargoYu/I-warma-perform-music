@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://deqg3kbbqx711"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_0daix"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_a3inf"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_3usv8"]
+[ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_517is"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_wjnwn"]
+[ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="6_6qrgl"]
+[ext_resource type="PackedScene" uid="uid://dgte1a082nky7" path="res://objects/signboard.tscn" id="7_a3inf"]
+
+[node name="Level04" type="Node2D" unique_id=621054034]
+script = ExtResource("1_0daix")
+
+[node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_a3inf")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_3usv8")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(2, 7), Vector2i(3, 7), Vector2i(4, 7), Vector2i(5, 7), Vector2i(6, 7), Vector2i(7, 7), Vector2i(8, 7), Vector2i(9, 7), Vector2i(10, 7), Vector2i(11, 7), Vector2i(12, 7), Vector2i(13, 7), Vector2i(0, 7), Vector2i(1, 7), Vector2i(1, 8), Vector2i(0, 8), Vector2i(2, 8), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(10, 8), Vector2i(11, 8), Vector2i(12, 8), Vector2i(13, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(15, 7), Vector2i(14, 7)])
+
+[node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_517is")]
+position = Vector2(40, 96)
+
+[node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_wjnwn")]
+position = Vector2(112, 0)
+target_room = "res://end.tscn"
+
+[node name="Giraffe2" parent="." unique_id=1867246780 instance=ExtResource("6_6qrgl")]
+position = Vector2(112, 96)
+
+[node name="Giraffe3" parent="." unique_id=1759761654 instance=ExtResource("6_6qrgl")]
+position = Vector2(144, 96)
+
+[node name="Giraffe4" parent="." unique_id=2063653650 instance=ExtResource("6_6qrgl")]
+position = Vector2(80, 96)
+
+[node name="Giraffe5" parent="." unique_id=511177201 instance=ExtResource("6_6qrgl")]
+position = Vector2(176, 96)
+
+[node name="Giraffe6" parent="." unique_id=527534122 instance=ExtResource("6_6qrgl")]
+position = Vector2(128, 96)
+
+[node name="Giraffe7" parent="." unique_id=1566416517 instance=ExtResource("6_6qrgl")]
+position = Vector2(160, 96)
+
+[node name="Giraffe8" parent="." unique_id=1199072112 instance=ExtResource("6_6qrgl")]
+position = Vector2(96, 96)
+
+[node name="Signboard" parent="." unique_id=856111074 instance=ExtResource("7_a3inf")]
+position = Vector2(224, 96)
+text = "最后的挑战"

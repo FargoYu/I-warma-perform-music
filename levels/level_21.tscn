@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://5qu1f2m34kr4"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_kff0s"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_bn4ji"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_nvgmw"]
+[ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_8n5lr"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_87rxk"]
+[ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="6_djlb3"]
+[ext_resource type="PackedScene" uid="uid://dgte1a082nky7" path="res://objects/signboard.tscn" id="7_bn4ji"]
+
+[node name="Level04" type="Node2D" unique_id=621054034]
+script = ExtResource("1_kff0s")
+
+[node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_bn4ji")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_nvgmw")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(0, 7), Vector2i(3, 2), Vector2i(4, 2), Vector2i(5, 2), Vector2i(2, 3), Vector2i(3, 3), Vector2i(4, 3), Vector2i(2, 4), Vector2i(3, 4), Vector2i(4, 4), Vector2i(3, 5), Vector2i(4, 5), Vector2i(10, 2), Vector2i(11, 2), Vector2i(12, 2), Vector2i(13, 2), Vector2i(15, 4), Vector2i(6, 2), Vector2i(0, 5), Vector2i(0, 6), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(3, 8), Vector2i(2, 8), Vector2i(1, 8), Vector2i(0, 8), Vector2i(0, 3), Vector2i(1, 3), Vector2i(2, 5), Vector2i(3, 6), Vector2i(4, 6)])
+
+[node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_8n5lr")]
+position = Vector2(32, 16)
+
+[node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_87rxk")]
+position = Vector2(0, 64)
+target_room = "res://levels/level_22.tscn"
+
+[node name="Giraffe2" parent="." unique_id=1867246780 instance=ExtResource("6_djlb3")]
+position = Vector2(32, 0)
+
+[node name="Signboard" parent="." unique_id=856111074 instance=ExtResource("7_bn4ji")]
+position = Vector2(16, 16)
+text = "洲际导弹"

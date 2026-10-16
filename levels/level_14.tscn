@@ -21,7 +21,7 @@ cells = Array[Vector2i]([Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2
 position = Vector2(8, 96)
 
 [node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_0duc7")]
-target_room = "uid://c78htantaua1w"
+target_room = "res://levels/level_15.tscn"
 
 [node name="Giraffe" parent="." unique_id=1759761654 instance=ExtResource("6_e3ou2")]
 position = Vector2(32, 96)

@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://bvo4gp6jixofg"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_5xg7u"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_0oidl"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_s5b7g"]
+[ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_hmv7y"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_oolj0"]
+[ext_resource type="PackedScene" uid="uid://dgte1a082nky7" path="res://objects/signboard.tscn" id="7_8j7gf"]
+[ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="7_m3dms"]
+
+[node name="Level04" type="Node2D" unique_id=621054034]
+script = ExtResource("1_5xg7u")
+
+[node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_0oidl")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_s5b7g")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(0, 6), Vector2i(2, 6), Vector2i(3, 6), Vector2i(4, 6), Vector2i(5, 6), Vector2i(6, 6), Vector2i(7, 6), Vector2i(8, 6), Vector2i(9, 6), Vector2i(10, 6), Vector2i(11, 6), Vector2i(12, 6), Vector2i(13, 6), Vector2i(14, 6), Vector2i(15, 6), Vector2i(2, 7), Vector2i(3, 7), Vector2i(4, 7), Vector2i(5, 7), Vector2i(6, 7), Vector2i(7, 7), Vector2i(8, 7), Vector2i(9, 7), Vector2i(10, 7), Vector2i(11, 7), Vector2i(12, 7), Vector2i(13, 7), Vector2i(14, 7), Vector2i(15, 7), Vector2i(2, 8), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(10, 8), Vector2i(11, 8), Vector2i(12, 8), Vector2i(13, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(0, 7), Vector2i(0, 8), Vector2i(14, 3), Vector2i(14, 4), Vector2i(14, 5), Vector2i(15, 5), Vector2i(15, 4), Vector2i(15, 3), Vector2i(2, 5), Vector2i(3, 5), Vector2i(4, 5), Vector2i(5, 5)])
+
+[node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_hmv7y")]
+position = Vector2(11, 80)
+
+[node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_oolj0")]
+position = Vector2(240, 32)
+target_room = "res://levels/level_20.tscn"
+
+[node name="Giraffe2" parent="." unique_id=1867246780 instance=ExtResource("7_m3dms")]
+position = Vector2(10, 48)
+
+[node name="Giraffe3" parent="." unique_id=1759761654 instance=ExtResource("7_m3dms")]
+position = Vector2(8, 64)
+
+[node name="Signboard" parent="." unique_id=856111074 instance=ExtResource("7_8j7gf")]
+position = Vector2(80, 64)
+text = "拘束地跳吧！"

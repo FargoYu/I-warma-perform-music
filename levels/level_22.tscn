@@ -1,0 +1,118 @@
+[gd_scene format=3 uid="uid://d2cm0ptahkryh"]
+
+[ext_resource type="Script" uid="uid://b66nxw7ghjkvh" path="res://scripts/rect_world.gd" id="1_lnjaj"]
+[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2_dgdix"]
+[ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_eiryh"]
+[ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_lomhg"]
+[ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_pq2nb"]
+[ext_resource type="PackedScene" uid="uid://dgte1a082nky7" path="res://objects/signboard.tscn" id="6_0cb17"]
+[ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="7_63owy"]
+
+[node name="Level04" type="Node2D" unique_id=621054034]
+script = ExtResource("1_lnjaj")
+
+[node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_dgdix")]
+
+[node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_eiryh")]
+texture_filter = 1
+cells = Array[Vector2i]([Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(13, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(15, 7), Vector2i(12, 8), Vector2i(11, 8), Vector2i(10, 8), Vector2i(15, 4), Vector2i(15, 5), Vector2i(15, 6), Vector2i(15, 2), Vector2i(15, 3)])
+
+[node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_lomhg")]
+position = Vector2(8, 112)
+
+[node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_pq2nb")]
+position = Vector2(240, 16)
+target_room = "res://levels/level_23.tscn"
+
+[node name="Signboard" parent="." unique_id=856111074 instance=ExtResource("6_0cb17")]
+position = Vector2(0, 112)
+text = "融入"
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1541447595]
+
+[node name="Giraffe" parent="Node2D" unique_id=1759761654 instance=ExtResource("7_63owy")]
+position = Vector2(104, 112)
+
+[node name="Giraffe2" parent="Node2D" unique_id=1912164973 instance=ExtResource("7_63owy")]
+position = Vector2(104, 96)
+
+[node name="Giraffe3" parent="Node2D" unique_id=2042183177 instance=ExtResource("7_63owy")]
+position = Vector2(104, 80)
+
+[node name="Giraffe4" parent="Node2D" unique_id=1629109718 instance=ExtResource("7_63owy")]
+position = Vector2(104, 64)
+
+[node name="Giraffe5" parent="Node2D" unique_id=1471169474 instance=ExtResource("7_63owy")]
+position = Vector2(104, 48)
+
+[node name="Giraffe6" parent="Node2D" unique_id=1300730488 instance=ExtResource("7_63owy")]
+position = Vector2(104, 32)
+
+[node name="Giraffe7" parent="Node2D" unique_id=1284664382 instance=ExtResource("7_63owy")]
+position = Vector2(104, 16)
+
+[node name="Giraffe8" parent="Node2D" unique_id=918586780 instance=ExtResource("7_63owy")]
+position = Vector2(104, 0)
+
+[node name="Giraffe9" parent="Node2D" unique_id=62551218 instance=ExtResource("7_63owy")]
+position = Vector2(104, -16)
+
+[node name="Node2D2" type="Node2D" parent="." unique_id=480906448]
+position = Vector2(0, -144)
+
+[node name="Giraffe" parent="Node2D2" unique_id=1093676968 instance=ExtResource("7_63owy")]
+position = Vector2(104, 112)
+
+[node name="Giraffe2" parent="Node2D2" unique_id=1011393700 instance=ExtResource("7_63owy")]
+position = Vector2(104, 96)
+
+[node name="Giraffe3" parent="Node2D2" unique_id=1270385251 instance=ExtResource("7_63owy")]
+position = Vector2(104, 80)
+
+[node name="Giraffe4" parent="Node2D2" unique_id=1965418562 instance=ExtResource("7_63owy")]
+position = Vector2(104, 64)
+
+[node name="Giraffe5" parent="Node2D2" unique_id=1382119433 instance=ExtResource("7_63owy")]
+position = Vector2(104, 48)
+
+[node name="Giraffe6" parent="Node2D2" unique_id=970186748 instance=ExtResource("7_63owy")]
+position = Vector2(104, 32)
+
+[node name="Giraffe7" parent="Node2D2" unique_id=2157734 instance=ExtResource("7_63owy")]
+position = Vector2(104, 16)
+
+[node name="Giraffe8" parent="Node2D2" unique_id=1881964381 instance=ExtResource("7_63owy")]
+position = Vector2(104, 0)
+
+[node name="Giraffe9" parent="Node2D2" unique_id=1660210946 instance=ExtResource("7_63owy")]
+position = Vector2(104, -16)
+
+[node name="Node2D3" type="Node2D" parent="." unique_id=2126982971]
+position = Vector2(0, -288)
+
+[node name="Giraffe" parent="Node2D3" unique_id=534247637 instance=ExtResource("7_63owy")]
+position = Vector2(104, 112)
+
+[node name="Giraffe2" parent="Node2D3" unique_id=1707973976 instance=ExtResource("7_63owy")]
+position = Vector2(104, 96)
+
+[node name="Giraffe3" parent="Node2D3" unique_id=17446722 instance=ExtResource("7_63owy")]
+position = Vector2(104, 80)
+
+[node name="Giraffe4" parent="Node2D3" unique_id=652474239 instance=ExtResource("7_63owy")]
+position = Vector2(104, 64)
+
+[node name="Giraffe5" parent="Node2D3" unique_id=1621480518 instance=ExtResource("7_63owy")]
+position = Vector2(104, 48)
+
+[node name="Giraffe6" parent="Node2D3" unique_id=1945503494 instance=ExtResource("7_63owy")]
+position = Vector2(104, 32)
+
+[node name="Giraffe7" parent="Node2D3" unique_id=1246079726 instance=ExtResource("7_63owy")]
+position = Vector2(104, 16)
+
+[node name="Giraffe8" parent="Node2D3" unique_id=365170440 instance=ExtResource("7_63owy")]
+position = Vector2(104, 0)
+
+[node name="Giraffe9" parent="Node2D3" unique_id=1262405855 instance=ExtResource("7_63owy")]
+position = Vector2(104, -16)

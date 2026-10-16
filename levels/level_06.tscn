@@ -21,7 +21,7 @@ position = Vector2(8, 112)
 
 [node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_qadnc")]
 position = Vector2(232, 64)
-target_room = "uid://0ghk82nbq5wx"
+target_room = "res://levels/level_07.tscn"
 
 [node name="Giraffe" parent="." unique_id=1759761654 instance=ExtResource("6_j8rst")]
 position = Vector2(100, 64)

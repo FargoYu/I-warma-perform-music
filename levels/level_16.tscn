@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" path="res://objects/block_grid.tscn" id="3_iik42"]
 [ext_resource type="PackedScene" uid="uid://djw2kd1ncbh2x" path="res://objects/warma.tscn" id="4_axljb"]
 [ext_resource type="PackedScene" path="res://objects/door.tscn" id="5_hs0jm"]
-[ext_resource type="PackedScene" uid="uid://dgte1a082nky7" path="res://objects/signboard.tscn" id="6_iik42"]
 [ext_resource type="PackedScene" uid="uid://cukt4p63p42l0" path="res://objects/giraffe.tscn" id="7_axljb"]
 
 [node name="Level04" type="Node2D" unique_id=621054034]
@@ -21,11 +20,7 @@ cells = Array[Vector2i]([Vector2i(0, 8), Vector2i(1, 8), Vector2i(2, 8), Vector2
 position = Vector2(8, 96)
 
 [node name="Door" parent="." unique_id=575282275 instance=ExtResource("5_hs0jm")]
-target_room = "res://end.tscn"
-
-[node name="Signboard" parent="." unique_id=856111074 instance=ExtResource("6_iik42")]
-position = Vector2(0, 96)
-text = "最后的挑战"
+target_room = "res://levels/level_17.tscn"
 
 [node name="Giraffe" parent="." unique_id=1759761654 instance=ExtResource("7_axljb")]
 position = Vector2(48, 96)
