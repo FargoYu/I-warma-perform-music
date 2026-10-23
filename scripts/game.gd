@@ -7,8 +7,6 @@ var world: Node2D
 
 func _ready() -> void:
 	_load_room(level)
-	if OS.get_cmdline_user_args().has("--capture"):
-		_capture.call_deferred()
 
 func _load_room(scene: PackedScene) -> void:
 	world = scene.instantiate()
@@ -64,18 +62,3 @@ func _unhandled_input(event: InputEvent) -> void:
 				world.show_contacts = not world.show_contacts
 				world.queue_redraw()
 
-func _capture() -> void:
-	world.set_physics_process(false)
-	await get_tree().process_frame
-	await RenderingServer.frame_post_draw
-	DirAccess.make_dir_recursive_absolute("res://artifacts")
-	get_viewport().get_texture().get_image().save_png("res://artifacts/game_overview.png")
-	world.player.pick_up_extinguisher()
-	world.player.direction = -1
-	world.show_contacts = true
-	world.fire()
-	world.queue_redraw()
-	await get_tree().process_frame
-	await RenderingServer.frame_post_draw
-	get_viewport().get_texture().get_image().save_png("res://artifacts/game_equipped.png")
-	get_tree().quit()

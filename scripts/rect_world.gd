@@ -19,6 +19,13 @@ const TERMINAL_SPEED: float = 240.0
 @export var horizontal_limit: float = 640.0
 @export_range(0.01, 1.0, 0.01) var death_flash_duration: float = 0.08
 
+## Size of the centered level number, in viewport pixels.
+@export_range(1, 144, 1) var level_number_font_size: int = 32:
+	set(value):
+		level_number_font_size = maxi(1, value)
+		if is_instance_valid(_level_number_label):
+			_level_number_label.add_theme_font_size_override("font_size", level_number_font_size)
+
 signal shot_hit(body: Node)
 signal player_fell
 signal restart_requested(restart_current_room: bool)
@@ -48,8 +55,10 @@ var setup_errors: Array[String] = []
 var _contact_overlay: Node2D
 var _time_speed_hud: CanvasLayer
 var _time_speed_label: Label
+var _level_number_label: Label
 
 func _ready() -> void:
+	_create_level_number()
 	_contact_overlay = Node2D.new()
 	_contact_overlay.name = "ContactOverlay"
 	_contact_overlay.z_index = 100
@@ -61,6 +70,28 @@ func _ready() -> void:
 		player.pick_up_extinguisher()
 	if player != null:
 		player.extinguisher_changed.connect(_equipment_audio)
+
+func _create_level_number() -> void:
+	var filename := scene_file_path.get_file().get_basename()
+	var digits := filename.trim_prefix("level_")
+	if not filename.begins_with("level_") or not digits.is_valid_int():
+		return
+	_level_number_label = Label.new()
+	_level_number_label.name = "LevelNumber"
+	# Background is -100; all gameplay objects render above this layer.
+	_level_number_label.z_index = -99
+	_level_number_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_level_number_label.text = str(digits.to_int())
+	_level_number_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_level_number_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_level_number_label.add_theme_font_size_override("font_size", level_number_font_size)
+	_level_number_label.add_theme_color_override("font_color", Color(0, 0, 0, 0.18))
+	add_child(_level_number_label)
+	_resize_level_number()
+	get_viewport().size_changed.connect(_resize_level_number)
+
+func _resize_level_number() -> void:
+	_level_number_label.size = get_viewport_rect().size
 
 func _equipment_audio(equipped: bool) -> void:
 	if equipped and not get_node("/root/GameState").has_extinguisher:

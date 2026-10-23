@@ -9,6 +9,7 @@
 
 [node name="Level01" type="Node2D" unique_id=621054034]
 script = ExtResource("1_world")
+level_number_font_size = 32
 
 [node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_background")]
 

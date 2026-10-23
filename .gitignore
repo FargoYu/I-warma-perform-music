@@ -1,11 +1,14 @@
+# Godot generated cache (keep .gd.uid and asset .import files)
 .godot/
 *.log
+*.tmp
+*.bak
+/export_credentials.cfg
 
-# Generated captures and local exports
+# Local captures and exports
 /artifacts/
 /build/
 /dist/
-/show/_source/
 /I warma perform music.exe
 /Warma-Demo-*.exe
 

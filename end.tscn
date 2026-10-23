@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://s3sam0n53o62"]
 
 [ext_resource type="Script" uid="uid://cgm18nmpybnih" path="res://scripts/scene_screen.gd" id="1"]
-[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2"]
+[ext_resource type="Texture2D" uid="uid://u6mths40ncve" path="res://Assets/Sprites/end.png" id="2"]
 
 [sub_resource type="SystemFont" id="Font"]
 font_names = PackedStringArray("Microsoft YaHei", "Noto Sans CJK SC")
@@ -11,7 +11,15 @@ script = ExtResource("1")
 target_scene = ""
 quit_on_key = true
 
-[node name="Background" parent="." unique_id=357229887 instance=ExtResource("2")]
+[node name="Background" type="TextureRect" parent="." unique_id=1134531121]
+z_index = -100
+texture_filter = 2
+offset_right = 256.0
+offset_bottom = 144.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Title" type="Label" parent="." unique_id=1715027560]
 offset_left = 16.0
@@ -21,7 +29,7 @@ offset_bottom = 70.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = SubResource("Font")
 theme_override_font_sizes/font_size = 22
-text = "游戏测试部分结束"
+text = "感谢游玩本游戏"
 horizontal_alignment = 1
 
 [node name="Prompt" type="Label" parent="." unique_id=1047940022]

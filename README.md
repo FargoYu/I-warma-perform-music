@@ -1,100 +1,98 @@
-# I warma perform music — Demo v0.2
+# 沃要吹灭火器 · I warma perform music
 
-这是 Warma 平台游戏的一次物理重构。工程使用 Godot 4.7，以集中式轴对齐矩形（AABB）求解器处理实体运动与碰撞，保持角色的实际碰撞尺寸。关卡场景负责配置，世界脚本统一推进物理和玩法，节点负责显示。
+一款以 Warma 为主角的像素风平台解谜游戏。跳上长颈鹿，吹响灭火器，用音符推动它们，寻找通往下一扇门的路线。
 
-本仓库是 **Demo v0.2** 的 Godot 源码工程，包含 16 个主线房间和一个独立演示房间 `level_X`。
+游戏包含 **24 个连续关卡**，从移动和跳跃入门，逐步探索碰撞、堆叠与空中配合。遇到需要精细操作的地方，可以放慢时间，再试一次。
 
-## 快速运行
+## 开始游玩
 
-1. 安装 Godot 4.7（标准版，无需 .NET），导入本目录的 `project.godot`。
-2. 等待首次资源导入完成，按 **F5** 运行。
-3. 开场按任意键进入第一房间；打开单个房间按 **F6** 可独立试玩。
+如果仓库的 **Releases** 页面提供 Windows 发布包，下载并解压后运行 `Warma-Demo-v0.2.exe`，无需安装 Godot。GitHub 的 **Code → Download ZIP** 下载的是源码，需要按下方开发说明运行。
 
-Windows 发布版解压后双击 `Warma-Demo-v0.2.exe` 即可运行，无需安装 Godot。源码工程请先在编辑器完成导入，再按 F5。逻辑画面 256×144，默认窗口 1024×576，物理更新 120 Hz。
+开场按任意键开始。接触告示牌可查看提示；到达门前按 **W** 进入下一关。完成第 24 关后进入结束画面，再按任意键退出。
 
 ## 操作
 
 | 按键 | 功能 |
 | --- | --- |
-| A / D | 左右移动 |
-| J | 跳跃；长按时一旦可以起跳就自动连续跳跃，松开可缩短跳跃 |
-| K | 获得灭火器后，每次点按发射一个音符，无攻击冷却；长按不连发 |
-| ← / → | 游戏时间减速 / 加速一档：x0.1、x0.2、x0.5、x1；到达极限后无效 |
-| W | Warma 与门的范围重叠时，进入门指定的房间 |
-| N | 立即获得灭火器 |
-| M | 使用当前房间场景树中的第一扇门，无需靠近 |
-| R | 重载当前房间，回到该房间最初设置的出生点，保留已获得的灭火器（F5 / F6 一致） |
-| P | F5 暂停 / 继续 |
-| F1 | F5 显示 / 隐藏实体碰撞边界 |
+| **A / D** | 向左 / 向右移动 |
+| **J** | 跳跃；长按跳得更高，持续按住可在能够起跳时自动再次跳跃 |
+| **K** | 获得灭火器后发射音符；每次点按发射一次，长按不会连发 |
+| **W** | 与门重叠时进入下一关 |
+| **R** | 重置当前关卡，回到初始出生点 |
+| **P** | 暂停 / 继续 |
+| **← / →** | 时间减速 / 加速一档 |
 
-门使用 `door.png`，层级在背景与主角之间；在 Inspector 的 **Target Room** 中选择房间或 `end.tscn`。告示牌使用 `signboard.png`；在 **Text** 中填写文字，接触时自动显示无底色的黑字，离开隐藏，新告示牌立即替换旧提示。当前主线连接为开场 → `level_01` → … → `level_16` → 结束；独立演示房间 `level_X` 也连接到结束画面。结束画面按任意键退出。装备随房间切换保留，退出游戏不存档。暂停期间 W/N/M 不执行。
+### 游玩提示
 
-游戏时间默认 x1，左下角仅显示当前倍率，采用告示牌的黑字样式。每次按下方向键只调整一档，长按不重复调档；暂停时也可调整。所选流速在换房间和重开后保留，退出游戏后恢复 x1。所有流速下均可快速点按 K，每次按下立即发射一个音符。
+- 音符会让长颈鹿沿发射方向移动一段时间。Warma、长颈鹿和地形之间的碰撞是解谜的一部分。
+- 发射没有冷却时间，可以连续点按 **K**；尝试调整站位、朝向与发射时机。
+- 时间倍率有 **×0.1、×0.2、×0.5、×1** 四档，左下角显示当前倍率。默认正常速度，减速适合观察和微调；音效保持正常音高。
+- 卡住时按 **R** 重来。掉出关卡边界也会自动重置当前关卡。
+- 灭火器取得后，在本次游戏的重试和换关中保留；时间倍率也会保留。
+- **没有跨次游玩的存档**：退出后重新打开，会从第一关开始，装备与时间倍率恢复初始状态。
 
-Warma 掉出关卡边界后会闪烁并重载当前房间，回到该关卡最初设置的出生位置，保留已获得的灭火器。灭火器一旦获得，就会在本次游戏中一直持有；退出游戏不存档。
+游戏使用键盘操作，提供动作与交互音效，没有背景音乐。
 
-## 音效
+## 从源码运行
 
-已启用轻松愉快的 15 个原创音效，覆盖落地、发射、受击、拾取、换房、重试和界面提示。行走、起跳与告示牌交互保持安静，没有背景音乐。未使用的音频素材已删除。音效保持正常音高，不跟随游戏时间倍率变化。资源、音量调节和重新生成方法见 [音效包说明](Assets/Audio/README.md)。
+工程配置为 **Godot 4.7**，使用 GDScript，标准版即可，无需 .NET。
 
-音频回归可运行 `godot --headless --path . --script res://tests/test_audio.gd`。
+1. 下载源码并解压，或克隆仓库。
+2. 在 Godot 项目管理器中导入根目录的 `project.godot`。
+3. 等待资源导入完成，按 **F5** 从开场运行完整游戏。
 
-## 工程结构
+默认窗口为 1024 × 576，逻辑画面为 256 × 144，采用 Compatibility 渲染器。首次打开时生成的 `.godot/` 是本地缓存，不需要提交。
+
+## 开发与关卡编辑
+
+### 目录结构
 
 | 路径 | 内容 |
 | --- | --- |
-| `levels/` | 主线与独立演示房间 |
-| `objects/`、`Assets/` | 游戏对象与像素素材 |
-| `scripts/`、`physics/` | 玩法、场景管理与矩形物理求解器 |
-| `addons/block_painter/` | 关卡方块画笔，支持绘制、擦除与撤销 |
-| `tests/` | 回归脚本及测试场景 |
-| `show/` | 架构说明与成品视频；不参与游戏运行 |
+| `start.tscn` / `main.tscn` / `end.tscn` | 开场、游戏宿主与结束画面 |
+| `levels/` | `level_01` 至 `level_24` 的关卡场景 |
+| `objects/` | 主角、长颈鹿、方块、门、告示牌和灭火器等对象 |
+| `scripts/` | 玩法、房间切换、装备状态、时间倍率与音效管理 |
+| `physics/` | 自定义轴对齐矩形（AABB）物理状态与碰撞求解器 |
+| `Assets/` | 游戏使用的像素素材与 15 个音效文件 |
+| `addons/block_painter/` | 编辑器中的方块画笔插件 |
+| `export_presets.cfg` | Windows x86_64 导出预设 |
 
-学习与搭建说明见 [系统概要与学习路径](SYSTEM_GUIDE.md)，详细架构见 [全游戏架构说明](show/全游戏架构说明.md)。
+`scripts/game.gd` 管理房间加载与切换，`scripts/rect_world.gd` 统一推进输入、物理和交互。实体的运动与碰撞由 `physics/` 中的矩形求解器处理，物理更新频率为 120 Hz；对象节点主要负责配置与绘制。修改运动逻辑时，应沿用这套状态和求解流程。
 
-## 导出 Windows 版本
+`GameState` 自动加载节点保存本次运行的装备和时间倍率；`AudioManager` 管理音效。可在 `default_bus_layout.tres` 的 SFX 总线上调整音量。
 
-安装 Godot 4.7.2 与匹配的导出模板，通过 **项目 → 导出 → Windows Desktop** 导出发布构建。已提供 x86_64 导出预设，默认输出到 `dist/Warma-Demo-v0.2-Windows-x86_64/Warma-Demo-v0.2.exe`，PCK 嵌入 EXE。测试、文档视频、音效生成工具、编辑器插件和本地中间文件均不进入运行包。
+### 编辑房间
 
-完整发布流程可执行：
+1. 打开 `levels/` 中的场景，修改对象的位置与属性。
+2. 选中 `BlockGrid2D`，开启方块画笔后，左键绘制、右键擦除，支持撤销与重做。插件在项目中默认启用。
+3. 通过门的 **Target Room** 属性设置下一关路径，最后一关指向 `res://end.tscn`。
+4. 在告示牌的 **Text** 属性中填写提示，玩家接触时会自动显示。
+5. 按 **F6** 单独试玩当前房间；检查完整流程时使用 **F5**。单独运行房间时，P 暂停和 F1 碰撞显示不可用。
 
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tools/build_release.ps1 -GodotPath 'C:\path\to\godot.exe'
-```
+现有版本还保留了以下辅助快捷键，正式游玩时也可使用：
 
-脚本执行导入、回归、Release 导出、独立启动和导出资源检查，生成带操作说明的 ZIP 及 SHA-256 校验文件，供上传到 Release。发布说明见 [RELEASE_NOTES.md](RELEASE_NOTES.md)。旧版本本地 EXE 收纳在忽略目录 `build/previous/`，发布包以 `dist/` 为准。
-
-源码提交保留 `.gd.uid` 和素材 `.import` 文件，它们记录资源标识与导入设置；`.godot/` 缓存可自动重建。测试截图 `artifacts/`、本地导出 `build/` / `dist/` 与制作中间文件已由 `.gitignore` 排除。
-
-## 回归验证
-
-回归命令（PowerShell）：
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tests/run_physics.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File tests/run_level_loading.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File tests/run_gameplay.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File tests/run_real_input.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File tests/run_display.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File tests/run_block_painter.ps1
-godot --headless --path . --script res://tests/test_audio.gd
-```
-
-这些脚本的默认 Godot 路径是开发机的 Steam 安装目录；其他环境请在命令末尾追加 `-GodotPath 'C:\path\to\godot.exe'`。显示测试需要真实图形设备，并会重新生成 `artifacts/` 截图。各脚本打印场景数、检查数与失败数，以实际运行输出为准。
-
-2026-10-14 发布整理时，使用 Godot 4.7.2 验证：
-
-| 测试 | 结果 |
+| 按键 | 功能 |
 | --- | --- |
-| 物理 | 143119 checks，0 failures |
-| 关卡加载 | 2138 checks，0 failures |
-| 真实按键 | 932 checks，0 failures |
-| 方块画笔 | 62 checks，0 failures |
-| 玩法 | 2108 checks，0 failures；包含 16 个房间的门连接与结束流程 |
-| 显示 | 283 checks，0 failures |
-| 音效 | 110 checks，0 failures；资源与注册表一一对应，无背景音乐自动播放 |
-| 结束画面 | 任意键退出，0 failures |
-| 导出资源与流程 | 59 checks，0 failures；读取 EXE 内嵌资源，验证废弃资源排除与 16 房间连接 |
-| Windows Release | 独立 EXE 启动检查通过 |
+| **N** | 立即获得灭火器 |
+| **M** | 直接使用当前房间场景树中的第一扇门，无需靠近 |
+| **F1** | 显示 / 隐藏实体碰撞边界 |
 
-全部回归断言已通过。部分测试在退出时仍有 Godot 对象 / 资源清理警告；没有脚本解析或运行错误。房间切换检查不等同于手动完成全部谜题。
+暂停时，获得装备的辅助快捷键、跳关和进门操作不执行，仍可调整时间倍率。
+
+### 导出 Windows 发布包
+
+安装与所用 Godot 版本匹配的导出模板，在 **项目 → 导出 → Windows Desktop** 中导出 Release。预设使用 x86_64，并将 PCK 嵌入 EXE，默认输出路径为：
+
+```text
+dist/Warma-Demo-v0.2-Windows-x86_64/Warma-Demo-v0.2.exe
+```
+
+也可以在项目根目录执行（需将 Godot 加入 PATH）：
+
+```powershell
+New-Item -ItemType Directory -Force dist/Warma-Demo-v0.2-Windows-x86_64
+godot --headless --path . --export-release "Windows Desktop"
+```
+
+`dist/` 和 `build/` 已被 Git 忽略。发布时可将导出包上传至 GitHub Releases，源码仓库保留项目文件、脚本、场景和资源即可。请保留 `.gd.uid` 与素材旁的 `.import` 文件，它们记录资源标识和导入设置。

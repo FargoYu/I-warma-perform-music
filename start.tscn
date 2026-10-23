@@ -1,66 +1,43 @@
 [gd_scene format=3 uid="uid://ca78o2pk11okd"]
 
 [ext_resource type="Script" uid="uid://cgm18nmpybnih" path="res://scripts/scene_screen.gd" id="1"]
-[ext_resource type="PackedScene" path="res://objects/background.tscn" id="2"]
-[ext_resource type="Texture2D" uid="uid://bb0esujtdm15y" path="res://Assets/Sprites/warma.png" id="3_1n0d2"]
-[ext_resource type="Texture2D" uid="uid://btaojw7r27rst" path="res://Assets/Sprites/extinguisher.png" id="4_oiuna"]
-[ext_resource type="Texture2D" uid="uid://b4frwkixpf60p" path="res://Assets/Sprites/giraffe.png" id="5_4a3qj"]
+[ext_resource type="Texture2D" uid="uid://cusoo1d4c84mo" path="res://Assets/Sprites/start.png" id="2"]
 
 [sub_resource type="SystemFont" id="Font"]
 font_names = PackedStringArray("Microsoft YaHei", "Noto Sans CJK SC")
+subpixel_positioning = 0
 
 [node name="Start" type="Node2D" unique_id=501903974]
 script = ExtResource("1")
 
-[node name="Background" parent="." unique_id=597267247 instance=ExtResource("2")]
+[node name="Background" type="TextureRect" parent="." unique_id=195293247]
+z_index = -100
+texture_filter = 2
+offset_right = 256.0
+offset_bottom = 144.0
+mouse_filter = 2
+texture = ExtResource("2")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Title" type="Label" parent="." unique_id=943772845]
-offset_left = 16.0
-offset_top = 24.0
-offset_right = 240.0
-offset_bottom = 87.0
+offset_left = 19.0
+offset_top = 34.0
+offset_right = 243.0
+offset_bottom = 97.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = SubResource("Font")
 theme_override_font_sizes/font_size = 22
-text = "沃要吹灭火器
-IWPM"
+text = "沃要吹灭火器"
 horizontal_alignment = 1
 
 [node name="Prompt" type="Label" parent="." unique_id=396607961]
-offset_left = 16.0
-offset_top = 112.0
-offset_right = 240.0
-offset_bottom = 138.0
+offset_left = 17.0
+offset_top = 88.0
+offset_right = 241.0
+offset_bottom = 114.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_fonts/font = SubResource("Font")
 theme_override_font_sizes/font_size = 10
 text = "按任意键开始"
 horizontal_alignment = 1
-
-[node name="Prompt2" type="Label" parent="." unique_id=1900901533]
-offset_left = 16.0
-offset_top = 88.0
-offset_right = 240.0
-offset_bottom = 114.0
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = SubResource("Font")
-theme_override_font_sizes/font_size = 10
-text = "测试草模"
-horizontal_alignment = 1
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=78866035]
-position = Vector2(64, 144)
-scale = Vector2(10, 10)
-texture = ExtResource("3_1n0d2")
-
-[node name="Sprite2D2" type="Sprite2D" parent="." unique_id=905160203]
-position = Vector2(192, 120)
-scale = Vector2(10, 10)
-texture = ExtResource("4_oiuna")
-
-[node name="Sprite2D3" type="Sprite2D" parent="." unique_id=75707357]
-z_index = -1
-position = Vector2(176, 40)
-rotation = 1.9268435
-scale = Vector2(10, 10)
-texture = ExtResource("5_4a3qj")
