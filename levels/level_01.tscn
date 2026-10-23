@@ -9,7 +9,6 @@
 
 [node name="Level01" type="Node2D" unique_id=621054034]
 script = ExtResource("1_world")
-level_number_font_size = 32
 
 [node name="Background" parent="." unique_id=890266944 instance=ExtResource("2_background")]
 
@@ -42,4 +41,9 @@ text_width = 96
 [node name="Signboard4" parent="." unique_id=171292768 instance=ExtResource("8_sign")]
 position = Vector2(112, 112)
 text = "按R重置"
+text_width = 96
+
+[node name="Signboard5" parent="." unique_id=1400161456 instance=ExtResource("8_sign")]
+position = Vector2(208, 32)
+text = "按上键进门"
 text_width = 96
