@@ -9,8 +9,9 @@
 /artifacts/
 /build/
 /dist/
-/I warma perform music.exe
-/Warma-Demo-*.exe
+/*.exe
+/*.pck
+/*.zip
 
 # Local editor and OS files
 .vscode/

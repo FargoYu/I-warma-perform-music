@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="I warma perform music"
-config/version="0.2.0"
+config/version="1.2.0"
 run/main_scene="res://start.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://Assets/Sprites/icon.png"

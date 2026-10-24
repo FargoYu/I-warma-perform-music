@@ -15,6 +15,7 @@ const GRAVITY: float = 360.0
 const TERMINAL_SPEED: float = 240.0
 
 ## World-local Y coordinate where Warma's feet trigger death.
+## Giraffes are removed only once their top is two body heights below this line.
 @export var fall_limit: float = 144.0
 @export var horizontal_limit: float = 640.0
 @export_range(0.01, 1.0, 0.01) var death_flash_duration: float = 0.08
@@ -260,10 +261,13 @@ func _physics_process(delta: float) -> void:
 				request_restart(true)
 				player_fell.emit()
 				break
-		elif body.state.y > fall_limit or absf(body.state.x) > horizontal_limit:
-			solver.remove_body(body.state)
-			actors.erase(body)
-			body.queue_free()
+		else:
+			# Keep giraffes fully off-screen with two body heights of extra clearance.
+			var removal_y: float = fall_limit + body.state.h * 2.0 if body.kind == "giraffe" else fall_limit - body.state.h
+			if body.state.y >= removal_y:
+				solver.remove_body(body.state)
+				actors.erase(body)
+				body.queue_free()
 	queue_redraw()
 
 func _unhandled_input(event: InputEvent) -> void:

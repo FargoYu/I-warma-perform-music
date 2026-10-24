@@ -1,12 +1,14 @@
 # 沃要吹灭火器 · I warma perform music
 
+当前版本：**v1.2**。
+
 一款以 Warma 为主角的像素风平台解谜游戏。跳上长颈鹿，吹响灭火器，用音符推动它们，寻找通往下一扇门的路线。
 
 游戏包含 **24 个连续关卡**，从移动和跳跃入门，逐步探索碰撞、堆叠与空中配合。遇到需要精细操作的地方，可以放慢时间，再试一次。
 
 ## 开始游玩
 
-如果仓库的 **Releases** 页面提供 Windows 发布包，下载并解压后运行 `Warma-Demo-v0.2.exe`，无需安装 Godot。GitHub 的 **Code → Download ZIP** 下载的是源码，需要按下方开发说明运行。
+如果仓库的 **Releases** 页面提供 Windows 发布包，下载并解压后运行 `沃要吹灭火器.exe`，无需安装 Godot。GitHub 的 **Code → Download ZIP** 下载的是源码，需要按下方开发说明运行。
 
 开场按任意键开始。接触告示牌可查看提示；到达门前按 **W** 进入下一关。完成第 24 关后进入结束画面，再按任意键退出。
 
@@ -25,6 +27,7 @@
 ### 游玩提示
 
 - 音符会让长颈鹿沿发射方向移动一段时间。Warma、长颈鹿和地形之间的碰撞是解谜的一部分。
+- 长颈鹿离开画面后仍会继续运动和参与碰撞；只有整个身体落到关卡底部以下两个自身高度时才会消失。
 - 发射没有冷却时间，可以连续点按 **K**；尝试调整站位、朝向与发射时机。
 - 时间倍率有 **×0.1、×0.2、×0.5、×1** 四档，左下角显示当前倍率。默认正常速度，减速适合观察和微调；音效保持正常音高。
 - 卡住时按 **R** 重来。掉出关卡边界也会自动重置当前关卡。
@@ -62,6 +65,8 @@
 
 `GameState` 自动加载节点保存本次运行的装备和时间倍率；`AudioManager` 管理音效。可在 `default_bus_layout.tres` 的 SFX 总线上调整音量。
 
+`RectWorld2D` 的 **Fall Limit** 是主角脚底触发坠落重置的 Y 坐标，默认 144。长颈鹿按顶部坐标判断清除，阈值为 `fall_limit + 2 × body_height`，默认 176；不受横向离屏距离影响。
+
 ### 编辑房间
 
 1. 打开 `levels/` 中的场景，修改对象的位置与属性。
@@ -85,13 +90,13 @@
 安装与所用 Godot 版本匹配的导出模板，在 **项目 → 导出 → Windows Desktop** 中导出 Release。预设使用 x86_64，并将 PCK 嵌入 EXE，默认输出路径为：
 
 ```text
-dist/Warma-Demo-v0.2-Windows-x86_64/Warma-Demo-v0.2.exe
+dist/Warma-v1.2-Windows-x86_64/沃要吹灭火器.exe
 ```
 
 也可以在项目根目录执行（需将 Godot 加入 PATH）：
 
 ```powershell
-New-Item -ItemType Directory -Force dist/Warma-Demo-v0.2-Windows-x86_64
+New-Item -ItemType Directory -Force dist/Warma-v1.2-Windows-x86_64
 godot --headless --path . --export-release "Windows Desktop"
 ```
 

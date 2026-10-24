@@ -15,7 +15,7 @@ script = ExtResource("1_0daix")
 
 [node name="PaintBlocksHere" parent="." unique_id=1022376901 instance=ExtResource("3_3usv8")]
 texture_filter = 1
-cells = Array[Vector2i]([Vector2i(2, 7), Vector2i(3, 7), Vector2i(4, 7), Vector2i(5, 7), Vector2i(6, 7), Vector2i(7, 7), Vector2i(8, 7), Vector2i(9, 7), Vector2i(10, 7), Vector2i(11, 7), Vector2i(12, 7), Vector2i(13, 7), Vector2i(0, 7), Vector2i(1, 7), Vector2i(1, 8), Vector2i(0, 8), Vector2i(2, 8), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(10, 8), Vector2i(11, 8), Vector2i(12, 8), Vector2i(13, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(15, 7), Vector2i(14, 7)])
+cells = Array[Vector2i]([Vector2i(2, 7), Vector2i(3, 7), Vector2i(4, 7), Vector2i(5, 7), Vector2i(6, 7), Vector2i(7, 7), Vector2i(8, 7), Vector2i(9, 7), Vector2i(10, 7), Vector2i(11, 7), Vector2i(12, 7), Vector2i(13, 7), Vector2i(1, 7), Vector2i(1, 8), Vector2i(2, 8), Vector2i(3, 8), Vector2i(4, 8), Vector2i(5, 8), Vector2i(6, 8), Vector2i(7, 8), Vector2i(8, 8), Vector2i(9, 8), Vector2i(10, 8), Vector2i(11, 8), Vector2i(12, 8), Vector2i(13, 8), Vector2i(14, 8), Vector2i(15, 8), Vector2i(15, 7), Vector2i(14, 7), Vector2i(0, 7), Vector2i(0, 8)])
 
 [node name="Warma" parent="." unique_id=1442484236 instance=ExtResource("4_517is")]
 position = Vector2(40, 96)
