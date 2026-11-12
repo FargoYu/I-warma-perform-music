@@ -1,6 +1,10 @@
 # 沃要吹灭火器 · I warma perform music
 
-当前版本：**v1.2**。
+当前版本：**v1.3 多平台版**。
+
+发布版提供 Windows、Android 和单文件 Web 三个平台。**网页版直接双击 `index.html` 即可运行，无需 CMD、本地服务器或联网；同一份 HTML 也可部署到 GitHub Pages，并支持安卓触屏。**
+
+源码仓库的 `docs/` 已包含可直接发布的网站，Pages 配置步骤见 [GITHUB-PAGES.txt](GITHUB-PAGES.txt)。平台成品从 Releases 下载。
 
 一款以 Warma 为主角的像素风平台解谜游戏。跳上长颈鹿，吹响灭火器，用音符推动它们，寻找通往下一扇门的路线。
 
@@ -8,9 +12,9 @@
 
 ## 开始游玩
 
-如果仓库的 **Releases** 页面提供 Windows 发布包，下载并解压后运行 `沃要吹灭火器.exe`，无需安装 Godot。GitHub 的 **Code → Download ZIP** 下载的是源码，需要按下方开发说明运行。
+如果仓库的 **Releases** 页面提供 Windows 发布包，下载并解压后运行 `Warma.exe`，无需安装 Godot。GitHub 的 **Code → Download ZIP** 下载的是源码，需要按下方开发说明运行。
 
-开场按任意键开始。接触告示牌可查看提示；到达门前按 **W** 进入下一关。完成第 24 关后进入结束画面，再按任意键退出。
+开场按任意键、鼠标点击或轻触屏幕开始。接触告示牌可查看提示；到达门前按 **W** 或触屏“进门”进入下一关。完成第 24 关后进入结束画面，再次操作返回标题并重置本次游戏。
 
 ## 操作
 
@@ -21,7 +25,7 @@
 | **K** | 获得灭火器后发射音符；每次点按发射一次，长按不会连发 |
 | **W** | 与门重叠时进入下一关 |
 | **R** | 重置当前关卡，回到初始出生点 |
-| **P** | 暂停 / 继续 |
+| **P / Esc** | 暂停 / 继续 |
 | **← / →** | 时间减速 / 加速一档 |
 
 ### 游玩提示
@@ -34,11 +38,13 @@
 - 灭火器取得后，在本次游戏的重试和换关中保留；时间倍率也会保留。
 - **没有跨次游玩的存档**：退出后重新打开，会从第一关开始，装备与时间倍率恢复初始状态。
 
-游戏使用键盘操作，提供动作与交互音效，没有背景音乐。
+游戏支持键盘与多点触屏，提供背景音乐和动作、交互音效。失焦或切到后台时自动暂停，返回后按 P / Esc 或点击“继续”。安卓系统返回键也可暂停/继续。
+
+触屏版底部有独立操作区，支持同时按住移动与跳跃、演奏；减速、加速、重来、暂停和进门均可触控。完整关卡显示在按钮上方，手机建议横屏。中文字体随包提供，不依赖设备安装字体。
 
 ## 从源码运行
 
-工程配置为 **Godot 4.7**，使用 GDScript，标准版即可，无需 .NET。
+工程配置为 **Godot 4.7.2**，使用 GDScript，标准版即可，无需 .NET。
 
 1. 下载源码并解压，或克隆仓库。
 2. 在 Godot 项目管理器中导入根目录的 `project.godot`。
@@ -59,7 +65,7 @@
 | `physics/` | 自定义轴对齐矩形（AABB）物理状态与碰撞求解器 |
 | `Assets/` | 游戏使用的像素素材与 15 个音效文件 |
 | `addons/block_painter/` | 编辑器中的方块画笔插件 |
-| `export_presets.cfg` | Windows x86_64 导出预设 |
+| `export_presets.cfg` | Windows、Android、Web 三平台导出预设 |
 
 `scripts/game.gd` 管理房间加载与切换，`scripts/rect_world.gd` 统一推进输入、物理和交互。实体的运动与碰撞由 `physics/` 中的矩形求解器处理，物理更新频率为 120 Hz；对象节点主要负责配置与绘制。修改运动逻辑时，应沿用这套状态和求解流程。
 
@@ -85,19 +91,59 @@
 
 暂停时，获得装备的辅助快捷键、跳关和进门操作不执行，仍可调整时间倍率。
 
-### 导出 Windows 发布包
+### 三平台运行与导出
 
-安装与所用 Godot 版本匹配的导出模板，在 **项目 → 导出 → Windows Desktop** 中导出 Release。预设使用 x86_64，并将 PCK 嵌入 EXE，默认输出路径为：
+| 平台 | 输出 | 启动方式 |
+| --- | --- | --- |
+| Windows x86_64 | `dist/Windows/Warma.exe` | 双击运行；PCK 已嵌入 |
+| Android ARMv7 / ARM64 / x86_64 | `dist/Android/Warma.apk` | 安装已签名 Release APK；Android 7.0+ / OpenGL ES 3.0 |
+| Web（电脑 + 安卓浏览器） | `dist/Web/index.html` | 直接双击，或部署到 GitHub Pages；所有游戏资源均已内嵌 |
 
-```text
-dist/Warma-v1.2-Windows-x86_64/沃要吹灭火器.exe
-```
+同一份 Web 导出同时适配电脑和安卓手机浏览器；手机自动显示触屏按钮，无需安装 APK。
 
-也可以在项目根目录执行（需将 Godot 加入 PATH）：
+单文件 HTML 内置压缩后的引擎、关卡、字体、音频和音频工作线程，直接支持 file:// 打开，不向外部网站请求游戏资源。建议使用新版 Chrome / Edge；手机文件管理器对本地 HTML 的处理各不相同，安卓手机建议访问托管网址。首次操作后浏览器解锁音频。触控、安全区、横竖屏与全屏功能保持可用。
+
+仓库中的 `docs/index.html` 就是准备好的网站入口；上传源码后，在 GitHub **Settings → Pages → Source** 选择 **GitHub Actions**，再运行仓库内的 Pages 工作流即可。完整步骤见 [GITHUB-PAGES.txt](GITHUB-PAGES.txt)。本仓库不依赖网站后端。
+
+安装匹配 Godot 4.7.2 的导出模板和 Python 3，在工程根目录执行：
 
 ```powershell
-New-Item -ItemType Directory -Force dist/Warma-v1.2-Windows-x86_64
-godot --headless --path . --export-release "Windows Desktop"
+python tools/export_all.py
+# 单独重建一个平台
+python tools/export_all.py --platform web
+# 指定编辑器路径
+python tools/export_all.py --godot "C:/path/to/godot.exe"
 ```
 
-`dist/` 和 `build/` 已被 Git 忽略。发布时可将导出包上传至 GitHub Releases，源码仓库保留项目文件、脚本、场景和资源即可。请保留 `.gd.uid` 与素材旁的 `.import` 文件，它们记录资源标识和导入设置。
+也可运行 `tools/export_all.ps1`。脚本先导入资源，再构建 Release、复制说明和许可证、生成 SHA256 校验清单。Web 的原始 Godot 导出写入 `build/web-runtime/`，随后自动生成 `dist/Web/index.html` 单文件版本。失败时日志写入 `build/`。
+
+Android 需要 JDK、Android SDK build-tools 和签名密钥。此电脑的独立构建配置位于 `build/toolchain/env.json`，脚本自动读取；该文件和私钥均不随导出包分发，也不提交版本库。**请另行备份 `build/toolchain/warma-release.keystore` 及其配置；更新已安装应用时必须使用相同密钥。** 换电脑可按 Godot 的 Android 导出说明配置工具链，并通过 `GODOT_ANDROID_KEYSTORE_RELEASE_PATH`、`GODOT_ANDROID_KEYSTORE_RELEASE_USER`、`GODOT_ANDROID_KEYSTORE_RELEASE_PASSWORD` 环境变量提供发布签名。
+
+开发时在命令末尾追加 `-- --touch-controls` 可在电脑上模拟触控布局。验证命令：
+
+```powershell
+# 使用 Godot 4.7.2 编辑器二进制
+Godot --headless --path . --script tests/platform_smoke.gd
+```
+
+测试覆盖24关切换、多点输入、暂停/失焦、重试、横竖屏与通关后重新开始。浏览器测试使用 Playwright 与 Pillow，`python tests/web_smoke.py` 检查网站运行；`python tests/offline_web_smoke.py` 检查单文件离线运行。`dist/`、`build/` 已被 Git 忽略，源码中保留 `.gd.uid` 和素材 `.import` 文件。
+
+参考：[Android 导出文档](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_android.html)、[Web 导出文档](https://docs.godotengine.org/en/stable/tutorials/export/exporting_for_web.html)。内置字体来自 [Google Fonts Noto Sans SC](https://github.com/google/fonts/tree/main/ofl/notosanssc)，许可证在 `Assets/Fonts/OFL.txt`。
+
+### 整理源码和 Release
+
+已有三平台导出后运行：
+
+```powershell
+python tools/package_release.py
+```
+
+脚本只收集工程、素材、工具、测试、许可证和 Pages 文件，并生成：
+
+- `publish/Warma-v1.3-Source.zip`：源码压缩包。
+- `publish/GitHub-Source/`：可直接提交到仓库的整理后目录（ZIP 内层文件夹内容与此一致）。
+- `publish/Release/`：Windows、Android、Web 三个 Release ZIP 及校验清单。
+
+源码包保留 `.gd.uid` 与 `.import`；不包含 `.godot/`、构建工具链、私钥、本机配置、测试截图或旧版EXE/ZIP。不要将源码 ZIP 本身当作 Pages 网站上传：先解压，把工程文件提交到仓库。后续修改游戏后，先重新导出，再运行打包脚本以同步 `docs/`。
+
+第三方许可证见 [THIRD_PARTY_NOTICES.txt](THIRD_PARTY_NOTICES.txt)。

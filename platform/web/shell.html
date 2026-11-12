@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+  <meta name="theme-color" content="#101b29">
+  <title>沃要吹灭火器</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root { --safe-top: env(safe-area-inset-top, 0px); --safe-right: env(safe-area-inset-right, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px); --safe-left: env(safe-area-inset-left, 0px); }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; background: #101b29; color: #edf3f7; font-family: system-ui, sans-serif; }
+    body { overscroll-behavior: none; touch-action: none; }
+    #game-frame { position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh; padding: var(--safe-top) var(--safe-right) var(--safe-bottom) var(--safe-left); }
+    #canvas { display: block; width: 100%; height: 100%; outline: none; touch-action: none; }
+    #loading { position: fixed; inset: 0; display: grid; place-content: center; gap: 18px; padding: 32px; text-align: center; background: #101b29; z-index: 5; }
+    #loading[hidden] { display: none; }
+    h1 { font-size: clamp(22px, 5vw, 36px); margin: 0; }
+    p { line-height: 1.7; margin: 0; max-width: 560px; }
+    progress { width: min(320px, 75vw); height: 8px; margin: auto; accent-color: #82dec8; }
+    button { color: inherit; border: 1px solid #78909f; border-radius: 6px; background: #1c3042; padding: 12px 18px; font: inherit; cursor: pointer; }
+    #fullscreen { position: fixed; top: max(6px, var(--safe-top)); right: max(6px, var(--safe-right)); z-index: 2; font-size: 12px; padding: 7px 10px; opacity: .75; }
+    #orientation { display: none; position: fixed; top: max(12px, var(--safe-top)); left: 0; right: 0; text-align: center; pointer-events: none; font-size: 13px; color: #dae5ec; }
+    @media (pointer: coarse) and (orientation: portrait) { #orientation { display: block; } }
+  </style>
+  $GODOT_HEAD_INCLUDE
+</head>
+<body>
+  <div id="game-frame"><canvas id="canvas" tabindex="0" aria-label="沃要吹灭火器游戏画面">请使用支持 WebGL 2 的浏览器。</canvas></div>
+  <button id="fullscreen" type="button" aria-label="切换全屏">全屏</button>
+  <div id="orientation">横屏游玩，操作更舒适</div>
+  <div id="loading" role="status" aria-live="polite">
+    <h1>沃要吹灭火器</h1>
+    <p id="status">正在加载游戏…</p>
+    <progress id="progress"></progress>
+    <button id="retry" type="button" hidden>重新加载</button>
+  </div>
+  <script src="$GODOT_URL"></script>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const status = document.getElementById('status');
+    const progress = document.getElementById('progress');
+    const retry = document.getElementById('retry');
+    const config = $GODOT_CONFIG;
+    // Keep every touch target inside the usable screen, including fullscreen
+    // cutouts and the bottom gesture area. Godot observes these backing-size
+    // changes with canvasResizePolicy 0 and adjusts its input coordinates.
+    const resizeCanvas = () => {
+      const rect = canvas.getBoundingClientRect();
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.max(1, Math.round(rect.width * ratio));
+      const height = Math.max(1, Math.round(rect.height * ratio));
+      if (canvas.width !== width) canvas.width = width;
+      if (canvas.height !== height) canvas.height = height;
+    };
+    new ResizeObserver(resizeCanvas).observe(canvas);
+    window.addEventListener('resize', resizeCanvas);
+    window.visualViewport?.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+    // The Web engine forwards canvas blur to its focus-out notification.
+    // Explicitly blur it when the browser/app is backgrounded, since losing
+    // window visibility does not always change document.activeElement.
+    window.addEventListener('blur', () => canvas.blur());
+    window.addEventListener('pagehide', () => canvas.blur());
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) canvas.blur();
+    });
+    const fail = (error) => {
+      progress.hidden = true;
+      status.textContent = '游戏未能启动：' + (error.message || error) + '。请使用最新版 Chrome、Edge 或 Firefox，并确认所有导出文件位于同一目录。';
+      retry.hidden = false;
+      console.error(error);
+    };
+    retry.addEventListener('click', () => location.reload());
+    document.getElementById('fullscreen').addEventListener('click', async () => {
+      try {
+        if (document.fullscreenElement) await document.exitFullscreen();
+        else {
+          await document.documentElement.requestFullscreen();
+          if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape').catch(() => {});
+        }
+      } catch (error) { console.info('Full screen unavailable:', error.message); }
+      canvas.focus();
+    });
+    document.addEventListener('fullscreenchange', () => {
+      const active = Boolean(document.fullscreenElement);
+      document.getElementById('fullscreen').textContent = active ? '退出全屏' : '全屏';
+      document.getElementById('fullscreen').setAttribute('aria-label', active ? '退出全屏' : '进入全屏');
+      resizeCanvas();
+    });
+    canvas.addEventListener('contextmenu', event => event.preventDefault());
+    if (location.protocol === 'file:') {
+      fail(new Error('这是开发用原始导出，请打开发布目录 dist/Web/index.html 的单文件版本'));
+    } else {
+      try {
+        const missing = Engine.getMissingFeatures({ threads: false });
+        if (missing.length) throw new Error('浏览器缺少 ' + missing.join(', '));
+        const engine = new Engine(config);
+        engine.startGame({
+          canvas,
+          canvasResizePolicy: 0,
+          onProgress: (current, total) => {
+            if (total > 0) {
+              progress.max = total;
+              progress.value = current;
+              status.textContent = '正在加载游戏… ' + Math.floor(current / total * 100) + '%';
+            }
+          },
+          onExit: () => { document.getElementById('loading').hidden = false; status.textContent = '游戏已结束'; progress.hidden = true; retry.hidden = false; }
+        }).then(() => {
+          document.getElementById('loading').hidden = true;
+          canvas.focus();
+        }).catch(fail);
+      } catch (error) { fail(error); }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+name: Deploy Warma to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "docs/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    # Only the repository's default branch can publish the website.
+    if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out source and the prepared website
+        uses: actions/checkout@v6
+
+      - name: Check the prepared website files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          site = Path("docs")
+          # The engine, game data, audio worklets and images are embedded in HTML.
+          required = ["index.html", "FONT-LICENSE.txt"]
+          for name in required:
+              asset = site / name
+              if not asset.is_file() or asset.stat().st_size == 0:
+                  raise SystemExit(f"Missing or empty web asset: {asset}")
+          if not (site / ".nojekyll").is_file():
+              raise SystemExit("Missing docs/.nojekyll")
+          print("Prepared website is complete. No local server or Godot build is required.")
+          PY
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload the prepared website
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: docs
+
+      - name: Publish to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

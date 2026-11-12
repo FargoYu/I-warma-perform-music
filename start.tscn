@@ -3,9 +3,7 @@
 [ext_resource type="Script" uid="uid://cgm18nmpybnih" path="res://scripts/scene_screen.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://cusoo1d4c84mo" path="res://Assets/Sprites/start.png" id="2"]
 
-[sub_resource type="SystemFont" id="Font"]
-font_names = PackedStringArray("Microsoft YaHei", "Noto Sans CJK SC")
-subpixel_positioning = 0
+[ext_resource type="FontFile" path="res://Assets/Fonts/NotoSansSC.ttf" id="3"]
 
 [node name="Start" type="Node2D" unique_id=501903974]
 script = ExtResource("1")
@@ -26,7 +24,7 @@ offset_top = 34.0
 offset_right = 243.0
 offset_bottom = 97.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = SubResource("Font")
+theme_override_fonts/font = ExtResource("3")
 theme_override_font_sizes/font_size = 22
 text = "沃要吹灭火器"
 horizontal_alignment = 1
@@ -37,7 +35,7 @@ offset_top = 88.0
 offset_right = 241.0
 offset_bottom = 114.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = SubResource("Font")
+theme_override_fonts/font = ExtResource("3")
 theme_override_font_sizes/font_size = 10
-text = "按任意键开始"
+text = "按任意键或点击开始"
 horizontal_alignment = 1

@@ -25,3 +25,6 @@ func change_time_speed(direction: int) -> void:
 
 func reset_run() -> void:
 	has_extinguisher = false
+	time_speed_index = TIME_SPEEDS.size() - 1
+	Engine.time_scale = get_time_speed()
+	time_speed_changed.emit(get_time_speed())

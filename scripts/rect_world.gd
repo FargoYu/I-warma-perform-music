@@ -92,7 +92,7 @@ func _create_level_number() -> void:
 	get_viewport().size_changed.connect(_resize_level_number)
 
 func _resize_level_number() -> void:
-	_level_number_label.size = get_viewport_rect().size
+	_level_number_label.size = Vector2(256, 144)
 
 func _equipment_audio(equipped: bool) -> void:
 	if equipped and not get_node("/root/GameState").has_extinguisher:
@@ -109,8 +109,7 @@ func _create_time_speed_hud() -> void:
 	_time_speed_label = Label.new()
 	_time_speed_label.name = "TimeSpeed"
 	_time_speed_label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var font := SystemFont.new()
-	font.font_names = PackedStringArray(["Microsoft YaHei", "Noto Sans CJK SC"])
+	var font := preload("res://Assets/Fonts/NotoSansSC.ttf")
 	_time_speed_label.add_theme_font_override("font", font)
 	_time_speed_label.add_theme_font_size_override("font_size", 10)
 	_time_speed_label.add_theme_color_override("font_color", Color.BLACK)
@@ -124,8 +123,15 @@ func _create_time_speed_hud() -> void:
 	var run_state := get_node("/root/GameState")
 	run_state.time_speed_changed.connect(_update_time_speed_label)
 	_update_time_speed_label(run_state.get_time_speed())
-	visibility_changed.connect(func(): _time_speed_hud.visible = is_visible_in_tree())
-	_time_speed_hud.visible = is_visible_in_tree()
+	visibility_changed.connect(_update_hud_visibility)
+	var controls := get_node_or_null("/root/PlatformControls")
+	if controls != null:
+		controls.touch_mode_changed.connect(_update_hud_visibility)
+	_update_hud_visibility()
+
+func _update_hud_visibility(_touch_enabled: bool = false) -> void:
+	var controls := get_node_or_null("/root/PlatformControls")
+	_time_speed_hud.visible = is_visible_in_tree() and (controls == null or not controls.is_touch_mode() or get_tree().current_scene == self)
 
 func _update_time_speed_label(speed: float) -> void:
 	_time_speed_label.text = "x%s" % str(speed).trim_suffix(".0")
@@ -271,21 +277,29 @@ func _physics_process(delta: float) -> void:
 	queue_redraw()
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("time_slower") or event.is_action_pressed("time_faster"):
+		get_node("/root/GameState").change_time_speed(-1 if event.is_action_pressed("time_slower") else 1)
+		get_viewport().set_input_as_handled()
+		return
+	# Standalone F6 levels have no game entry point to handle their restart key.
+	if get_tree().current_scene == self and event.is_action_pressed("restart"):
+		get_viewport().set_input_as_handled()
+		request_restart()
+		return
+	if frozen or restarting or transitioning:
+		return
+	# Both keyboard and touch send actions. Every fresh press fires once;
+	# long holds and keyboard echo never repeat shots.
+	if event.is_action_pressed("shoot"):
+		demo_time = 0.0
+		fire()
+		get_viewport().set_input_as_handled()
+		return
+	if event.is_action_pressed("interact"):
+		enter_touching_door()
+		get_viewport().set_input_as_handled()
+		return
 	if event is InputEventKey and event.pressed and not event.echo:
-		match event.physical_keycode:
-			KEY_LEFT, KEY_RIGHT:
-				get_node("/root/GameState").change_time_speed(-1 if event.physical_keycode == KEY_LEFT else 1)
-				get_viewport().set_input_as_handled()
-				return
-		if frozen or restarting or transitioning:
-			return
-		# Handle each press immediately so fast taps between physics ticks are kept.
-		# Keyboard echo is excluded above, so holding K never repeats a shot.
-		if event.is_action_pressed("shoot"):
-			demo_time = 0.0
-			fire()
-			get_viewport().set_input_as_handled()
-			return
 		match event.physical_keycode:
 			KEY_N:
 				grant_extinguisher()
@@ -293,13 +307,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_M:
 				enter_first_door()
 				get_viewport().set_input_as_handled()
-			KEY_W:
-				enter_touching_door()
-				get_viewport().set_input_as_handled()
-	# Standalone F6 levels have no game entry point to handle their restart key.
-	if get_tree().current_scene == self and event is InputEventKey and event.pressed and not event.echo and event.physical_keycode == KEY_R:
-		get_viewport().set_input_as_handled()
-		request_restart()
 
 func grant_extinguisher() -> void:
 	if not is_instance_valid(player):
@@ -496,3 +503,5 @@ func _draw_contacts(canvas: Node2D) -> void:
 		if state.grounded:
 			canvas.draw_line(Vector2(state.x, state.y + state.h), Vector2(state.x + state.w, state.y + state.h), Color("9aff9c"), line_width)
 		canvas.draw_line(rect.get_center(), rect.get_center() + Vector2(state.vx, state.vy) * 0.09, Color("ff86ad"), line_width)
+
+

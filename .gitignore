@@ -9,6 +9,11 @@
 /artifacts/
 /build/
 /dist/
+/publish/
+__pycache__/
+*.pyc
+*.keystore
+*.jks
 /*.exe
 /*.pck
 /*.zip

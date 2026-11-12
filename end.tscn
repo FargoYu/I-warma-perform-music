@@ -3,13 +3,12 @@
 [ext_resource type="Script" uid="uid://cgm18nmpybnih" path="res://scripts/scene_screen.gd" id="1"]
 [ext_resource type="Texture2D" uid="uid://u6mths40ncve" path="res://Assets/Sprites/end.png" id="2"]
 
-[sub_resource type="SystemFont" id="Font"]
-font_names = PackedStringArray("Microsoft YaHei", "Noto Sans CJK SC")
+[ext_resource type="FontFile" path="res://Assets/Fonts/NotoSansSC.ttf" id="3"]
 
 [node name="End" type="Node2D" unique_id=1729021521]
 script = ExtResource("1")
-target_scene = ""
-quit_on_key = true
+target_scene = "res://start.tscn"
+is_ending = true
 
 [node name="Background" type="TextureRect" parent="." unique_id=1134531121]
 z_index = -100
@@ -27,7 +26,7 @@ offset_top = 34.0
 offset_right = 240.0
 offset_bottom = 70.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = SubResource("Font")
+theme_override_fonts/font = ExtResource("3")
 theme_override_font_sizes/font_size = 22
 text = "感谢游玩本游戏"
 horizontal_alignment = 1
@@ -38,7 +37,7 @@ offset_top = 86.0
 offset_right = 240.0
 offset_bottom = 112.0
 theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_fonts/font = SubResource("Font")
+theme_override_fonts/font = ExtResource("3")
 theme_override_font_sizes/font_size = 10
-text = "按任意键退出游戏"
+text = "按任意键或点击返回标题"
 horizontal_alignment = 1

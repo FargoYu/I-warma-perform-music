@@ -1,0 +1,16 @@
+Third-party components included with this game
+
+Godot Engine 4.7.2
+The runtime is distributed under the MIT license. See licenses/Godot-LICENSE.txt,
+licenses/Godot-AUTHORS.txt and licenses/Godot-COPYRIGHT.txt for engine and bundled
+third-party notices. Not every engine dependency is used by every platform build.
+Project: https://godotengine.org/
+
+Noto Sans SC
+Bundled as a static regular-weight (400) instance of the Google Fonts variable
+font. License: SIL Open Font License 1.1, included in Assets/Fonts/OFL.txt and
+FONT-LICENSE.txt in release packages.
+Source: https://github.com/google/fonts/tree/main/ofl/notosanssc
+
+These notices apply to the named third-party components. They do not assign a
+new license to the game's original character artwork, audio or project code.

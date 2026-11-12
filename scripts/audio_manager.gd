@@ -1,5 +1,5 @@
 extends Node
-## A bounded pool for short, non-spatial puzzle feedback.
+## Background music and a bounded pool for short puzzle feedback.
 
 signal sfx_played(cue: StringName)
 
@@ -21,19 +21,33 @@ const SOUNDS := {
 	&"complete": preload("res://Assets/Audio/SFX/complete.wav"),
 }
 const POOL_SIZE := 16
+const GAMEPLAY_MUSIC := preload("res://Assets/Audio/gameplay_loop.ogg.ogg")
+const SCREEN_MUSIC := preload("res://Assets/Audio/intro_end_loop.ogg.ogg")
 
+var _music: AudioStreamPlayer
 var _voices: Array[AudioStreamPlayer] = []
 var _last_played: Dictionary = {}
 var _shot_index := 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	_music = AudioStreamPlayer.new()
+	_music.name = "Music"
+	_music.bus = &"Music"
+	add_child(_music)
 	for index in POOL_SIZE:
 		var voice := AudioStreamPlayer.new()
 		voice.name = "SFX%d" % index
 		voice.bus = &"SFX"
 		add_child(voice)
 		_voices.append(voice)
+
+func play_music(in_gameplay: bool) -> void:
+	var track := GAMEPLAY_MUSIC if in_gameplay else SCREEN_MUSIC
+	if _music.stream == track and _music.playing:
+		return
+	_music.stream = track
+	_music.play()
 
 func play_sfx(cue: StringName, gain_db: float = 0.0) -> void:
 	if not SOUNDS.has(cue):
